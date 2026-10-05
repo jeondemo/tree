@@ -1,0 +1,2429 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#123a2c">
+<meta name="robots" content="noindex">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="과수 방제">
+<title>우리 집 과수 방제</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@700;900&family=Noto+Sans+KR:wght@400;500;700&display=swap">
+<script>
+var API_URL = 'https://script.google.com/macros/s/AKfycbwYZ08xNCnPO3VORtf4DS2G9IpQuKaxuhDKzWMPZ4fqlZvTbGgJx3IUzanmhYiFcmXM/exec';
+var APP_VERSION = '2026-10-06';
+</script>
+<style>
+:root {
+  --ground: #eef0ea;
+  --green: #123a2c;
+  --green2: #1d4f3d;
+  --green3: #0c2a20;
+  --ivory: #f6f3ea;
+  --gold: #e4c88a;
+  --tag: #f1dfae;
+  --text: #10201a;
+  --muted: #45524b;
+  --label: #3d6b58;
+  --outline: #6d7a73;
+  --hair: #e3e7df;
+  --nav: #5b6861;
+  --danger: #8f1d1d;
+  --mist: #d3ddd6;
+  --serif: 'Noto Serif KR', 'Nanum Myeongjo', 'Noto Serif CJK KR', serif;
+  --sans: 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', 'Noto Sans CJK KR', sans-serif;
+}
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--ground); color: var(--text); font-family: var(--sans); font-size: 16px; line-height: 1.55; }
+button, input, select { font-family: inherit; color: inherit; }
+button { cursor: pointer; }
+h1, h2, h3, p { margin: 0; }
+a { color: var(--green); }
+.app { max-width: 480px; margin: 0 auto; min-height: 100vh; min-height: 100dvh; display: flex; flex-direction: column; background: var(--ground); padding-bottom: calc(86px + env(safe-area-inset-bottom)); }
+.hero { background: var(--green); color: var(--ivory); padding: calc(28px + env(safe-area-inset-top)) 20px 22px 20px; display: flex; flex-direction: column; gap: 18px; }
+.hero-top { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; }
+.hero-col { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.eyebrow { font-size: 13px; font-weight: 700; color: var(--gold); letter-spacing: 0.06em; }
+.hero h1 { font-family: var(--serif); font-weight: 900; font-size: 64px; line-height: 1.1; }
+.hero h1.month { font-size: 104px; line-height: 1; }
+.hero h1.mid { font-size: 56px; line-height: 1.15; }
+.hero-sub { font-size: 16px; color: var(--mist); }
+.hero-side { padding-bottom: 12px; font-size: 14px; color: var(--mist); text-align: right; display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+.hero-side strong { display: block; font-size: 18px; font-weight: 700; color: var(--ivory); }
+.gear { width: 44px; height: 44px; border: 0; border-radius: 12px; background: var(--green2); color: var(--ivory); display: flex; align-items: center; justify-content: center; }
+.tiles { display: flex; gap: 10px; }
+.tile { flex: 1 1 0; background: var(--green2); border-radius: 16px; padding: 14px 10px; display: flex; flex-direction: column; align-items: center; }
+.tile b { font-family: var(--serif); font-weight: 900; font-size: 46px; line-height: 1.1; color: var(--gold); font-variant-numeric: tabular-nums; }
+.tile span { font-size: 14px; font-weight: 700; }
+.tile.side { flex: 0 0 auto; padding: 10px 18px; }
+.body { padding: 20px 16px 0 16px; display: flex; flex-direction: column; gap: 28px; flex-grow: 1; }
+.stack { display: flex; flex-direction: column; gap: 10px; }
+.card { background: #fff; border-radius: 18px; padding: 18px; display: flex; flex-direction: column; gap: 10px; }
+.card.dark { background: var(--green); color: var(--ivory); }
+.card.tight { padding: 2px 18px; gap: 0; }
+.cap { font-size: 13px; font-weight: 700; color: var(--label); }
+.card.dark .cap { color: var(--gold); }
+.h2 { padding: 0 4px; font-family: var(--serif); font-weight: 900; font-size: 26px; line-height: 1.25; color: var(--green); }
+.hint { padding: 0 4px; font-size: 14px; color: var(--muted); }
+.small { font-size: 14px; color: var(--muted); }
+.note { font-size: 15px; color: var(--muted); }
+.dose { font-size: 17px; font-weight: 700; color: var(--text); }
+.dose .src { display: block; font-size: 13px; font-weight: 500; color: var(--muted); }
+.notice-t { font-family: var(--serif); font-weight: 900; font-size: 22px; line-height: 1.3; color: var(--green); }
+.green-note { font-size: 14px; font-weight: 500; color: var(--label); }
+.warn-note { font-size: 14px; font-weight: 700; color: var(--danger); }
+.line { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.between { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.pname { font-size: 21px; font-weight: 700; line-height: 1.35; }
+.pname.big { font-size: 22px; }
+.pname.kit { font-size: 24px; line-height: 1.25; }
+.pname.soft { font-size: 19px; font-weight: 500; color: var(--muted); }
+.chip { font-size: 13px; font-weight: 700; padding: 2px 10px; border-radius: 999px; white-space: nowrap; display: inline-block; }
+.chip.own { background: var(--green); color: var(--ivory); }
+.chip.alt { background: var(--gold); color: var(--text); }
+.chip.buy { border: 1px solid var(--outline); color: var(--muted); padding: 1px 10px; }
+.chip.kind { border: 1px solid var(--outline); color: var(--muted); padding: 1px 10px; }
+.chip.kind.spray { border-color: var(--label); color: var(--label); }
+.chip.tagc { background: var(--tag); color: var(--text); }
+.chip.bad { background: var(--danger); color: #fff; }
+.card.dark .chip.own { background: var(--ivory); color: var(--green); }
+.visit-head { display: flex; background: #fff; border-radius: 18px; overflow: hidden; }
+.visit-date { flex-shrink: 0; width: 116px; background: var(--green); color: var(--ivory); padding: 14px 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.visit-date .m { font-size: 13px; font-weight: 700; color: var(--gold); }
+.visit-date .d { font-family: var(--serif); font-weight: 900; font-size: 38px; line-height: 1.15; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.visit-date .d.long { font-size: 30px; }
+.visit-date .u { font-size: 13px; }
+.visit-info { padding: 14px 16px; display: flex; flex-direction: column; justify-content: center; min-width: 0; }
+.visit-info h2 { font-size: 20px; font-weight: 700; line-height: 1.3; }
+.tree-card { background: #fff; border-radius: 18px; padding: 16px; display: flex; flex-direction: column; gap: 4px; }
+.tree-name { font-family: var(--serif); font-weight: 900; font-size: 34px; line-height: 1.2; color: var(--green); }
+.tree-name.mid { font-size: 30px; }
+.task { display: flex; gap: 12px; padding: 12px 0; border-top: 1px solid var(--hair); }
+.task.first { border-top: 0; padding-top: 6px; }
+.task:last-child { padding-bottom: 2px; }
+.check { flex-shrink: 0; width: 44px; height: 44px; padding: 0; border: 0; background: transparent; display: flex; align-items: flex-start; justify-content: center; }
+.check span { width: 30px; height: 30px; margin-top: 4px; border: 2px solid var(--green); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--ivory); }
+.check.on span { background: var(--green); }
+.task-body { display: flex; flex-direction: column; gap: 6px; min-width: 0; flex: 1; }
+.task.done .pname, .task.done .note { color: var(--outline); text-decoration: line-through; }
+.period { align-self: flex-start; background: var(--tag); border-radius: 10px; padding: 7px 14px; display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.period .k { font-size: 13px; font-weight: 700; }
+.period .v { font-size: 19px; font-weight: 700; line-height: 1.35; }
+.period.sm { padding: 4px 12px; }
+.period.sm .v { font-size: 16px; }
+.period.late { background: var(--danger); color: #fff; }
+.mixbox { margin-top: 6px; padding-top: 10px; border-top: 1px solid var(--hair); display: flex; flex-direction: column; gap: 6px; }
+.btn { display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 60px; padding: 0 18px; border: 0; border-radius: 18px; background: var(--green); color: var(--ivory); font-size: 18px; font-weight: 700; text-decoration: none; width: 100%; }
+.btn:disabled { opacity: 0.5; }
+.btn.line2 { min-height: 50px; border: 2px solid var(--green); border-radius: 14px; background: transparent; color: var(--green); font-size: 16px; }
+.btn.gold { min-height: 46px; width: auto; flex-shrink: 0; min-width: 60px; padding: 0 14px; border-radius: 12px; background: var(--tag); color: var(--text); font-size: 15px; }
+.btn.ghost { min-height: 46px; width: auto; flex-shrink: 0; min-width: 60px; padding: 0 12px; border: 1px solid var(--outline); border-radius: 12px; background: transparent; color: var(--muted); font-size: 15px; font-weight: 500; }
+.btn.ghost.hot { border-color: var(--danger); background: var(--danger); color: #fff; font-weight: 700; }
+.btn.tall { flex: 1 1 0; min-height: 96px; border-radius: 16px; font-size: 17px; flex-direction: column; gap: 6px; padding: 8px; text-align: center; }
+.linkbtn { align-self: flex-start; min-height: 44px; display: flex; align-items: center; padding: 0; border: 0; background: transparent; color: var(--green); font-size: 15px; font-weight: 700; text-decoration: underline; text-underline-offset: 4px; }
+.row { padding: 14px 0; border-top: 1px solid var(--hair); display: flex; flex-direction: column; gap: 4px; }
+.row:first-child, .cap + .row { border-top: 0; }
+.row.h { flex-direction: row; align-items: center; justify-content: space-between; gap: 12px; }
+.row .main { display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1; }
+.routine-t { font-family: var(--serif); font-weight: 900; font-size: 24px; line-height: 1.35; }
+.routine-x { font-size: 17px; font-weight: 700; }
+.routine + .routine { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--green2); }
+.seg { display: flex; background: var(--green3); border-radius: 14px; padding: 4px; gap: 4px; }
+.seg button { flex: 1 1 0; min-height: 46px; border: 0; border-radius: 11px; background: transparent; color: var(--mist); font-size: 16px; font-weight: 700; }
+.seg button.on { background: var(--gold); color: var(--text); }
+.chips { display: flex; gap: 8px; overflow-x: auto; padding: 2px 16px; margin: 0 -16px; scrollbar-width: none; }
+.chips::-webkit-scrollbar { display: none; }
+.chips.wrap { flex-wrap: wrap; overflow: visible; padding: 0; margin: 0; }
+.pick { flex-shrink: 0; min-height: 46px; padding: 0 16px; border: 1px solid var(--outline); border-radius: 999px; background: #fff; color: var(--text); font-size: 16px; font-weight: 500; white-space: nowrap; display: flex; align-items: center; gap: 6px; }
+.pick.on { background: var(--green); border-color: var(--green); color: var(--ivory); font-weight: 700; }
+.pick small { font-size: 12px; font-weight: 700; opacity: 0.8; }
+.month-head { display: flex; align-items: baseline; gap: 10px; padding: 0 4px; }
+.month-head b { font-family: var(--serif); font-weight: 900; font-size: 34px; line-height: 1.2; color: var(--green); }
+.arow { padding: 14px 0; border-top: 1px solid var(--hair); display: flex; flex-direction: column; gap: 6px; }
+.arow:first-child, .tree-name + .arow { border-top: 0; }
+.arow.done { opacity: 0.55; }
+.field { display: flex; flex-direction: column; gap: 6px; }
+.field label, .flabel { font-size: 13px; font-weight: 700; color: var(--label); }
+.input { width: 100%; min-height: 50px; padding: 8px 14px; border: 1px solid var(--outline); border-radius: 12px; background: #fff; font-size: 18px; font-weight: 500; }
+.input.name { font-family: var(--serif); font-weight: 900; font-size: 30px; color: var(--green); min-height: 60px; }
+.input.num { width: 104px; text-align: right; font-weight: 700; font-size: 20px; font-variant-numeric: tabular-nums; }
+.input:focus, .pick:focus-visible, .btn:focus-visible, .check:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+.numrow { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.numrow .unit { font-size: 16px; font-weight: 500; color: var(--muted); }
+.thumbs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.thumb { position: relative; height: 120px; border-radius: 14px; overflow: hidden; background: #d9ddd4; }
+.thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.thumb .x { position: absolute; top: 4px; right: 4px; width: 36px; height: 36px; border: 0; border-radius: 999px; background: rgba(16, 32, 26, 0.82); color: #fff; display: flex; align-items: center; justify-content: center; }
+.thumb-add { height: 120px; border-radius: 14px; border: 2px solid var(--green); background: #fff; color: var(--green); font-size: 15px; font-weight: 700; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; }
+.mini-thumbs { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 4px; }
+.mini-thumbs a, .mini-thumbs span { width: 52px; height: 52px; border-radius: 8px; overflow: hidden; background: #d9ddd4; display: block; }
+.mini-thumbs img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.amount { font-family: var(--serif); font-weight: 900; font-size: 36px; line-height: 1.1; color: var(--green); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.water { display: flex; gap: 10px; }
+.water button { flex: 1 1 0; min-height: 72px; border-radius: 16px; border: 0; background: var(--green2); color: var(--ivory); font-family: var(--serif); font-size: 32px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.water button.on { background: var(--gold); color: var(--text); font-weight: 900; }
+.result-big { font-family: var(--serif); font-weight: 900; font-size: 34px; line-height: 1.2; }
+.result-sub { font-size: 19px; font-weight: 700; }
+.banner { border-radius: 14px; padding: 12px 16px; background: var(--tag); color: var(--text); font-size: 15px; font-weight: 500; display: flex; flex-direction: column; gap: 6px; }
+.banner.bad { background: var(--danger); color: #fff; }
+.banner .linkbtn { color: inherit; min-height: 36px; }
+.nav { position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; display: flex; justify-content: center; background: #fff; border-top: 1px solid var(--hair); }
+.nav-in { width: 100%; max-width: 480px; display: flex; padding: 6px 8px calc(10px + env(safe-area-inset-bottom)) 8px; }
+.nav button { flex: 1 1 0; min-height: 56px; border: 0; background: transparent; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; color: var(--nav); font-size: 12px; font-weight: 500; }
+.nav button.on { color: var(--green); font-weight: 700; }
+.toast { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(96px + env(safe-area-inset-bottom)); z-index: 40; width: calc(100% - 32px); max-width: 448px; background: var(--text); color: #fff; border-radius: 14px; padding: 14px 18px; font-size: 16px; font-weight: 500; box-shadow: 0 8px 24px rgba(16, 32, 26, 0.3); }
+.veil { position: fixed; inset: 0; z-index: 50; background: rgba(16, 32, 26, 0.55); display: flex; align-items: flex-end; justify-content: center; }
+.sheet { width: 100%; max-width: 480px; max-height: 88vh; overflow-y: auto; background: var(--ground); border-radius: 22px 22px 0 0; padding: 22px 16px calc(22px + env(safe-area-inset-bottom)) 16px; display: flex; flex-direction: column; gap: 16px; }
+.sheet h2 { font-family: var(--serif); font-weight: 900; font-size: 28px; line-height: 1.25; color: var(--green); padding: 0 4px; }
+.spin { width: 22px; height: 22px; border-radius: 999px; border: 3px solid rgba(246, 243, 234, 0.35); border-top-color: var(--ivory); animation: spin 0.9s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.center { min-height: 60vh; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; padding: 24px; text-align: center; }
+.toggle { flex-shrink: 0; width: 64px; height: 38px; border-radius: 999px; border: 0; background: var(--outline); position: relative; padding: 0; }
+.toggle::after { content: ''; position: absolute; top: 4px; left: 4px; width: 30px; height: 30px; border-radius: 999px; background: #fff; transition: left 0.15s; }
+.toggle.on { background: var(--green); }
+.toggle.on::after { left: 30px; }
+.hide { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; overflow: hidden; }
+@media (prefers-reduced-motion: reduce) { .spin { animation-duration: 2.5s; } .toggle::after { transition: none; } }
+@media (max-width: 360px) { .hero h1.month { font-size: 88px; } .tree-name { font-size: 30px; } .tile b { font-size: 40px; } }
+</style>
+</head>
+<body>
+<div id="root"><div class="center"><div class="note">불러오는 중입니다</div></div></div>
+<script>
+var SEED = {"version":2,"trees":[{"name":"복숭아","aliases":["복숭아"]},{"name":"체리","aliases":["체리","양앵두"]},{"name":"자두","aliases":["자두"]},{"name":"감","aliases":["감","단감"]},{"name":"사과대추","aliases":["대추","사과대추"]},{"name":"딸기","aliases":["딸기"]},{"name":"백일홍","aliases":["배롱나무","백일홍"]}],"products":[{"name":"모스피란","kind":"살충","ingredient":"아세타미프리드","content":"8%","form":"수화제","group":"4a","unit":"g","gap":0,"match":[],"note":"","source":"제조사 제품 표와 팜모닝 등록 정보 (2026-10 확인)"},{"name":"라이몬","kind":"살충","ingredient":"노발루론","content":"10%","form":"액상수화제","group":"벤조일우레아계","unit":"ml","gap":0,"match":[],"note":"","source":"제조사 제품 표와 팜모닝 등록 정보 (2026-10 확인)"},{"name":"알타코아","kind":"살충","ingredient":"클로란트라닐리프롤","content":"5%","form":"입상수화제","group":"28 (디아마이드)","unit":"g","gap":0,"match":[],"note":"배수는 라벨 확인","source":"제조사 제품 표와 팜모닝 등록 정보 (2026-10 확인)"},{"name":"델란","kind":"살균","ingredient":"디티아논","content":"75%","form":"수화제","group":"보호 살균제","unit":"g","gap":0,"match":[],"note":"석회유황합제, 보르도액, 고착형 전착제와 섞지 않기","source":"제조사 제품 표와 팜모닝 등록 정보 (2026-10 확인)"},{"name":"일품","kind":"살균","ingredient":"옥솔린산","content":"20%","form":"수화제","group":"가4","unit":"g","gap":0,"match":[],"note":"","source":"제조사 제품 표와 팜모닝 등록 정보 (2026-10 확인)"},{"name":"살림꾼","kind":"살균","ingredient":"메트코나졸","content":"20%","form":"액상수화제","group":"사1 (트리아졸)","unit":"ml","gap":0,"match":[],"note":"","source":"제조사 제품 표와 팜모닝 등록 정보 (2026-10 확인)"},{"name":"후론사이드","kind":"살균","ingredient":"플루아지남","content":"50%","form":"수화제","group":"다5","unit":"g","gap":0,"match":[],"note":"배수는 라벨 확인","source":"제조사 제품 표와 팜모닝 등록 정보 (2026-10 확인)"},{"name":"석회보르도액","kind":"살균","ingredient":"석회보르도액","content":"","form":"","group":"","unit":"","gap":7,"match":["보르도","IC66D"],"note":"다른 살균제·살충제와 섞지 않고 7일 이상 띄우기. 석회유황합제와도 섞지 않기. 뿌리고 2~3일 안에 비가 오면 약해 우려","source":"제조사 제품 표와 팜모닝 등록 정보 (2026-10 확인)"},{"name":"동제","kind":"살균","ingredient":"구리","content":"","form":"","group":"","unit":"","gap":7,"match":["보르도","코사이드","쿠퍼","구리","동수화제"],"note":"보르도액이나 코사이드. 간격 7일은 보르도액 기준을 따른 것이니 라벨 확인","source":""},{"name":"기계유유제","kind":"동계","ingredient":"기계유","content":"","form":"유제","group":"","unit":"","gap":14,"match":["기계유"],"note":"석회유황합제와 2주 이상 띄우기. 배수는 라벨 확인","source":""},{"name":"석회유황합제","kind":"동계","ingredient":"석회유황","content":"","form":"","group":"","unit":"","gap":14,"match":["석회유황","유황합제"],"note":"기계유유제와 2주 이상 띄우기. 싹 트기 전에만","source":""},{"name":"톱신페스트","kind":"도포","ingredient":"티오파네이트메틸","content":"","form":"도포제","group":"","unit":"","gap":0,"match":[],"note":"자른 면과 병든 껍질에 바르는 약","source":""}],"doses":[{"id":"모스피란|복숭아","product":"모스피란","tree":"복숭아","target":"복숭아순나방, 복숭아가루진딧물","dilution":2000,"doseText":"","phi":21,"phiNote":"","max":3,"src":"기준","checked":"","was":""},{"id":"모스피란|자두","product":"모스피란","tree":"자두","target":"","dilution":2000,"doseText":"","phi":7,"phiNote":"","max":3,"src":"기준","checked":"","was":""},{"id":"모스피란|체리","product":"모스피란","tree":"체리","target":"","dilution":2000,"doseText":"","phi":21,"phiNote":"","max":2,"src":"기준","checked":"","was":""},{"id":"모스피란|감","product":"모스피란","tree":"감","target":"","dilution":2000,"doseText":"","phi":14,"phiNote":"","max":3,"src":"기준","checked":"","was":""},{"id":"모스피란|사과대추","product":"모스피란","tree":"사과대추","target":"","dilution":2000,"doseText":"","phi":21,"phiNote":"","max":2,"src":"기준","checked":"","was":""},{"id":"모스피란|딸기","product":"모스피란","tree":"딸기","target":"목화진딧물, 작은뿌리파리","dilution":2000,"doseText":"","phi":2,"phiNote":"","max":3,"src":"기준","checked":"","was":""},{"id":"라이몬|복숭아","product":"라이몬","tree":"복숭아","target":"복숭아순나방, 복숭아심식나방, 복숭아굴나방","dilution":2000,"doseText":"","phi":21,"phiNote":"","max":3,"src":"기준","checked":"","was":""},{"id":"라이몬|자두","product":"라이몬","tree":"자두","target":"","dilution":2000,"doseText":"","phi":7,"phiNote":"","max":3,"src":"기준","checked":"","was":""},{"id":"라이몬|체리","product":"라이몬","tree":"체리","target":"","dilution":2000,"doseText":"","phi":30,"phiNote":"","max":3,"src":"기준","checked":"","was":""},{"id":"라이몬|감","product":"라이몬","tree":"감","target":"","dilution":2000,"doseText":"","phi":14,"phiNote":"","max":3,"src":"기준","checked":"","was":""},{"id":"라이몬|사과대추","product":"라이몬","tree":"사과대추","target":"","dilution":2000,"doseText":"","phi":21,"phiNote":"","max":3,"src":"기준","checked":"","was":""},{"id":"라이몬|딸기","product":"라이몬","tree":"딸기","target":"","dilution":2000,"doseText":"","phi":3,"phiNote":"","max":3,"src":"기준","checked":"","was":""},{"id":"알타코아|복숭아","product":"알타코아","tree":"복숭아","target":"복숭아순나방, 복숭아심식나방, 복숭아유리나방","dilution":null,"doseText":"","phi":7,"phiNote":"","max":3,"src":"기준","checked":"","was":""},{"id":"알타코아|자두","product":"알타코아","tree":"자두","target":"","dilution":null,"doseText":"","phi":14,"phiNote":"","max":3,"src":"기준","checked":"","was":""},{"id":"알타코아|체리","product":"알타코아","tree":"체리","target":"","dilution":null,"doseText":"","phi":30,"phiNote":"","max":2,"src":"기준","checked":"","was":""},{"id":"알타코아|감","product":"알타코아","tree":"감","target":"","dilution":null,"doseText":"","phi":21,"phiNote":"","max":3,"src":"기준","checked":"","was":""},{"id":"알타코아|사과대추","product":"알타코아","tree":"사과대추","target":"","dilution":null,"doseText":"","phi":14,"phiNote":"","max":3,"src":"기준","checked":"","was":""},{"id":"알타코아|딸기","product":"알타코아","tree":"딸기","target":"","dilution":null,"doseText":"","phi":2,"phiNote":"","max":2,"src":"기준","checked":"","was":""},{"id":"델란|복숭아","product":"델란","tree":"복숭아","target":"세균구멍병, 잎오갈병","dilution":1000,"doseText":"","phi":21,"phiNote":"","max":3,"src":"기준","checked":"","was":""},{"id":"델란|체리","product":"델란","tree":"체리","target":"","dilution":1000,"doseText":"","phi":14,"phiNote":"","max":3,"src":"기준","checked":"","was":""},{"id":"델란|감","product":"델란","tree":"감","target":"","dilution":1000,"doseText":"","phi":21,"phiNote":"","max":4,"src":"기준","checked":"","was":""},{"id":"델란|자두","product":"델란","tree":"자두","target":"주머니병","dilution":1000,"doseText":"","phi":null,"phiNote":"개화 전","max":2,"src":"기준","checked":"","was":""},{"id":"일품|복숭아","product":"일품","tree":"복숭아","target":"세균구멍병","dilution":1000,"doseText":"","phi":14,"phiNote":"","max":3,"src":"기준","checked":"","was":""},{"id":"일품|자두","product":"일품","tree":"자두","target":"","dilution":1000,"doseText":"","phi":7,"phiNote":"","max":3,"src":"기준","checked":"","was":""},{"id":"일품|체리","product":"일품","tree":"체리","target":"","dilution":1000,"doseText":"","phi":14,"phiNote":"","max":3,"src":"기준","checked":"","was":""},{"id":"살림꾼|복숭아","product":"살림꾼","tree":"복숭아","target":"탄저병, 잿빛무늬병","dilution":3000,"doseText":"","phi":14,"phiNote":"","max":4,"src":"기준","checked":"","was":""},{"id":"살림꾼|자두","product":"살림꾼","tree":"자두","target":"","dilution":3000,"doseText":"","phi":7,"phiNote":"","max":2,"src":"기준","checked":"","was":""},{"id":"살림꾼|체리","product":"살림꾼","tree":"체리","target":"","dilution":3000,"doseText":"","phi":14,"phiNote":"","max":3,"src":"기준","checked":"","was":""},{"id":"살림꾼|감","product":"살림꾼","tree":"감","target":"","dilution":3000,"doseText":"","phi":14,"phiNote":"","max":4,"src":"기준","checked":"","was":""},{"id":"살림꾼|딸기","product":"살림꾼","tree":"딸기","target":"흰가루병","dilution":3000,"doseText":"","phi":2,"phiNote":"","max":3,"src":"기준","checked":"","was":""},{"id":"살림꾼|백일홍","product":"살림꾼","tree":"백일홍","target":"갈색점무늬병","dilution":null,"doseText":"","phi":null,"phiNote":"","max":null,"src":"기준","checked":"","was":""},{"id":"후론사이드|복숭아","product":"후론사이드","tree":"복숭아","target":"잿빛무늬병, 탄저병, 역병","dilution":null,"doseText":"","phi":14,"phiNote":"","max":4,"src":"기준","checked":"","was":""},{"id":"후론사이드|자두","product":"후론사이드","tree":"자두","target":"","dilution":null,"doseText":"","phi":7,"phiNote":"","max":3,"src":"기준","checked":"","was":""},{"id":"후론사이드|체리","product":"후론사이드","tree":"체리","target":"","dilution":null,"doseText":"","phi":7,"phiNote":"","max":3,"src":"기준","checked":"","was":""},{"id":"후론사이드|감","product":"후론사이드","tree":"감","target":"","dilution":null,"doseText":"","phi":21,"phiNote":"","max":4,"src":"기준","checked":"","was":""},{"id":"후론사이드|사과대추","product":"후론사이드","tree":"사과대추","target":"","dilution":null,"doseText":"","phi":30,"phiNote":"","max":3,"src":"기준","checked":"","was":""}],"mix":[{"a":"델란","b":"라이몬","verdict":"가능","note":"제조사 혼용표에서 확인 (복숭아)","id":"m01"},{"a":"후론사이드","b":"라이몬","verdict":"가능","note":"제조사 혼용표에서 확인","id":"m02"},{"a":"살림꾼","b":"알타코아","verdict":"가능","note":"제조사 혼용표에서 확인","id":"m03"},{"a":"후론사이드","b":"알타코아","verdict":"가능","note":"제조사 혼용표에서 확인","id":"m04"},{"a":"델란","b":"모스피란","verdict":"확인 안 됨","note":"복숭아에서는 확인하지 못함. 따로 뿌리기","id":"m05"},{"a":"일품","b":"살림꾼","verdict":"확인 안 됨","note":"따로 뿌리기","id":"m06"},{"a":"일품","b":"후론사이드","verdict":"확인 안 됨","note":"따로 뿌리기","id":"m07"},{"a":"일품","b":"라이몬","verdict":"확인 안 됨","note":"따로 뿌리기","id":"m08"},{"a":"일품","b":"알타코아","verdict":"확인 안 됨","note":"따로 뿌리기","id":"m09"},{"a":"일품","b":"모스피란","verdict":"확인 안 됨","note":"따로 뿌리기","id":"m10"},{"a":"살림꾼","b":"모스피란","verdict":"확인 안 됨","note":"따로 뿌리기","id":"m11"},{"a":"석회보르도액","b":"*","verdict":"금지","note":"다른 약과 섞지 않고 7일 이상 띄우기","id":"m12"},{"a":"동제","b":"*","verdict":"금지","note":"보르도액 기준을 따름. 다른 약과 섞지 않기","id":"m13"},{"a":"석회유황합제","b":"*","verdict":"금지","note":"다른 약과 섞지 않기. 기계유유제와 2주 이상","id":"m14"},{"a":"기계유유제","b":"*","verdict":"금지","note":"다른 약과 섞지 않기. 석회유황합제와 2주 이상","id":"m15"}],"plan":[{"id":"pe01","tree":"복숭아","kind":"동계","product":"기계유유제","text":"깍지벌레·진딧물 알","note":"영상인 날에. 석회유황합제와 2주 이상 띄우기","s":"12-01","e":"02-28","label":"12월 또는 2월","seq":"","gap":14,"routine":false,"post":false},{"id":"pe02","tree":"복숭아","kind":"관리","product":"","text":"전정, 진 흐르는 가지 제거","note":"","s":"12-01","e":"01-31","label":"12월 ~ 1월","seq":"","gap":0,"routine":false,"post":false},{"id":"pe03","tree":"복숭아","kind":"도포","product":"톱신페스트","text":"진 난 껍질을 긁고 바르기 (수지병)","note":"","s":"01-01","e":"01-31","label":"1월","seq":"","gap":0,"routine":false,"post":false},{"id":"pe04","tree":"복숭아","kind":"동계","product":"석회유황합제","text":"잎오갈병·구멍병 (핵심)","note":"동제(보르도액·코사이드)로 대신할 수 있음. 기계유유제와 2주 이상 띄우기","s":"03-01","e":"03-31","label":"3월, 싹 트기 직전","seq":"","gap":14,"routine":false,"post":false},{"id":"pe05","tree":"복숭아","kind":"주의","product":"","text":"꽃 필 때는 살충제 금지","note":"","s":"04-01","e":"04-30","label":"4월","seq":"","gap":0,"routine":false,"post":false},{"id":"pe06","tree":"복숭아","kind":"살균","product":"델란","text":"구멍병","note":"","s":"04-21","e":"04-30","label":"4월 하순, 꽃잎이 다 진 직후","seq":"1차","gap":0,"routine":false,"post":false},{"id":"pe07","tree":"복숭아","kind":"살충","product":"모스피란","text":"진딧물·순나방","note":"꽃이 남아 있으면 미루기","s":"04-21","e":"04-30","label":"4월 하순, 꽃잎이 다 진 직후","seq":"1차","gap":0,"routine":false,"post":false},{"id":"pe08","tree":"복숭아","kind":"살균","product":"델란","text":"구멍병","note":"","s":"05-01","e":"05-10","label":"5월 상순","seq":"2차","gap":0,"routine":false,"post":false},{"id":"pe09","tree":"복숭아","kind":"살충","product":"라이몬","text":"순나방 애벌레","note":"","s":"05-01","e":"05-10","label":"5월 상순","seq":"2차","gap":0,"routine":false,"post":false},{"id":"pe10","tree":"복숭아","kind":"살균","product":"일품","text":"구멍병","note":"","s":"05-21","e":"05-31","label":"5월 하순, 봉지 씌우기 직전","seq":"3차","gap":0,"routine":false,"post":false},{"id":"pe11","tree":"복숭아","kind":"살균","product":"살림꾼","text":"탄저병","note":"봉지를 씌우면 약이 열매에 닿지 않으니 이 차수는 건너뛰지 않기","s":"05-21","e":"05-31","label":"5월 하순, 봉지 씌우기 직전","seq":"3차","gap":0,"routine":false,"post":false},{"id":"pe12","tree":"복숭아","kind":"살충","product":"모스피란","text":"진딧물이 남았으면","note":"진딧물이 없으면 쉬기","s":"05-21","e":"05-31","label":"5월 하순, 봉지 씌우기 직전","seq":"3차","gap":0,"routine":false,"post":false},{"id":"pe13","tree":"복숭아","kind":"관리","product":"","text":"3차 약이 마르면 열매 솎고 봉지 씌우기","note":"","s":"05-21","e":"05-31","label":"5월 하순","seq":"","gap":0,"routine":false,"post":false},{"id":"pe14","tree":"복숭아","kind":"살균","product":"일품","text":"구멍병","note":"","s":"06-01","e":"06-10","label":"6월 상순","seq":"4차","gap":0,"routine":false,"post":false},{"id":"pe15","tree":"복숭아","kind":"살균","product":"후론사이드","text":"탄저병","note":"","s":"06-01","e":"06-10","label":"6월 상순","seq":"4차","gap":0,"routine":false,"post":false},{"id":"pe16","tree":"복숭아","kind":"살충","product":"라이몬","text":"심식나방","note":"","s":"06-01","e":"06-10","label":"6월 상순","seq":"4차","gap":0,"routine":false,"post":false},{"id":"pe17","tree":"복숭아","kind":"살균","product":"일품","text":"구멍병","note":"","s":"06-21","e":"06-30","label":"6월 하순, 장마 전","seq":"5차","gap":0,"routine":false,"post":false},{"id":"pe18","tree":"복숭아","kind":"살균","product":"살림꾼","text":"탄저병","note":"","s":"06-21","e":"06-30","label":"6월 하순, 장마 전","seq":"5차","gap":0,"routine":false,"post":false},{"id":"pe19","tree":"복숭아","kind":"살충","product":"알타코아","text":"유리나방·심식나방","note":"줄기 밑동과 굵은 가지까지 흠뻑","s":"06-21","e":"06-30","label":"6월 하순, 장마 전","seq":"5차","gap":0,"routine":false,"post":false},{"id":"pe20","tree":"복숭아","kind":"관리","product":"","text":"줄기 진·톱밥 확인, 애벌레 제거","note":"","s":"06-01","e":"06-30","label":"6월","seq":"","gap":0,"routine":true,"post":false},{"id":"pe21","tree":"복숭아","kind":"살균","product":"후론사이드","text":"잿빛무늬병·탄저병","note":"","s":"07-01","e":"07-07","label":"7월 상순, 수확 3주 전","seq":"6차","gap":0,"routine":false,"post":false},{"id":"pe22","tree":"복숭아","kind":"살충","product":"알타코아","text":"봉지를 안 씌웠으면","note":"봉지를 씌웠으면 쉬기","s":"07-01","e":"07-07","label":"7월 상순, 수확 3주 전","seq":"6차","gap":0,"routine":false,"post":false},{"id":"pe23","tree":"복숭아","kind":"주의","product":"","text":"모스피란·라이몬은 수확 21일 전까지만 (6차 날이 마지막)","note":"","s":"07-01","e":"07-31","label":"7월","seq":"","gap":0,"routine":false,"post":false},{"id":"pe24","tree":"복숭아","kind":"살균","product":"살림꾼","text":"잿빛무늬병","note":"살림꾼과 후론사이드는 수확 14일 전까지라 이날로 살균제 끝","s":"07-11","e":"07-14","label":"7월 중순, 수확 2주 전","seq":"7차","gap":0,"routine":false,"post":false},{"id":"pe25","tree":"복숭아","kind":"관리","product":"","text":"낙과·병든 열매 바로 치우기","note":"","s":"07-01","e":"07-31","label":"7월","seq":"","gap":0,"routine":true,"post":false},{"id":"pe26","tree":"복숭아","kind":"관리","product":"","text":"수확","note":"더 늦은 품종이면 계획 시트에서 이 줄의 날짜를 고치고 6차·7차를 수확 3주 전, 2주 전으로 옮기기","s":"07-28","e":"08-10","label":"7월 하순 ~ 8월 상순 (조생종 기준)","seq":"","gap":0,"routine":false,"post":false},{"id":"pe27","tree":"복숭아","kind":"살충","product":"라이몬","text":"흰불나방","note":"한 해 3회까지. 열매가 남아 있으면 수확 21일 전까지만","s":"08-11","e":"08-31","label":"8월, 수확을 마친 뒤","seq":"","gap":0,"routine":false,"post":true},{"id":"pe28","tree":"복숭아","kind":"살충","product":"알타코아","text":"유리나방 2차","note":"줄기에 흠뻑. 열매가 남아 있으면 수확 7일 전까지만","s":"08-11","e":"08-31","label":"8월, 수확을 마친 뒤","seq":"","gap":0,"routine":false,"post":true},{"id":"pe29","tree":"복숭아","kind":"살충","product":"","text":"응애가 보이면 살비제","note":"","s":"08-01","e":"08-31","label":"8월","seq":"","gap":0,"routine":true,"post":false},{"id":"pe30","tree":"복숭아","kind":"살충","product":"모스피란","text":"애매미충","note":"","s":"09-01","e":"09-30","label":"9월","seq":"","gap":0,"routine":false,"post":false},{"id":"pe31","tree":"복숭아","kind":"살균","product":"석회보르도액","text":"구멍병","note":"4-8식·4-12식. 모스피란을 비롯한 다른 약과 7일 이상 띄우고 섞지 않기. 구멍병이 심했으면 10일 간격으로 2~3회","s":"09-21","e":"10-31","label":"9월 하순 ~ 10월","seq":"","gap":7,"routine":false,"post":false},{"id":"pe32","tree":"복숭아","kind":"관리","product":"","text":"떨어진 잎 치우기 (구멍병 월동처)","note":"","s":"10-01","e":"11-30","label":"10월 ~ 11월","seq":"","gap":0,"routine":true,"post":false},{"id":"pe33","tree":"복숭아","kind":"살균","product":"동제","text":"가을에 보르도액을 못 쳤으면","note":"보르도액이나 코사이드","s":"11-01","e":"11-30","label":"11월, 낙엽 직후","seq":"","gap":7,"routine":false,"post":false},{"id":"ch01","tree":"체리","kind":"동계","product":"기계유유제","text":"깍지벌레·응애 알","note":"영상인 날에. 석회유황합제와 2주 이상 띄우기","s":"12-01","e":"02-28","label":"12월 ~ 2월 중","seq":"","gap":14,"routine":false,"post":false},{"id":"ch02","tree":"체리","kind":"관리","product":"","text":"겨울 전정, 진 흐르는 가지 제거","note":"","s":"12-01","e":"01-31","label":"12월 ~ 1월","seq":"","gap":0,"routine":false,"post":false},{"id":"ch03","tree":"체리","kind":"도포","product":"톱신페스트","text":"자른 면과 병든 껍질에 바르기","note":"","s":"01-01","e":"01-31","label":"1월","seq":"","gap":0,"routine":false,"post":false},{"id":"ch04","tree":"체리","kind":"동계","product":"석회유황합제","text":"세균성구멍병","note":"동제(보르도액·코사이드)로 대신할 수 있음. 기계유유제와 2주 이상 띄우기","s":"03-01","e":"03-31","label":"3월, 싹 트기 직전","seq":"","gap":14,"routine":false,"post":false},{"id":"ch05","tree":"체리","kind":"주의","product":"","text":"꽃 필 때는 살충제 쉬기","note":"","s":"04-01","e":"04-30","label":"4월","seq":"","gap":0,"routine":false,"post":false},{"id":"ch06","tree":"체리","kind":"살균","product":"","text":"잿빛무늬병 살균제","note":"","s":"04-15","e":"04-30","label":"4월, 꽃이 진 뒤","seq":"","gap":0,"routine":false,"post":false},{"id":"ch07","tree":"체리","kind":"살충","product":"모스피란","text":"진딧물","note":"","s":"04-15","e":"04-30","label":"4월, 꽃이 진 뒤","seq":"","gap":0,"routine":false,"post":false},{"id":"ch08","tree":"체리","kind":"살균","product":"일품","text":"구멍병","note":"수확 14일 전까지","s":"05-01","e":"05-31","label":"5월, 비 온 뒤","seq":"","gap":0,"routine":false,"post":false},{"id":"ch09","tree":"체리","kind":"살충","product":"라이몬","text":"나방 애벌레","note":"수확 30일 전까지만","s":"05-01","e":"05-31","label":"5월","seq":"","gap":0,"routine":false,"post":false},{"id":"ch10","tree":"체리","kind":"관리","product":"","text":"수확. 익은 열매 바로 따고 낙과 치우기 (초파리)","note":"","s":"06-01","e":"06-30","label":"6월","seq":"","gap":0,"routine":false,"post":false},{"id":"ch11","tree":"체리","kind":"살균","product":"","text":"갈색무늬병 살균제","note":"","s":"06-01","e":"06-30","label":"6월, 수확 뒤","seq":"","gap":0,"routine":false,"post":true},{"id":"ch12","tree":"체리","kind":"살충","product":"","text":"유리나방: 줄기에 등록약 흠뻑","note":"","s":"06-01","e":"06-30","label":"6월, 수확 뒤","seq":"","gap":0,"routine":false,"post":true},{"id":"ch13","tree":"체리","kind":"살균","product":"","text":"갈색무늬병·구멍병 살균제 (조기낙엽 방지)","note":"","s":"07-01","e":"07-31","label":"7월, 장마 전후","seq":"","gap":0,"routine":false,"post":true},{"id":"ch14","tree":"체리","kind":"관리","product":"","text":"줄기 유리나방 확인","note":"","s":"07-01","e":"07-31","label":"7월","seq":"","gap":0,"routine":true,"post":false},{"id":"ch15","tree":"체리","kind":"살균","product":"","text":"조기낙엽 방지 살균제","note":"","s":"08-01","e":"08-31","label":"8월","seq":"","gap":0,"routine":false,"post":true},{"id":"ch16","tree":"체리","kind":"살충","product":"라이몬","text":"흰불나방 2화기","note":"","s":"08-01","e":"08-31","label":"8월","seq":"","gap":0,"routine":false,"post":true},{"id":"ch17","tree":"체리","kind":"살충","product":"","text":"유리나방 2차: 줄기 등록약","note":"","s":"08-01","e":"08-31","label":"8월","seq":"","gap":0,"routine":false,"post":true},{"id":"ch18","tree":"체리","kind":"살충","product":"모스피란","text":"애매미충","note":"","s":"09-01","e":"09-30","label":"9월","seq":"","gap":0,"routine":false,"post":true},{"id":"ch19","tree":"체리","kind":"살충","product":"","text":"응애가 보이면 살비제 (모스피란은 안 들음)","note":"","s":"09-01","e":"09-30","label":"9월","seq":"","gap":0,"routine":true,"post":false},{"id":"ch20","tree":"체리","kind":"주의","product":"","text":"잎을 오래 지키기 (내년 꽃눈 양분)","note":"","s":"10-01","e":"10-31","label":"10월","seq":"","gap":0,"routine":false,"post":false},{"id":"ch21","tree":"체리","kind":"관리","product":"","text":"떨어진 잎 치우기","note":"","s":"10-01","e":"10-31","label":"10월","seq":"","gap":0,"routine":true,"post":false},{"id":"ch22","tree":"체리","kind":"살균","product":"동제","text":"낙엽 직후","note":"보르도액이나 코사이드","s":"11-01","e":"11-30","label":"11월, 낙엽 직후","seq":"","gap":7,"routine":false,"post":false},{"id":"ch23","tree":"체리","kind":"관리","product":"","text":"낙엽 태우거나 버리기","note":"","s":"11-01","e":"11-30","label":"11월","seq":"","gap":0,"routine":true,"post":false},{"id":"pl01","tree":"자두","kind":"동계","product":"기계유유제","text":"","note":"영상인 날에. 석회유황합제와 2주 이상 띄우기","s":"12-01","e":"02-28","label":"12월 ~ 2월 중","seq":"","gap":14,"routine":false,"post":false},{"id":"pl02","tree":"자두","kind":"관리","product":"","text":"전정, 검게 마른 가지 제거","note":"","s":"01-01","e":"01-31","label":"1월","seq":"","gap":0,"routine":false,"post":false},{"id":"pl03","tree":"자두","kind":"도포","product":"톱신페스트","text":"자른 면에 바르기","note":"","s":"01-01","e":"01-31","label":"1월","seq":"","gap":0,"routine":false,"post":false},{"id":"pl04","tree":"자두","kind":"동계","product":"석회유황합제","text":"주머니병 예방 (핵심)","note":"기계유유제와 2주 이상 띄우기","s":"03-01","e":"03-31","label":"3월, 싹 트기 직전","seq":"","gap":14,"routine":false,"post":false},{"id":"pl05","tree":"자두","kind":"살균","product":"","text":"주머니병·잿빛무늬병 살균제","note":"","s":"04-15","e":"04-30","label":"4월, 꽃이 진 뒤","seq":"","gap":0,"routine":false,"post":false},{"id":"pl06","tree":"자두","kind":"살충","product":"모스피란","text":"진딧물","note":"","s":"04-15","e":"04-30","label":"4월, 꽃이 진 뒤","seq":"","gap":0,"routine":false,"post":false},{"id":"pl07","tree":"자두","kind":"살균","product":"일품","text":"구멍병","note":"수확 7일 전까지","s":"05-01","e":"05-31","label":"5월","seq":"","gap":0,"routine":false,"post":false},{"id":"pl08","tree":"자두","kind":"관리","product":"","text":"열매 솎기, 봉지 씌우기","note":"","s":"05-01","e":"05-31","label":"5월","seq":"","gap":0,"routine":false,"post":false},{"id":"pl09","tree":"자두","kind":"살균","product":"","text":"구멍병·검은점무늬병 살균제","note":"","s":"06-01","e":"06-30","label":"6월","seq":"","gap":0,"routine":false,"post":false},{"id":"pl10","tree":"자두","kind":"살충","product":"","text":"심식나방 살충제","note":"","s":"06-01","e":"06-30","label":"6월","seq":"","gap":0,"routine":false,"post":false},{"id":"pl11","tree":"자두","kind":"살충","product":"","text":"유리나방: 줄기 밑동에 등록약","note":"","s":"06-01","e":"06-30","label":"6월","seq":"","gap":0,"routine":false,"post":false},{"id":"pl12","tree":"자두","kind":"관리","product":"","text":"수확. 사용 제한일 확인","note":"","s":"07-01","e":"07-31","label":"7월","seq":"","gap":0,"routine":false,"post":false},{"id":"pl13","tree":"자두","kind":"살균","product":"","text":"잿빛무늬병 살균제","note":"수확 중이니 사용 제한일 확인","s":"07-01","e":"07-31","label":"7월","seq":"","gap":0,"routine":false,"post":false},{"id":"pl14","tree":"자두","kind":"살충","product":"라이몬","text":"흰불나방","note":"","s":"08-01","e":"08-31","label":"8월","seq":"","gap":0,"routine":false,"post":true},{"id":"pl15","tree":"자두","kind":"살충","product":"","text":"응애 관찰","note":"","s":"08-01","e":"08-31","label":"8월","seq":"","gap":0,"routine":true,"post":false},{"id":"pl16","tree":"자두","kind":"살충","product":"모스피란","text":"애매미충·선녀벌레","note":"","s":"09-01","e":"09-30","label":"9월","seq":"","gap":0,"routine":false,"post":true},{"id":"pl17","tree":"자두","kind":"관리","product":"","text":"떨어진 잎 치우기","note":"","s":"10-01","e":"10-31","label":"10월","seq":"","gap":0,"routine":true,"post":false},{"id":"pl18","tree":"자두","kind":"살균","product":"동제","text":"낙엽 직후","note":"보르도액이나 코사이드","s":"11-01","e":"11-30","label":"11월, 낙엽 직후","seq":"","gap":7,"routine":false,"post":false},{"id":"ps01","tree":"감","kind":"관리","product":"","text":"거친 껍질 벗기기 (깍지벌레·노린재 월동처), 전정","note":"","s":"12-01","e":"01-31","label":"12월 ~ 1월","seq":"","gap":0,"routine":false,"post":false},{"id":"ps02","tree":"감","kind":"동계","product":"기계유유제","text":"깍지벌레","note":"영상인 날에. 석회유황합제와 2주 이상 띄우기","s":"02-01","e":"02-28","label":"2월","seq":"","gap":14,"routine":false,"post":false},{"id":"ps03","tree":"감","kind":"동계","product":"석회유황합제","text":"","note":"기계유유제와 2주 이상 띄우기","s":"03-01","e":"03-31","label":"3월, 싹 트기 직전","seq":"","gap":14,"routine":false,"post":false},{"id":"ps04","tree":"감","kind":"관리","product":"","text":"새순 해충 관찰","note":"","s":"04-01","e":"04-30","label":"4월","seq":"","gap":0,"routine":true,"post":false},{"id":"ps05","tree":"감","kind":"살균","product":"","text":"새 가지 탄저병 예방 살균제","note":"","s":"04-01","e":"04-30","label":"4월","seq":"","gap":0,"routine":false,"post":false},{"id":"ps06","tree":"감","kind":"살충","product":"모스피란","text":"깍지벌레 어린벌레가 깨는 때","note":"","s":"05-01","e":"06-30","label":"5월 ~ 6월","seq":"","gap":0,"routine":false,"post":false},{"id":"ps07","tree":"감","kind":"살균","product":"","text":"둥근무늬낙엽병 예방 살균제","note":"","s":"05-21","e":"06-30","label":"5월 하순 ~ 6월","seq":"","gap":0,"routine":false,"post":false},{"id":"ps08","tree":"감","kind":"살충","product":"","text":"감꼭지나방 1화기 살충제","note":"","s":"06-01","e":"06-30","label":"6월","seq":"","gap":0,"routine":false,"post":false},{"id":"ps09","tree":"감","kind":"살균","product":"","text":"탄저병·낙엽병 살균제","note":"","s":"07-01","e":"07-31","label":"7월","seq":"","gap":0,"routine":false,"post":false},{"id":"ps10","tree":"감","kind":"살충","product":"","text":"감꼭지나방 2화기 살충제","note":"","s":"07-01","e":"07-31","label":"7월","seq":"","gap":0,"routine":false,"post":false},{"id":"ps11","tree":"감","kind":"살균","product":"","text":"탄저병 살균제","note":"","s":"08-01","e":"08-31","label":"8월","seq":"","gap":0,"routine":false,"post":false},{"id":"ps12","tree":"감","kind":"살충","product":"","text":"노린재 살충제","note":"","s":"08-01","e":"09-30","label":"8월 ~ 9월","seq":"","gap":0,"routine":false,"post":false},{"id":"ps13","tree":"감","kind":"살충","product":"모스피란","text":"거북밀깍지벌레 어린벌레","note":"","s":"08-01","e":"09-30","label":"8월 ~ 9월","seq":"","gap":0,"routine":false,"post":false},{"id":"ps14","tree":"감","kind":"살충","product":"","text":"선녀벌레 살충제","note":"","s":"09-01","e":"09-30","label":"9월","seq":"","gap":0,"routine":false,"post":false},{"id":"ps15","tree":"감","kind":"관리","product":"","text":"수확. 사용 제한일 확인","note":"","s":"10-01","e":"10-31","label":"10월","seq":"","gap":0,"routine":false,"post":false},{"id":"ps16","tree":"감","kind":"살충","product":"모스피란","text":"깍지벌레가 남았으면","note":"열매를 다 딴 뒤에만","s":"10-01","e":"10-31","label":"10월, 수확을 마친 뒤","seq":"","gap":0,"routine":false,"post":true},{"id":"ps17","tree":"감","kind":"관리","product":"","text":"낙엽 치우기 (낙엽병 월동처)","note":"","s":"11-01","e":"11-30","label":"11월","seq":"","gap":0,"routine":true,"post":false},{"id":"ju01","tree":"사과대추","kind":"관리","product":"","text":"전정, 빗자루병 가지 잘라 태우기","note":"","s":"12-01","e":"01-31","label":"12월 ~ 1월","seq":"","gap":0,"routine":false,"post":false},{"id":"ju02","tree":"사과대추","kind":"동계","product":"기계유유제","text":"깍지벌레·응애","note":"영상인 날에. 석회유황합제와 2주 이상 띄우기","s":"02-01","e":"02-28","label":"2월","seq":"","gap":14,"routine":false,"post":false},{"id":"ju03","tree":"사과대추","kind":"주의","product":"","text":"싹이 늦게 트니 아직 기다리기","note":"","s":"03-01","e":"03-31","label":"3월","seq":"","gap":0,"routine":false,"post":false},{"id":"ju04","tree":"사과대추","kind":"동계","product":"석회유황합제","text":"","note":"기계유유제와 2주 이상 띄우기","s":"04-01","e":"04-30","label":"4월, 싹 트기 직전","seq":"","gap":14,"routine":false,"post":false},{"id":"ju05","tree":"사과대추","kind":"살충","product":"라이몬","text":"잎말이나방","note":"","s":"05-01","e":"05-31","label":"5월","seq":"","gap":0,"routine":false,"post":false},{"id":"ju06","tree":"사과대추","kind":"살충","product":"","text":"진딧물·응애 관찰","note":"","s":"05-01","e":"05-31","label":"5월","seq":"","gap":0,"routine":true,"post":false},{"id":"ju07","tree":"사과대추","kind":"주의","product":"","text":"꽃 필 때는 살충제 쉬기","note":"","s":"06-01","e":"06-30","label":"6월","seq":"","gap":0,"routine":false,"post":false},{"id":"ju08","tree":"사과대추","kind":"관리","product":"","text":"빗자루병이 의심되면 수간주입 상담","note":"","s":"06-01","e":"06-30","label":"6월","seq":"","gap":0,"routine":false,"post":false},{"id":"ju09","tree":"사과대추","kind":"살충","product":"","text":"노린재가 오기 시작하는지 보기","note":"","s":"06-01","e":"06-30","label":"6월","seq":"","gap":0,"routine":true,"post":false},{"id":"ju10","tree":"사과대추","kind":"살균","product":"","text":"탄저병·녹병 살균제","note":"","s":"07-01","e":"07-31","label":"7월","seq":"","gap":0,"routine":false,"post":false},{"id":"ju11","tree":"사과대추","kind":"살충","product":"","text":"노린재 살충제","note":"","s":"07-01","e":"07-31","label":"7월","seq":"","gap":0,"routine":false,"post":false},{"id":"ju12","tree":"사과대추","kind":"살충","product":"","text":"잎말이나방 2화기 살충제","note":"","s":"07-01","e":"07-31","label":"7월","seq":"","gap":0,"routine":false,"post":false},{"id":"ju13","tree":"사과대추","kind":"살균","product":"","text":"열매 탄저병 살균제","note":"","s":"08-01","e":"08-31","label":"8월","seq":"","gap":0,"routine":false,"post":false},{"id":"ju14","tree":"사과대추","kind":"살충","product":"","text":"노린재 살충제","note":"","s":"08-01","e":"08-31","label":"8월","seq":"","gap":0,"routine":false,"post":false},{"id":"ju15","tree":"사과대추","kind":"관리","product":"","text":"수확. 사용 제한일 확인","note":"","s":"09-01","e":"09-30","label":"9월","seq":"","gap":0,"routine":false,"post":false},{"id":"ju16","tree":"사과대추","kind":"살충","product":"","text":"노린재 살충제","note":"수확 중이니 사용 제한일 확인","s":"09-01","e":"09-30","label":"9월","seq":"","gap":0,"routine":false,"post":false},{"id":"ju17","tree":"사과대추","kind":"관리","product":"","text":"수확 뒤 정리","note":"","s":"10-01","e":"10-31","label":"10월","seq":"","gap":0,"routine":false,"post":false},{"id":"ju18","tree":"사과대추","kind":"살충","product":"모스피란","text":"깍지벌레·애매미충","note":"열매를 다 딴 뒤에만","s":"10-01","e":"10-31","label":"10월, 수확을 마친 뒤","seq":"","gap":0,"routine":false,"post":true},{"id":"ju19","tree":"사과대추","kind":"관리","product":"","text":"낙엽 치우기 (녹병 월동처)","note":"","s":"11-01","e":"11-30","label":"11월","seq":"","gap":0,"routine":true,"post":false},{"id":"ju20","tree":"사과대추","kind":"관리","product":"","text":"빗자루병 가지 표시해 두기","note":"","s":"11-01","e":"11-30","label":"11월","seq":"","gap":0,"routine":false,"post":false},{"id":"st01","tree":"딸기","kind":"주의","product":"","text":"월동 중. 덮어 둔 짚·비닐 유지","note":"","s":"12-01","e":"02-28","label":"12월 ~ 2월","seq":"","gap":0,"routine":false,"post":false},{"id":"st02","tree":"딸기","kind":"관리","product":"","text":"마른 잎·병든 잎 따 내기","note":"","s":"03-01","e":"03-31","label":"3월","seq":"","gap":0,"routine":false,"post":false},{"id":"st03","tree":"딸기","kind":"관리","product":"","text":"보름 간격으로 웃거름 2~3회","note":"","s":"03-15","e":"04-30","label":"3월 중순부터","seq":"","gap":0,"routine":false,"post":false},{"id":"st04","tree":"딸기","kind":"살충","product":"모스피란","text":"꽃 피기 전 진딧물","note":"수확 2일 전까지","s":"04-01","e":"04-20","label":"4월, 꽃 피기 전","seq":"","gap":0,"routine":false,"post":false},{"id":"st05","tree":"딸기","kind":"살충","product":"","text":"응애가 보이면 딸기 등록 살비제","note":"","s":"04-01","e":"04-30","label":"4월","seq":"","gap":0,"routine":true,"post":false},{"id":"st06","tree":"딸기","kind":"주의","product":"","text":"꽃이 피면 살충제 금지","note":"","s":"04-01","e":"04-30","label":"4월","seq":"","gap":0,"routine":false,"post":false},{"id":"st07","tree":"딸기","kind":"관리","product":"","text":"열매가 흙에 닿지 않게 짚 깔기","note":"","s":"04-01","e":"04-30","label":"4월","seq":"","gap":0,"routine":false,"post":false},{"id":"st08","tree":"딸기","kind":"관리","product":"","text":"수확. 무르거나 곰팡이 핀 열매는 바로 따서 버리기","note":"","s":"05-15","e":"06-10","label":"5월 중순 ~ 6월 초순","seq":"","gap":0,"routine":false,"post":false},{"id":"st09","tree":"딸기","kind":"살균","product":"살림꾼","text":"흰가루병","note":"수확 2일 전까지","s":"05-01","e":"05-31","label":"5월","seq":"","gap":0,"routine":false,"post":false},{"id":"st10","tree":"딸기","kind":"주의","product":"","text":"약은 수확 2~3일 전 기준인 것만 쓰기","note":"","s":"05-15","e":"06-10","label":"수확하는 동안","seq":"","gap":0,"routine":false,"post":false},{"id":"st11","tree":"딸기","kind":"살충","product":"라이몬","text":"잎 갉는 애벌레","note":"수확 3일 전까지","s":"06-01","e":"06-30","label":"6월","seq":"","gap":0,"routine":false,"post":false},{"id":"st12","tree":"딸기","kind":"관리","product":"","text":"수확이 끝나면 런너 정리","note":"","s":"06-11","e":"06-30","label":"6월 중순부터","seq":"","gap":0,"routine":false,"post":false},{"id":"st13","tree":"딸기","kind":"관리","product":"","text":"장마철 탄저병: 시든 포기는 뽑아 버리기","note":"","s":"07-01","e":"07-31","label":"7월","seq":"","gap":0,"routine":true,"post":false},{"id":"st14","tree":"딸기","kind":"주의","product":"","text":"물은 잎에 뿌리지 말고 포기 밑에","note":"","s":"07-01","e":"07-31","label":"7월","seq":"","gap":0,"routine":false,"post":false},{"id":"st15","tree":"딸기","kind":"관리","product":"","text":"런너에서 새 모종 받기","note":"","s":"08-01","e":"08-31","label":"8월","seq":"","gap":0,"routine":false,"post":false},{"id":"st16","tree":"딸기","kind":"관리","product":"","text":"병든 포기·잎 치우기","note":"","s":"08-01","e":"08-31","label":"8월","seq":"","gap":0,"routine":true,"post":false},{"id":"st17","tree":"딸기","kind":"관리","product":"","text":"모종 심기","note":"","s":"09-15","e":"10-15","label":"9월 중순 ~ 10월 중순","seq":"","gap":0,"routine":false,"post":false},{"id":"st18","tree":"딸기","kind":"살충","product":"모스피란","text":"진딧물이 보이면 지금 낮춰 두기","note":"","s":"10-01","e":"10-31","label":"10월","seq":"","gap":0,"routine":false,"post":false},{"id":"st19","tree":"딸기","kind":"관리","product":"","text":"월동 준비: 짚이나 비닐 덮기","note":"","s":"11-01","e":"11-30","label":"11월","seq":"","gap":0,"routine":false,"post":false},{"id":"my01","tree":"백일홍","kind":"동계","product":"기계유유제","text":"월동하는 주머니깍지벌레 알","note":"영상인 날에. 석회유황합제와 2주 이상 띄우기","s":"12-01","e":"02-28","label":"12월 또는 2월","seq":"","gap":14,"routine":false,"post":false},{"id":"my02","tree":"백일홍","kind":"관리","product":"","text":"전정, 줄기의 하얀 주머니(깍지벌레)를 솔로 문질러 떼기","note":"","s":"12-01","e":"01-31","label":"12월 ~ 1월","seq":"","gap":0,"routine":false,"post":false},{"id":"my03","tree":"백일홍","kind":"관리","product":"","text":"남은 주머니 떼기","note":"","s":"03-01","e":"03-31","label":"3월","seq":"","gap":0,"routine":false,"post":false},{"id":"my04","tree":"백일홍","kind":"주의","product":"","text":"싹이 늦게 트니 기다리기. 새순이 나와도 아직 약 없음","note":"","s":"03-01","e":"04-30","label":"3월 ~ 4월","seq":"","gap":0,"routine":false,"post":false},{"id":"my05","tree":"백일홍","kind":"관리","product":"","text":"새순에 진딧물이 붙는지, 줄기에 개미가 오르내리는지 확인","note":"","s":"05-01","e":"05-31","label":"5월","seq":"","gap":0,"routine":true,"post":false},{"id":"my06","tree":"백일홍","kind":"살충","product":"","text":"주머니깍지벌레: 배롱나무 등록 살충제 1회째","note":"어린벌레가 자리 잡기 전이 적기. 줄기·가지 위주로 흠뻑","s":"06-11","e":"06-20","label":"6월 중순, 알이 깨는 때","seq":"","gap":0,"routine":false,"post":false},{"id":"my07","tree":"백일홍","kind":"살충","product":"","text":"주머니깍지벌레: 배롱나무 등록 살충제 2회째","note":"줄기·가지 위주로 흠뻑","s":"06-21","e":"06-30","label":"1회째에서 10일 뒤","seq":"","gap":0,"routine":false,"post":false},{"id":"my08","tree":"백일홍","kind":"살충","product":"","text":"진딧물이 보이면 살충제","note":"꽃은 피해서 뿌리기","s":"07-01","e":"07-31","label":"7월","seq":"","gap":0,"routine":true,"post":false},{"id":"my09","tree":"백일홍","kind":"살균","product":"살림꾼","text":"잎에 갈색 점이 번지면 (갈색점무늬병)","note":"번지지 않으면 쉬기","s":"07-01","e":"07-31","label":"7월","seq":"","gap":0,"routine":false,"post":false},{"id":"my10","tree":"백일홍","kind":"살충","product":"","text":"주머니깍지벌레: 살충제 1회째","note":"꽃은 피해서 줄기 위주","s":"08-21","e":"08-31","label":"8월 하순, 두 번째로 알이 깨는 때","seq":"","gap":0,"routine":false,"post":false},{"id":"my11","tree":"백일홍","kind":"관리","product":"","text":"검은 그을음은 호스 물로 씻어 내기","note":"","s":"08-01","e":"08-31","label":"8월","seq":"","gap":0,"routine":true,"post":false},{"id":"my12","tree":"백일홍","kind":"살충","product":"","text":"주머니깍지벌레: 살충제 2회째","note":"","s":"09-01","e":"09-10","label":"9월 초순, 8월 하순에서 10일 뒤","seq":"","gap":0,"routine":false,"post":false},{"id":"my13","tree":"백일홍","kind":"주의","product":"","text":"벌레가 줄면 그을음은 비에 서서히 벗겨짐","note":"","s":"09-01","e":"09-30","label":"9월","seq":"","gap":0,"routine":false,"post":false},{"id":"my14","tree":"백일홍","kind":"관리","product":"","text":"떨어진 잎 치우기","note":"","s":"10-01","e":"10-31","label":"10월","seq":"","gap":0,"routine":true,"post":false},{"id":"my15","tree":"백일홍","kind":"관리","product":"","text":"낙엽 뒤 줄기의 주머니 확인","note":"","s":"11-01","e":"11-30","label":"11월","seq":"","gap":0,"routine":false,"post":false}],"kit":[{"id":"k1","name":"모스피란","ingredient":"아세타미프리드","content":"8%","form":"수화제","unit":"","covers":"","status":"확인 전","checked":"","label":null,"added":"2026-10-05"},{"id":"k2","name":"라이몬","ingredient":"노발루론","content":"10%","form":"액상수화제","unit":"","covers":"","status":"확인 전","checked":"","label":null,"added":"2026-10-05"}],"photos":[],"logs":[],"checks":[]};
+</script>
+<script>
+(function (root) {
+'use strict';
+var L = {};
+var DAY = 86400000;
+var SPRAY = { '살균': 1, '살충': 1, '동계': 1 };
+
+function pad(n) { return (n < 10 ? '0' : '') + n; }
+function trim(s) { return String(s == null ? '' : s).trim(); }
+function num(v) {
+  if (v === null || v === undefined || v === '') return null;
+  var n = Number(String(v).replace(/,/g, ''));
+  return isFinite(n) ? n : null;
+}
+function list(v) {
+  if (Array.isArray(v)) return v;
+  if (!v) return [];
+  return String(v).split(',').map(trim).filter(Boolean);
+}
+function bool(v) { return v === true || /^(true|1|y|yes|예)$/i.test(trim(v)); }
+function obj(v) {
+  if (v && typeof v === 'object') return v;
+  if (!v) return null;
+  try { return JSON.parse(v); } catch (e) { return null; }
+}
+
+L.pad = pad;
+L.num = num;
+L.list = list;
+
+L.dn = function (y, m, d) { return Math.round(Date.UTC(y, m - 1, d) / DAY); };
+L.fromDn = function (n) {
+  var t = new Date(n * DAY);
+  return { y: t.getUTCFullYear(), m: t.getUTCMonth() + 1, d: t.getUTCDate() };
+};
+L.isoToDn = function (s) {
+  var p = String(s || '').split(/[^0-9]+/).filter(Boolean);
+  if (p.length < 3) return null;
+  return L.dn(+p[0], +p[1], +p[2]);
+};
+L.dnToIso = function (n) { var o = L.fromDn(n); return o.y + '-' + pad(o.m) + '-' + pad(o.d); };
+L.todayDn = function (now) {
+  now = now || new Date();
+  return L.dn(now.getFullYear(), now.getMonth() + 1, now.getDate());
+};
+L.monthLen = function (y, m) { return new Date(Date.UTC(y, m, 0)).getUTCDate(); };
+L.md = function (n) { var o = L.fromDn(n); return o.m + '월 ' + o.d + '일'; };
+L.uid = function (prefix) {
+  return (prefix || 'x') + Date.now().toString(36) + Math.floor(Math.random() * 46656).toString(36);
+};
+
+L.normalize = function (raw) {
+  var t = raw || {};
+  function rows(k) { return Array.isArray(t[k]) ? t[k] : []; }
+  return {
+    trees: rows('trees').filter(function (r) { return trim(r.name); }).map(function (r) {
+      var al = list(r.aliases);
+      if (al.indexOf(trim(r.name)) < 0) al.push(trim(r.name));
+      return { name: trim(r.name), aliases: al };
+    }),
+    products: rows('products').filter(function (r) { return trim(r.name); }).map(function (r) {
+      return {
+        name: trim(r.name), kind: trim(r.kind), ingredient: trim(r.ingredient), content: trim(r.content),
+        form: trim(r.form), group: trim(r.group), unit: trim(r.unit), gap: num(r.gap) || 0,
+        match: list(r.match), note: trim(r.note), source: trim(r.source)
+      };
+    }),
+    doses: rows('doses').filter(function (r) { return trim(r.product) && trim(r.tree); }).map(function (r) {
+      return {
+        id: trim(r.id) || (trim(r.product) + '|' + trim(r.tree)),
+        product: trim(r.product), tree: trim(r.tree), target: trim(r.target), dilution: num(r.dilution),
+        doseText: trim(r.doseText), phi: num(r.phi), phiNote: trim(r.phiNote), max: num(r.max),
+        src: trim(r.src) || '기준', checked: trim(r.checked), was: trim(r.was)
+      };
+    }),
+    mix: rows('mix').filter(function (r) { return trim(r.a); }).map(function (r, i) {
+      return { id: trim(r.id) || ('m' + i), a: trim(r.a), b: trim(r.b), verdict: trim(r.verdict), note: trim(r.note) };
+    }),
+    plan: rows('plan').filter(function (r) { return trim(r.id) && trim(r.tree); }).map(function (r) {
+      return {
+        id: trim(r.id), tree: trim(r.tree), kind: trim(r.kind), product: trim(r.product), text: trim(r.text),
+        note: trim(r.note), s: trim(r.s), e: trim(r.e), label: trim(r.label), seq: trim(r.seq),
+        gap: num(r.gap) || 0, routine: bool(r.routine), post: bool(r.post)
+      };
+    }),
+    kit: rows('kit').filter(function (r) { return trim(r.id) && trim(r.name); }).map(function (r) {
+      return {
+        id: trim(r.id), name: trim(r.name), ingredient: trim(r.ingredient), content: trim(r.content),
+        form: trim(r.form), unit: trim(r.unit), covers: trim(r.covers), status: trim(r.status) || '확인 전',
+        checked: trim(r.checked), label: obj(r.label), added: trim(r.added)
+      };
+    }),
+    photos: rows('photos').filter(function (r) { return trim(r.id); }).map(function (r) {
+      return { id: trim(r.id), kitId: trim(r.kitId), fileId: trim(r.fileId), thumb: trim(r.thumb), added: trim(r.added) };
+    }),
+    logs: rows('logs').filter(function (r) { return trim(r.id) && trim(r.date); }).map(function (r) {
+      return {
+        id: trim(r.id), date: trim(r.date), tree: trim(r.tree), product: trim(r.product), base: trim(r.base),
+        water: num(r.water), key: trim(r.key), memo: trim(r.memo), created: trim(r.created)
+      };
+    }),
+    checks: rows('checks').filter(function (r) { return trim(r.id); }).map(function (r) {
+      return { id: trim(r.id), date: trim(r.date) };
+    })
+  };
+};
+
+L.applyOps = function (raw, ops) {
+  var out = {};
+  Object.keys(raw).forEach(function (k) { out[k] = Array.isArray(raw[k]) ? raw[k].slice() : raw[k]; });
+  var KEY = { trees: 'name', products: 'name' };
+  ops.forEach(function (op) {
+    var key = KEY[op.table] || 'id';
+    var arr = (out[op.table] || []).slice();
+    var id = op.type === 'del' ? op.id : op.row[key];
+    var at = -1;
+    arr.forEach(function (r, i) { if (String(r[key]) === String(id)) at = i; });
+    if (op.type === 'del') { if (at >= 0) arr.splice(at, 1); }
+    else if (at >= 0) { arr[at] = Object.assign({}, arr[at], op.row); }
+    else { arr.push(op.row); }
+    out[op.table] = arr;
+  });
+  return out;
+};
+
+L.norm = function (s) { return String(s == null ? '' : s).toLowerCase().replace(/[\s\-·.,()\[\]\/]/g, ''); };
+L.pct = function (s) { var m = String(s || '').match(/\d+(?:\.\d+)?/); return m ? parseFloat(m[0]) : null; };
+
+function sameIngredient(a, b) {
+  a = L.norm(a); b = L.norm(b);
+  if (!a || !b) return false;
+  if (a === b) return true;
+  if (a.length >= 4 && b.length >= 4 && (a.indexOf(b) >= 0 || b.indexOf(a) >= 0)) return true;
+  return false;
+}
+
+L.matchKit = function (k, products) {
+  var out = [];
+  var manual = trim(k.covers);
+  var kn = L.norm(k.name);
+  if (manual && manual !== '-') {
+    list(manual).forEach(function (name) {
+      var p = products.filter(function (x) { return x.name === name; })[0];
+      if (p) out.push({ product: p.name, type: L.norm(p.name) === kn ? 'same' : 'alt', manual: true });
+    });
+    return out;
+  }
+  products.forEach(function (p) {
+    if (L.norm(p.name) === kn) { out.push({ product: p.name, type: 'same' }); return; }
+    if (manual === '-') return;
+    var ki = L.norm(k.ingredient);
+    var kw = p.match.some(function (w) { w = L.norm(w); return w && (kn.indexOf(w) >= 0 || ki.indexOf(w) >= 0); });
+    if (kw) { out.push({ product: p.name, type: 'alt' }); return; }
+    if (p.match.length === 0 && sameIngredient(p.ingredient, k.ingredient)) {
+      var samePct = L.pct(p.content) !== null && L.pct(p.content) === L.pct(k.content);
+      var sameForm = !!L.norm(p.form) && L.norm(p.form) === L.norm(k.form);
+      out.push({ product: p.name, type: samePct && sameForm ? 'alt' : 'similar' });
+    }
+  });
+  return out;
+};
+
+L.buildOwn = function (data) {
+  var own = {};
+  var similar = {};
+  var rank = { same: 2, alt: 1 };
+  data.kit.forEach(function (k) {
+    L.matchKit(k, data.products).forEach(function (m) {
+      if (m.type === 'similar') { (similar[m.product] = similar[m.product] || []).push(k); return; }
+      var cur = own[m.product];
+      if (!cur || rank[m.type] > rank[cur.type]) own[m.product] = { kit: k, type: m.type };
+    });
+  });
+  return { own: own, similar: similar };
+};
+
+L.resolve = function (ctx, product) {
+  if (!product) return { plan: '', name: '', state: 'none', kit: null };
+  var r = ctx.own[product];
+  if (!r) return { plan: product, name: product, state: 'buy', kit: null, similar: ctx.similar[product] || [] };
+  return { plan: product, name: r.kit.name, state: r.type === 'same' ? 'own' : 'alt', kit: r.kit, similar: [] };
+};
+
+L.canonical = function (data, name) {
+  if (!name) return '';
+  if (data.products.some(function (p) { return p.name === name; })) return name;
+  var k = data.kit.filter(function (x) { return x.name === name; })[0];
+  if (k) {
+    var m = L.matchKit(k, data.products);
+    if (m.length) return m[0].product;
+  }
+  return name;
+};
+
+L.productOf = function (data, name) {
+  return data.products.filter(function (p) { return p.name === name; })[0] || null;
+};
+
+L.doseRow = function (data, tree, names) {
+  for (var i = 0; i < names.length; i++) {
+    if (!names[i]) continue;
+    for (var j = 0; j < data.doses.length; j++) {
+      var d = data.doses[j];
+      if (d.tree === tree && d.product === names[i]) return d;
+    }
+  }
+  return null;
+};
+
+L.fmtAmount = function (v) {
+  if (v >= 100) return String(Math.round(v));
+  var r = Math.round(v * 10) / 10;
+  return (r % 1 === 0) ? String(r) : r.toFixed(1);
+};
+L.fmtNum = function (n) { return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ','); };
+
+L.doseInfo = function (data, ctx, product, tree, water) {
+  var res = L.resolve(ctx, product);
+  var p = L.productOf(data, product);
+  var row = L.doseRow(data, tree, [res.kit ? res.kit.name : '', product]);
+  var unit = (res.kit && res.kit.unit) || (p && p.unit) || '';
+  var w = water || 20;
+  var line = '';
+  if (row && row.dilution) {
+    var amt = w * 1000 / row.dilution;
+    var exact = Math.abs(amt * 10 - Math.round(amt * 10)) < 1e-9;
+    line = '물 ' + w + 'L에 ' + (exact ? '' : '약 ') + L.fmtAmount(amt) + (unit || '') + ' (' + L.fmtNum(row.dilution) + '배)';
+  } else if (row && row.doseText) {
+    line = row.doseText;
+  } else if (p && SPRAY[p.kind]) {
+    line = '용량은 라벨 확인';
+  }
+  return { row: row, unit: unit, line: line, fromLabel: !!(row && row.src === '라벨') };
+};
+
+function mdParse(s) {
+  var p = String(s || '').split(/[^0-9]+/).filter(Boolean);
+  if (p.length < 2) return null;
+  var m = +p[p.length - 2], d = +p[p.length - 1];
+  if (!(m >= 1 && m <= 12 && d >= 1 && d <= 31)) return null;
+  return { m: m, d: d };
+}
+
+L.window = function (t, season) {
+  var s = mdParse(t.s), e = mdParse(t.e);
+  if (!s || !e) return null;
+  var a = L.dn(season, s.m, Math.min(s.d, L.monthLen(season, s.m)));
+  var wrap = (e.m < s.m) || (e.m === s.m && e.d < s.d);
+  var ey = wrap ? season + 1 : season;
+  var ed = (e.m === 2 && e.d >= 28) ? L.monthLen(ey, 2) : Math.min(e.d, L.monthLen(ey, e.m));
+  return { a: a, b: L.dn(ey, e.m, ed) };
+};
+
+L.occurrences = function (plan, y, m) {
+  var ms = L.dn(y, m, 1), me = L.dn(y, m, L.monthLen(y, m));
+  var out = [];
+  plan.forEach(function (t) {
+    [y - 1, y].forEach(function (season) {
+      var w = L.window(t, season);
+      if (!w || w.b < ms || w.a > me) return;
+      out.push({ task: t, season: season, key: season + ':' + t.id, a: w.a, b: w.b });
+    });
+  });
+  return out;
+};
+
+function isSpray(t) { return !!SPRAY[t.kind]; }
+function gapBetween(x, y) {
+  if (x.tree !== y.tree || !isSpray(x) || !isSpray(y)) return 0;
+  if (x.product && x.product === y.product) return 0;
+  return Math.max(x.gap || 0, y.gap || 0);
+}
+
+L.isHarvest = function (t) { return t.kind === '관리' && /^수확(\.|$)/.test(t.text); };
+
+L.nextHarvest = function (data, tree, afterDn) {
+  var o = L.fromDn(afterDn), best = null;
+  [o.y - 1, o.y, o.y + 1].forEach(function (season) {
+    data.plan.forEach(function (t) {
+      if (t.tree !== tree || !L.isHarvest(t)) return;
+      var w = L.window(t, season);
+      if (!w || w.a <= afterDn || w.a - afterDn > 150) return;
+      if (best === null || w.a < best) best = w.a;
+    });
+  });
+  return best;
+};
+
+L.harvestOpen = function (data, tree, lo, hi) {
+  var o = L.fromDn(lo), hit = false;
+  [o.y - 1, o.y].forEach(function (season) {
+    data.plan.forEach(function (t) {
+      if (t.tree !== tree || !L.isHarvest(t)) return;
+      var w = L.window(t, season);
+      if (w && w.a <= lo && w.b >= lo) hit = true;
+    });
+  });
+  return hit;
+};
+
+L.taskOfKey = function (data, key) {
+  var id = String(key || '').split(':')[1] || '';
+  return data.plan.filter(function (t) { return t.id === id; })[0] || null;
+};
+
+L.treeOrder = function (data) {
+  var o = {};
+  data.trees.forEach(function (t, i) { o[t.name] = i; });
+  return o;
+};
+
+L.monthPlan = function (data, ctx, today, y, m) {
+  var ms = L.dn(y, m, 1), me = L.dn(y, m, L.monthLen(y, m));
+  var isCurrent = today >= ms && today <= me;
+  var from = isCurrent ? today : ms;
+  var checks = {};
+  data.checks.forEach(function (c) { checks[c.id] = c.date || 'done'; });
+  var order = L.treeOrder(data);
+  var res = { visits: [], routine: [], notices: [], skip: [], overdue: [], done: [], later: [], ms: ms, me: me, isCurrent: isCurrent };
+  var pend = [];
+  var gapOf = {};
+  data.products.forEach(function (p) { gapOf[p.name] = p.gap || 0; });
+  var logs = data.logs.map(function (g) {
+    return { dn: L.isoToDn(g.date), tree: g.tree, base: g.base || L.canonical(data, g.product), product: g.product };
+  }).filter(function (g) { return g.dn !== null; });
+
+  L.occurrences(data.plan, y, m).forEach(function (o) {
+    o.doneDate = checks[o.key] || '';
+    if (o.task.kind === '주의') { res.notices.push(o); return; }
+    if (o.task.routine) { res.routine.push(o); return; }
+    if (o.doneDate) { res.done.push(o); return; }
+    if (o.b < from) { res.overdue.push(o); return; }
+    o.lo = Math.max(o.a, from);
+    o.hi = Math.min(o.b, me);
+    o.defer = o.b > me;
+    o.wait = null;
+    if (isSpray(o.task) && o.task.product && !o.task.post) {
+      var own0 = ctx.own[o.task.product];
+      var drow = L.doseRow(data, o.task.tree, [own0 ? own0.kit.name : '', o.task.product]);
+      if (drow && drow.phi !== null && drow.phi >= 7) {
+        o.inHarvest = L.harvestOpen(data, o.task.tree, o.lo, o.hi);
+        o.phiDays = drow.phi;
+        var hs = L.nextHarvest(data, o.task.tree, o.a);
+        if (hs !== null && hs - drow.phi < o.b) {
+          o.phiCap = hs - drow.phi; o.harvestAt = hs; o.phiDays = drow.phi;
+          if (o.phiCap - o.lo + 1 < 5) { o.phiPast = o.phiCap < from; res.skip.push(o); return; }
+          o.hi = Math.min(o.hi, o.phiCap);
+          if (o.phiCap <= me) o.defer = false;
+        }
+      }
+    }
+    if (isSpray(o.task)) {
+      logs.forEach(function (g) {
+        if (g.tree !== o.task.tree) return;
+        if (o.task.product && g.base === o.task.product) return;
+        var gap = Math.max(o.task.gap || 0, gapOf[g.base] || 0);
+        if (!gap) return;
+        if (g.dn > o.b || g.dn < o.lo - gap) return;
+        var need = g.dn + gap;
+        if (need > o.lo) { o.lo = need; o.wait = { until: need, product: g.product, date: g.dn, gap: gap }; }
+      });
+    }
+    if (o.lo > o.hi) {
+      if (o.b >= o.lo) { o.defer = true; res.later.push(o); return; }
+      o.hi = o.lo; o.tight = true;
+      if (o.lo > me) { res.later.push(o); return; }
+    }
+    pend.push(o);
+  });
+
+  pend.forEach(function (x) {
+    pend.forEach(function (yy) {
+      if (x === yy) return;
+      var g = gapBetween(x.task, yy.task);
+      if (!g) return;
+      if (yy.b > x.b || (yy.b === x.b && (yy.task.gap || 0) > (x.task.gap || 0))) {
+        var cap = Math.min(yy.b, me + 31) - g;
+        if (cap >= x.lo && cap < x.hi) { x.hi = cap; x.capped = true; }
+      }
+    });
+  });
+
+  var must = pend.filter(function (o) { return !o.defer; });
+  var opt = pend.filter(function (o) { return o.defer; });
+  must.sort(function (p, q) { return (p.hi - q.hi) || (q.lo - p.lo); });
+  var visits = [];
+  must.forEach(function (o) {
+    var lo = o.lo;
+    var pushedBy = null;
+    visits.forEach(function (v) {
+      v.items.forEach(function (it) {
+        var g = gapBetween(o.task, it.task);
+        if (g && v.lo + g > lo) { lo = v.lo + g; pushedBy = v; o.gapDays = g; }
+      });
+    });
+    var hi = o.hi;
+    if (lo > hi) {
+      if (o.b >= lo && lo <= me) { hi = Math.min(o.b, me); }
+      else if (lo > me) { o.defer = true; o.pushed = true; res.later.push(o); return; }
+      else { hi = lo; o.tight = true; }
+    }
+    var home = null, bestSpan = -1, homeFree = false;
+    visits.forEach(function (v) {
+      var clash = v.items.some(function (it) { return gapBetween(o.task, it.task) > 0; });
+      if (clash) return;
+      var nl = Math.max(v.lo, lo), nh = Math.min(v.hi, hi);
+      if (nl > nh) return;
+      var span = nh - nl + 1;
+      var free = nl === v.lo && nh === v.hi;
+      if (!free && span < Math.min(5, hi - lo + 1, v.hi - v.lo + 1)) return;
+      if (free) {
+        if (!homeFree || v.lo < home.lo) { home = v; homeFree = true; }
+      } else if (!homeFree && span > bestSpan) { home = v; bestSpan = span; }
+    });
+    if (home) {
+      home.lo = Math.max(home.lo, lo);
+      home.hi = Math.min(home.hi, hi);
+      home.items.push(o);
+      if (pushedBy && !home.after) { home.after = pushedBy; home.gapDays = o.gapDays; }
+    } else {
+      visits.push({ lo: lo, hi: hi, items: [o], after: pushedBy, gapDays: pushedBy ? o.gapDays : 0 });
+    }
+  });
+  visits.sort(function (p, q) { return (p.lo - q.lo) || (p.hi - q.hi); });
+  visits.forEach(function (v) {
+    if (v.after && v.after.hi >= v.lo && v.lo - 1 >= v.after.lo) v.after.hi = v.lo - 1;
+  });
+  opt.forEach(function (o) {
+    var home = null;
+    for (var i = 0; i < visits.length && !home; i++) {
+      var v = visits[i];
+      var clash = v.items.some(function (it) { return gapBetween(o.task, it.task) > 0; });
+      if (!clash && o.lo <= v.lo && o.hi >= v.hi) home = v;
+    }
+    if (home) home.items.push(o); else res.later.push(o);
+  });
+  function byTree(p, q) {
+    return ((order[p.task.tree] || 0) - (order[q.task.tree] || 0)) || (p.a - q.a) || (p.task.id < q.task.id ? -1 : 1);
+  }
+  visits.forEach(function (v, i) { v.items.sort(byTree); v.n = i + 1; });
+  ['routine', 'notices', 'skip', 'overdue', 'done', 'later'].forEach(function (k) { res[k].sort(byTree); });
+  res.visits = visits;
+
+  var active = [];
+  visits.forEach(function (v) { v.items.forEach(function (o) { active.push(o); }); });
+  var prodSeen = {}, prods = [];
+  active.concat(res.later, res.overdue).forEach(function (o) {
+    var p = o.task.product;
+    if (!p || prodSeen[p]) return;
+    prodSeen[p] = 1;
+    prods.push(L.resolve(ctx, p));
+  });
+  var rk = { own: 0, alt: 0, buy: 1 };
+  prods.sort(function (p, q) { return rk[p.state] - rk[q.state]; });
+  res.products = prods;
+  res.taskCount = active.length;
+  res.buyCount = prods.filter(function (p) { return p.state === 'buy'; }).length;
+  return res;
+};
+
+L.groupByTree = function (items) {
+  var out = [], idx = {};
+  items.forEach(function (o) {
+    var t = o.task.tree;
+    if (idx[t] === undefined) { idx[t] = out.length; out.push({ tree: t, items: [] }); }
+    out[idx[t]].items.push(o);
+  });
+  return out;
+};
+
+L.groupRoutine = function (items) {
+  var out = [], idx = {};
+  items.forEach(function (o) {
+    var k = o.task.text;
+    if (idx[k] === undefined) { idx[k] = out.length; out.push({ text: k, trees: [] }); }
+    if (out[idx[k]].trees.indexOf(o.task.tree) < 0) out[idx[k]].trees.push(o.task.tree);
+  });
+  return out;
+};
+
+L.mixVerdict = function (data, a, b) {
+  if (a === b) return null;
+  var hit = null;
+  data.mix.forEach(function (r) {
+    if ((r.a === a && r.b === b) || (r.a === b && r.b === a)) hit = r;
+  });
+  if (hit) return hit;
+  data.mix.forEach(function (r) {
+    if (!hit && r.b === '*' && (r.a === a || r.a === b)) hit = r;
+  });
+  if (hit) return hit;
+  return { a: a, b: b, verdict: '확인 안 됨', note: '라벨의 혼용표 확인. 모르면 따로 뿌리기' };
+};
+
+L.mixLines = function (data, ctx, items) {
+  var names = [];
+  items.forEach(function (o) {
+    if (isSpray(o.task) && o.task.product && !o.doneDate && names.indexOf(o.task.product) < 0) names.push(o.task.product);
+  });
+  var out = [];
+  for (var i = 0; i < names.length; i++) {
+    for (var j = i + 1; j < names.length; j++) {
+      var v = L.mixVerdict(data, names[i], names[j]);
+      if (v) out.push({ a: L.resolve(ctx, names[i]).name, b: L.resolve(ctx, names[j]).name, verdict: v.verdict, note: v.note });
+    }
+  }
+  return out;
+};
+
+L.usage = function (data, tree, base, year) {
+  var n = 0;
+  data.logs.forEach(function (g) {
+    if (g.tree !== tree) return;
+    if ((g.base || L.canonical(data, g.product)) !== base) return;
+    if (String(g.date).slice(0, 4) !== String(year)) return;
+    n++;
+  });
+  return n;
+};
+
+L.upcoming = function (data, today, months) {
+  var o = L.fromDn(today);
+  var seen = {}, out = [];
+  for (var i = 0; i < (months || 12); i++) {
+    var y = o.y + Math.floor((o.m - 1 + i) / 12), m = (o.m - 1 + i) % 12 + 1;
+    L.occurrences(data.plan, y, m).forEach(function (oc) {
+      if (seen[oc.key] || oc.b < today) return;
+      seen[oc.key] = 1;
+      out.push(oc);
+    });
+  }
+  out.sort(function (p, q) { return (p.a - q.a) || (p.b - q.b); });
+  return out;
+};
+
+L.monthList = function (today, count) {
+  var o = L.fromDn(today), out = [];
+  for (var i = 0; i < (count || 12); i++) {
+    out.push({ y: o.y + Math.floor((o.m - 1 + i) / 12), m: (o.m - 1 + i) % 12 + 1 });
+  }
+  return out;
+};
+
+L.nextUse = function (data, today) {
+  var map = {};
+  L.upcoming(data, today, 12).forEach(function (oc) {
+    var p = oc.task.product;
+    if (!p) return;
+    if (!map[p]) {
+      var st = L.fromDn(Math.max(oc.a, today)), now = L.fromDn(today);
+      map[p] = { a: oc.a, label: oc.task.label, when: (st.y !== now.y ? '내년 ' : '') + st.m + '월', trees: [] };
+    }
+    if (oc.a <= map[p].a + 31 && map[p].trees.indexOf(oc.task.tree) < 0) map[p].trees.push(oc.task.tree);
+  });
+  return map;
+};
+
+L.kitView = function (data, ctx, today) {
+  var next = L.nextUse(data, today);
+  var photoCount = {};
+  data.photos.forEach(function (p) { photoCount[p.kitId] = (photoCount[p.kitId] || 0) + 1; });
+  var owned = data.kit.map(function (k) {
+    var ms = L.matchKit(k, data.products);
+    var used = ms.filter(function (x) { return x.type !== 'similar'; });
+    var sim = ms.filter(function (x) { return x.type === 'similar'; });
+    var alt = used.some(function (x) { return x.type === 'alt'; });
+    var use = '';
+    if (alt) use = '계획의 ' + used.map(function (x) { return x.product; }).join(', ') + ' 대신 들어감';
+    else if (used.length && next[used[0].product]) use = '다음 사용: ' + next[used[0].product].when + ' · ' + next[used[0].product].trees.join(', ');
+    else if (sim.length) use = L.josa(sim[0].product, '과', '와') + ' 성분이 같지만 함량이나 제형이 다름. 라벨로 용량 확인 필요';
+    else if (!used.length) use = '지금 계획에는 쓰이지 않음';
+    var meta = [k.ingredient, k.content, k.form].filter(Boolean).join(' · ');
+    var n = photoCount[k.id] || 0;
+    var checked = (n ? '사진 ' + n + '장' : '사진 없음') + ' · ' + (k.status === '확인함' ? '용량과 용법 확인함' : '확인 전');
+    return { kit: k, alt: alt, similar: sim.length > 0 && !used.length, use: use, meta: meta, checked: checked, photos: n };
+  });
+  var need = data.products.filter(function (p) { return !ctx.own[p.name] && next[p.name]; }).map(function (p) {
+    var nx = next[p.name];
+    return {
+      product: p,
+      meta: [p.kind, p.ingredient !== p.name ? p.ingredient : ''].filter(Boolean).join(' · '),
+      use: '다음 사용: ' + nx.when + ' · ' + nx.trees.join(', '),
+      a: nx.a,
+      similar: (ctx.similar[p.name] || []).map(function (k) { return k.name; })
+    };
+  });
+  need.sort(function (p, q) { return p.a - q.a; });
+  return { owned: owned, need: need };
+};
+
+L.treeOfCrop = function (trees, crop) {
+  var raw = String(crop || '');
+  var parts = [raw.replace(/\(.*?\)/g, '')].concat((raw.match(/\((.*?)\)/g) || []).map(function (s) { return s.slice(1, -1); }));
+  var cands = [];
+  parts.forEach(function (p) { p.split(/[,·\/]/).forEach(function (q) { if (L.norm(q)) cands.push(L.norm(q)); }); });
+  for (var i = 0; i < trees.length; i++) {
+    for (var j = 0; j < trees[i].aliases.length; j++) {
+      if (cands.indexOf(L.norm(trees[i].aliases[j])) >= 0) return trees[i].name;
+    }
+  }
+  return '';
+};
+
+function mergeRows(rows) {
+  if (!rows.length) return null;
+  var out = { target: [], dilution: null, doseText: '', phi: null, max: null, phiNote: '', source: '' };
+  rows.forEach(function (r) {
+    var t = trim(r.target);
+    if (t && out.target.indexOf(t) < 0) out.target.push(t);
+    var d = num(r.dilution), p = num(r.phi), mx = num(r.max);
+    if (d !== null && out.dilution === null) out.dilution = d;
+    if (!out.doseText && trim(r.doseText)) out.doseText = trim(r.doseText);
+    if (p !== null) out.phi = out.phi === null ? p : Math.max(out.phi, p);
+    if (mx !== null) out.max = out.max === null ? mx : Math.min(out.max, mx);
+    if (!out.phiNote && trim(r.phiText) && p === null) out.phiNote = trim(r.phiText);
+    if (!out.source && trim(r.source)) out.source = trim(r.source);
+  });
+  out.target = out.target.join(', ');
+  return out;
+}
+
+function verdict(lab, base) {
+  if (lab === null || lab === undefined) return (base === null || base === undefined) ? 'none' : 'keep';
+  if (base === null || base === undefined) return 'new';
+  return lab === base ? 'same' : 'diff';
+}
+L.verdict = verdict;
+
+L.compareLabel = function (data, label, search) {
+  label = label || {};
+  var ident = { name: trim(label.name), ingredient: trim(label.ingredient), content: trim(label.content), form: trim(label.form), covers: '' };
+  var matches = L.matchKit(ident, data.products);
+  var base = matches.length ? matches[0].product : '';
+  var rows = [];
+  data.trees.forEach(function (t) {
+    var lab = mergeRows((label.rows || []).filter(function (r) { return L.treeOfCrop(data.trees, r.crop) === t.name; }));
+    var sr = mergeRows(((search && search.rows) || []).filter(function (r) { return L.treeOfCrop(data.trees, r.crop) === t.name; }));
+    var bs = null;
+    if (base) {
+      data.doses.forEach(function (d) { if (d.product === base && d.tree === t.name) bs = d; });
+    }
+    if (!lab && !bs && !sr) return;
+    rows.push({
+      tree: t.name,
+      onLabel: !!lab,
+      target: (lab && lab.target) || (bs && bs.target) || (sr && sr.target) || '',
+      doseText: (lab && lab.doseText) || '',
+      phiNote: (lab && lab.phiNote) || '',
+      dilution: lab ? lab.dilution : null, phi: lab ? lab.phi : null, max: lab ? lab.max : null,
+      base: bs ? { dilution: bs.dilution, phi: bs.phi, max: bs.max, src: bs.src } : null,
+      search: sr ? { dilution: sr.dilution, phi: sr.phi, max: sr.max, source: sr.source } : null
+    });
+  });
+  var unit = '';
+  (label.rows || []).forEach(function (r) {
+    var s = trim(r.per20L) + ' ' + trim(r.doseText);
+    if (!unit && /\d\s*(ml|㎖|mL)/i.test(s)) unit = 'ml';
+    if (!unit && /\d\s*g/i.test(s)) unit = 'g';
+  });
+  return { ident: ident, matches: matches, base: base, rows: rows, unit: unit };
+};
+
+L.fieldVerdicts = function (row) {
+  var out = {};
+  ['dilution', 'phi', 'max'].forEach(function (f) {
+    out[f] = verdict(num(row[f]), row.base ? row.base[f] : null);
+  });
+  return out;
+};
+
+L.confirmOps = function (data, draft, todayIso) {
+  var ops = [];
+  var existing = data.kit.filter(function (k) { return draft.kitId ? k.id === draft.kitId : L.norm(k.name) === L.norm(draft.name); })[0];
+  var kitId = existing ? existing.id : L.uid('k');
+  var oldName = existing ? existing.name : '';
+  if (existing && oldName !== draft.name) {
+    data.doses.forEach(function (d) {
+      if (d.product === oldName && d.src === '라벨' && !L.productOf(data, oldName)) ops.push({ table: 'doses', type: 'del', id: d.id });
+    });
+  }
+  ops.push({
+    table: 'kit', type: 'put', row: {
+      id: kitId, name: draft.name, ingredient: draft.ingredient || '', content: draft.content || '', form: draft.form || '',
+      unit: draft.unit || '', covers: draft.covers || '', status: '확인함', checked: todayIso,
+      label: JSON.stringify({ cautions: draft.cautions || [], maker: draft.maker || '', group: draft.group || '', model: draft.model || '', sources: (draft.sources || []).slice(0, 6) }),
+      added: existing ? existing.added : todayIso
+    }
+  });
+  (draft.rows || []).forEach(function (r) {
+    if (!r.use) return;
+    var d = num(r.dilution), p = num(r.phi), mx = num(r.max);
+    if (d === null && p === null && mx === null && !trim(r.doseText)) return;
+    var id = draft.name + '|' + r.tree;
+    var prev = data.doses.filter(function (x) { return x.id === id; })[0];
+    var was = '';
+    if (prev && prev.src !== '라벨') {
+      was = '기준값: ' + [prev.dilution ? L.fmtNum(prev.dilution) + '배' : '', prev.phi !== null ? '수확 ' + prev.phi + '일 전' : '', prev.max !== null ? prev.max + '회' : ''].filter(Boolean).join(', ');
+    } else if (prev) { was = prev.was; }
+    ops.push({
+      table: 'doses', type: 'put', row: {
+        id: id, product: draft.name, tree: r.tree, target: r.target || (prev ? prev.target : ''),
+        dilution: d === null ? (prev && prev.dilution !== null ? prev.dilution : '') : d,
+        doseText: trim(r.doseText),
+        phi: p === null ? (prev && prev.phi !== null ? prev.phi : '') : p,
+        phiNote: trim(r.phiNote) || (prev ? prev.phiNote : ''),
+        max: mx === null ? (prev && prev.max !== null ? prev.max : '') : mx,
+        src: '라벨', checked: todayIso, was: was
+      }
+    });
+  });
+  (draft.photos || []).forEach(function (ph) {
+    ops.push({ table: 'photos', type: 'put', row: { id: ph.id || L.uid('p'), kitId: kitId, fileId: ph.fileId || '', thumb: ph.thumb || '', added: todayIso } });
+  });
+  return { ops: ops, kitId: kitId };
+};
+
+L.removeKitOps = function (data, kitId) {
+  var k = data.kit.filter(function (x) { return x.id === kitId; })[0];
+  var ops = [], fileIds = [];
+  if (!k) return { ops: ops, fileIds: fileIds };
+  ops.push({ table: 'kit', type: 'del', id: kitId });
+  data.photos.forEach(function (p) {
+    if (p.kitId === kitId) { ops.push({ table: 'photos', type: 'del', id: p.id }); if (p.fileId) fileIds.push(p.fileId); }
+  });
+  if (!L.productOf(data, k.name)) {
+    data.doses.forEach(function (d) { if (d.product === k.name) ops.push({ table: 'doses', type: 'del', id: d.id }); });
+  }
+  return { ops: ops, fileIds: fileIds };
+};
+
+L.findTaskFor = function (data, tree, base, dn) {
+  var o = L.fromDn(dn);
+  var checks = {};
+  data.checks.forEach(function (c) { checks[c.id] = 1; });
+  var best = null;
+  [[o.y, o.m], [o.m === 1 ? o.y - 1 : o.y, o.m === 1 ? 12 : o.m - 1], [o.m === 12 ? o.y + 1 : o.y, o.m === 12 ? 1 : o.m + 1]].forEach(function (ym) {
+    L.occurrences(data.plan, ym[0], ym[1]).forEach(function (oc) {
+      if (oc.task.tree !== tree || oc.task.product !== base || checks[oc.key]) return;
+      if (dn < oc.a - 7 || dn > oc.b + 7) return;
+      var dist = dn < oc.a ? oc.a - dn : (dn > oc.b ? dn - oc.b : 0);
+      if (!best || dist < best.dist || (dist === best.dist && oc.b < best.oc.b)) best = { oc: oc, dist: dist };
+    });
+  });
+  return best ? best.oc : null;
+};
+
+L.logOps = function (data, pairs, dateIso, water, memo) {
+  var ops = [];
+  var dn = L.isoToDn(dateIso);
+  var created = new Date().toISOString();
+  var used = {};
+  pairs.forEach(function (p) {
+    var base = p.base || L.canonical(data, p.product);
+    var key = p.key || '';
+    if (!key) {
+      var oc = L.findTaskFor(data, p.tree, base, dn);
+      if (oc && !used[oc.key]) key = oc.key;
+    }
+    if (key) used[key] = 1;
+    ops.push({ table: 'logs', type: 'put', row: { id: L.uid('g'), date: dateIso, tree: p.tree, product: p.product, base: base, water: water || '', key: key, memo: memo || '', created: created } });
+    if (key) ops.push({ table: 'checks', type: 'put', row: { id: key, date: dateIso } });
+  });
+  return ops;
+};
+
+L.uncheckOps = function (data, key) {
+  var ops = [{ table: 'checks', type: 'del', id: key }];
+  data.logs.forEach(function (g) { if (g.key === key) ops.push({ table: 'logs', type: 'del', id: g.id }); });
+  return ops;
+};
+
+L.deleteLogOps = function (data, logId) {
+  var g = data.logs.filter(function (x) { return x.id === logId; })[0];
+  var ops = [{ table: 'logs', type: 'del', id: logId }];
+  if (g && g.key) {
+    var others = data.logs.some(function (x) { return x.id !== logId && x.key === g.key; });
+    if (!others) ops.push({ table: 'checks', type: 'del', id: g.key });
+  }
+  return ops;
+};
+
+L.josa = function (word, withBatchim, without) {
+  var w = String(word || '');
+  var c = w.charCodeAt(w.length - 1);
+  var has = false;
+  if (c >= 0xAC00 && c <= 0xD7A3) has = ((c - 0xAC00) % 28) !== 0;
+  else if (/[0136780lmnLMN]$/.test(w)) has = true;
+  return w + (has ? withBatchim : without);
+};
+
+L.harvestPending = function (data, tree, dn) {
+  var o = L.fromDn(dn), hit = false;
+  [o.y - 1, o.y, o.y + 1].forEach(function (season) {
+    data.plan.forEach(function (t) {
+      if (t.tree !== tree || !L.isHarvest(t)) return;
+      var w = L.window(t, season);
+      if (w && w.b >= dn && w.a - dn <= 150) hit = true;
+    });
+  });
+  return hit;
+};
+
+L.logEffects = function (data, ctx, pairs, dateIso, today) {
+  var dn = L.isoToDn(dateIso);
+  var year = String(dateIso).slice(0, 4);
+  var out = [];
+  var seen = {};
+  pairs.forEach(function (p) {
+    var base = p.base || L.canonical(data, p.product);
+    var row = L.doseRow(data, p.tree, [p.product, base]);
+    var prod = L.productOf(data, base);
+    var ptask = p.key ? L.taskOfKey(data, p.key) : null;
+    if (row && row.phi !== null && !(ptask && ptask.post) && L.harvestPending(data, p.tree, dn)) {
+      out.push({ type: 'harvest', tree: p.tree, product: p.product, date: dn + row.phi, text: L.md(dn + row.phi) + '부터', sub: p.tree + ' 딸 수 있음', note: p.product + ' · 수확 ' + row.phi + '일 전까지' });
+    }
+    if (row && row.max !== null) {
+      var n = L.usage(data, p.tree, base, year);
+      out.push({ type: 'count', tree: p.tree, product: p.product, n: n, max: row.max, over: n > row.max, full: n === row.max, text: '올해 ' + n + '회', sub: p.tree + ' ' + p.product, note: '한 해 ' + row.max + '회까지' + (n > row.max ? ' · 횟수를 넘겼습니다' : (n === row.max ? ' · 올해는 더 쓰지 않기' : '')) });
+    }
+    var gkey = p.tree;
+    if (!seen[gkey]) {
+      var nexts = [];
+      L.upcoming(data, today, 3).forEach(function (oc) {
+        if (oc.task.tree !== p.tree || !isSpray(oc.task) || oc.task.product === base) return;
+        var gap = Math.max(oc.task.gap || 0, prod ? prod.gap : 0);
+        if (!gap || dn + gap < oc.a || dn > oc.b) return;
+        nexts.push({ oc: oc, gap: gap });
+      });
+      if (nexts.length) {
+        seen[gkey] = 1;
+        var nx = nexts[0];
+        var nm = L.resolve(ctx, nx.oc.task.product).name || nx.oc.task.text;
+        out.push({ type: 'gap', tree: p.tree, date: dn + nx.gap, text: L.md(dn + nx.gap) + '부터', sub: p.tree + ' ' + nm, note: L.josa(p.product, '과', '와') + ' ' + nx.gap + '일 띄우기' });
+      }
+    }
+  });
+  return out;
+};
+
+L.harvestDates = function (data, today) {
+  var by = {};
+  data.logs.forEach(function (g) {
+    var dn = L.isoToDn(g.date);
+    if (dn === null) return;
+    var row = L.doseRow(data, g.tree, [g.product, g.base]);
+    var gt = g.key ? L.taskOfKey(data, g.key) : null;
+    if (!row || row.phi === null || (gt && gt.post) || !L.harvestPending(data, g.tree, dn)) return;
+    var until = dn + row.phi;
+    if (until < today) return;
+    if (!by[g.tree] || until > by[g.tree].date) by[g.tree] = { tree: g.tree, date: until, product: g.product, phi: row.phi };
+  });
+  return Object.keys(by).map(function (k) { return by[k]; });
+};
+
+L.calcRows = function (data, ctx, water) {
+  var out = [];
+  data.products.forEach(function (p) {
+    if (!SPRAY[p.kind]) return;
+    var res = L.resolve(ctx, p.name);
+    var names = res.kit && res.kit.name !== p.name ? [res.kit.name, p.name] : [p.name];
+    var groups = {}, order = [];
+    data.trees.forEach(function (t) {
+      var row = L.doseRow(data, t.name, names);
+      if (!row) return;
+      var k = row.dilution ? String(row.dilution) : (row.doseText ? 't:' + row.doseText : '');
+      if (!k) return;
+      if (!groups[k]) { groups[k] = { dilution: row.dilution, doseText: row.doseText, trees: [], label: row.src === '라벨' }; order.push(k); }
+      groups[k].trees.push(t.name);
+    });
+    var unit = (res.kit && res.kit.unit) || p.unit || '';
+    if (!order.length) { out.push({ name: res.name, plan: p.name, state: res.state, missing: true }); return; }
+    order.forEach(function (k) {
+      var g = groups[k];
+      var amount = '';
+      if (g.dilution) {
+        var amt = water * 1000 / g.dilution;
+        var exact = Math.abs(amt * 10 - Math.round(amt * 10)) < 1e-9;
+        amount = (exact ? '' : '약 ') + L.fmtAmount(amt) + unit;
+      }
+      out.push({
+        name: res.name, plan: p.name, state: res.state, missing: false,
+        rate: g.dilution ? L.fmtNum(g.dilution) + '배' : g.doseText,
+        trees: order.length > 1 || g.trees.length < 3 ? g.trees.join(', ') : '',
+        amount: amount, label: g.label
+      });
+    });
+  });
+  var seenRow = {};
+  out = out.filter(function (r) {
+    var k = r.name + '|' + (r.missing ? '-' : r.rate) + '|' + (r.trees || '');
+    if (seenRow[k]) return false;
+    seenRow[k] = 1;
+    return true;
+  });
+  var rk = { own: 0, alt: 0, buy: 1 };
+  out.sort(function (p, q) { return (rk[p.state] - rk[q.state]) || ((p.missing ? 1 : 0) - (q.missing ? 1 : 0)); });
+  return out;
+};
+
+L.mixTable = function (data, ctx) {
+  var rk = { '금지': 0, '확인 안 됨': 1, '가능': 2 };
+  var seenMix = {};
+  return data.mix.map(function (r) {
+    var a = L.resolve(ctx, r.a), b = r.b === '*' ? null : L.resolve(ctx, r.b);
+    return {
+      id: r.id, a: a.name || r.a, b: b ? (b.name || r.b) : '다른 약', verdict: r.verdict, note: r.note,
+      mine: (a.state !== 'buy') && (!b || b.state !== 'buy')
+    };
+  }).filter(function (r) {
+    var k = r.a + '+' + r.b;
+    if (seenMix[k]) return false;
+    seenMix[k] = 1;
+    return true;
+  }).sort(function (p, q) { return ((q.mine ? 1 : 0) - (p.mine ? 1 : 0)) || (rk[p.verdict] - rk[q.verdict]); });
+};
+
+L.extractJson = function (text) {
+  var s = String(text || '');
+  var fence = s.match(/```(?:json)?\s*([\s\S]*?)```/i);
+  if (fence) s = fence[1];
+  var a = s.indexOf('{'), b = s.lastIndexOf('}');
+  if (a < 0 || b <= a) return null;
+  try { return JSON.parse(s.slice(a, b + 1)); } catch (e) { return null; }
+};
+
+root.TreeLogic = L;
+if (typeof module !== 'undefined' && module.exports) module.exports = L;
+})(typeof window !== 'undefined' ? window : globalThis);
+</script>
+<script src="https://cdn.jsdelivr.net/npm/react@18.3.1/umd/react.production.min.js" crossorigin></script>
+<script src="https://cdn.jsdelivr.net/npm/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin></script>
+<script src="https://cdn.jsdelivr.net/npm/@babel/standalone@7.25.6/babel.min.js" crossorigin></script>
+<script type="text/babel" data-presets="react">
+const { useState, useEffect, useMemo, useRef } = React;
+const L = window.TreeLogic;
+const DEMO = !API_URL;
+const SPRAY = { '살균': 1, '살충': 1, '동계': 1 };
+const ORD = ['첫', '두', '세', '네', '다섯', '여섯', '일곱'];
+
+const LS = {
+  get(k, d) { try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} },
+  del(k) { try { localStorage.removeItem(k); } catch (e) {} }
+};
+const clone = (x) => JSON.parse(JSON.stringify(x));
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+function nowDn() {
+  const m = /[?&]today=(\d{4}-\d{2}-\d{2})/.exec(location.search);
+  return m ? L.isoToDn(m[1]) : L.todayDn();
+}
+
+async function api(action, payload) {
+  const body = Object.assign({ action: action, pin: LS.get('tree.pin', '') }, payload || {});
+  const res = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(body) });
+  if (!res.ok) throw new Error('서버 응답 ' + res.status);
+  const json = await res.json();
+  if (!json.ok) {
+    const e = new Error(json.error || '알 수 없는 오류');
+    e.code = json.code || '';
+    e.server = true;
+    throw e;
+  }
+  return json;
+}
+
+function readAsDataURL(file) {
+  return new Promise((resolve, reject) => {
+    const fr = new FileReader();
+    fr.onload = () => resolve(String(fr.result));
+    fr.onerror = () => reject(new Error('사진을 열지 못했습니다.'));
+    fr.readAsDataURL(file);
+  });
+}
+function loadImage(src) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => resolve(img);
+    img.onerror = () => reject(new Error('사진을 읽지 못했습니다.'));
+    img.src = src;
+  });
+}
+function drawScaled(img, max, q) {
+  const w = img.naturalWidth, h = img.naturalHeight;
+  const s = Math.min(1, max / Math.max(w, h));
+  const c = document.createElement('canvas');
+  c.width = Math.max(1, Math.round(w * s));
+  c.height = Math.max(1, Math.round(h * s));
+  const g = c.getContext('2d');
+  g.fillStyle = '#fff';
+  g.fillRect(0, 0, c.width, c.height);
+  g.drawImage(img, 0, 0, c.width, c.height);
+  return c.toDataURL('image/jpeg', q);
+}
+async function fileToPhoto(file) {
+  const url = await readAsDataURL(file);
+  try {
+    const img = await loadImage(url);
+    const full = drawScaled(img, 2000, 0.85);
+    const thumb = drawScaled(img, 240, 0.6);
+    return { id: L.uid('p'), data: full.split(',')[1], mime: 'image/jpeg', thumb: thumb, fileId: '' };
+  } catch (e) {
+    return { id: L.uid('p'), data: url.split(',')[1], mime: file.type || 'image/jpeg', thumb: '', fileId: '' };
+  }
+}
+
+function demoLabel(draft, data) {
+  const kit = draft.kitId ? data.kit.filter((k) => k.id === draft.kitId)[0] : null;
+  if (kit) {
+    const rows = data.doses.filter((d) => d.product === kit.name).map((d) => ({
+      crop: d.tree === '사과대추' ? '대추' : (d.tree === '백일홍' ? '배롱나무' : d.tree), target: d.target,
+      doseText: d.dilution ? L.fmtNum(d.dilution) + '배' : '', dilution: d.dilution, per20L: d.dilution ? L.fmtAmount(20000 / d.dilution) + (kit.name === '라이몬' ? 'ml' : 'g') : '',
+      phi: d.phi, phiText: d.phiNote, max: d.max
+    }));
+    return { name: kit.name, maker: '', ingredient: kit.ingredient, content: kit.content, form: kit.form, kind: '', group: '', rows: rows, cautions: [], unreadable: [] };
+  }
+  return {
+    name: 'IC-66D', maker: '', ingredient: '석회보르도액', content: '', form: '', kind: '살균', group: '',
+    rows: [{ crop: '복숭아', target: '세균구멍병', doseText: '50~100배', dilution: null, per20L: '', phi: null, phiText: '싹 트기 전, 수확 뒤 낙엽 직전', max: null }],
+    cautions: ['다른 살균제·살충제와 7일 이상 띄우기', '석회유황합제와 섞지 않기'], unreadable: []
+  };
+}
+
+const ICONS = {
+  cal: <g><rect x="3.5" y="5" width="17" height="15" rx="2.5"></rect><path d="M3.5 10h17M8 3v4M16 3v4"></path></g>,
+  list: <g><path d="M9 6h11M9 12h11M9 18h11"></path><circle cx="4.5" cy="6" r="1"></circle><circle cx="4.5" cy="12" r="1"></circle><circle cx="4.5" cy="18" r="1"></circle></g>,
+  bottle: <g><path d="M9.5 3h5v3.2l1.8 2.3c.5.6.7 1.3.7 2V19a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2v-8.5c0-.7.2-1.4.7-2l1.8-2.3V3z"></path><path d="M7 13h10"></path></g>,
+  pen: <g><path d="M5 19l1-4L16.5 4.5a2 2 0 0 1 3 3L9 18l-4 1z"></path><path d="M14.5 6.5l3 3"></path></g>,
+  drop: <path d="M12 3.5c3.2 4 5.5 6.9 5.5 10a5.5 5.5 0 0 1-11 0c0-3.1 2.3-6 5.5-10z"></path>,
+  camera: <g><path d="M4 8h3l1.5-2.5h7L17 8h3v11H4z"></path><circle cx="12" cy="13.5" r="3.5"></circle></g>,
+  album: <g><rect x="3.5" y="6.5" width="14" height="13" rx="2"></rect><path d="M7 3.5h11.5a2 2 0 0 1 2 2V16"></path><path d="M3.5 16l4-4 3.5 3.5 2.5-2.5 4 4"></path></g>,
+  plus: <path d="M12 5v14M5 12h14"></path>,
+  tick: <path d="M5 12.5l4.5 4.5L19 7.5"></path>,
+  x: <path d="M6 6l12 12M18 6L6 18"></path>,
+  gear: <g><circle cx="12" cy="12" r="3"></circle><path d="M12 3v2.5M12 18.5V21M3 12h2.5M18.5 12H21M5.6 5.6l1.8 1.8M16.6 16.6l1.8 1.8M5.6 18.4l1.8-1.8M16.6 7.4l1.8-1.8"></path></g>
+};
+function Icon({ name, size, bold }) {
+  return (
+    <svg width={size || 24} height={size || 24} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={bold ? 2 : 1.8} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{ICONS[name]}</svg>
+  );
+}
+
+function StateChips({ res }) {
+  if (!res || res.state === 'none') return null;
+  if (res.state === 'buy') return <span className="chip buy">구입 필요</span>;
+  return (
+    <React.Fragment>
+      <span className="chip own">보유</span>
+      {res.state === 'alt' && <span className="chip alt">대체</span>}
+    </React.Fragment>
+  );
+}
+
+function KindChips({ t }) {
+  return (
+    <div className="line">
+      <span className={'chip kind' + (SPRAY[t.kind] ? ' spray' : '')}>{t.kind}</span>
+      {t.seq && <span className="chip kind">{t.seq}</span>}
+    </div>
+  );
+}
+
+function TwoStep({ label, onGo }) {
+  const [hot, setHot] = useState(false);
+  useEffect(() => {
+    if (!hot) return undefined;
+    const id = setTimeout(() => setHot(false), 4000);
+    return () => clearTimeout(id);
+  }, [hot]);
+  return (
+    <button type="button" className={'btn ghost' + (hot ? ' hot' : '')} onClick={() => { if (hot) { setHot(false); onGo(); } else setHot(true); }}>
+      {hot ? '한 번 더' : label}
+    </button>
+  );
+}
+
+function TaskRow({ o, first, data, ctx, today, onToggle, late, skip }) {
+  const t = o.task;
+  const res = L.resolve(ctx, t.product);
+  const done = !!o.doneDate;
+  const info = t.product ? L.doseInfo(data, ctx, t.product, t.tree, 20) : null;
+  const year = L.fromDn(today).y;
+  const row = info && info.row;
+  const used = row && row.max !== null ? L.usage(data, t.tree, t.product, year) : 0;
+  const limits = [];
+  if (row) {
+    if (row.phi !== null) limits.push('수확 ' + row.phi + '일 전까지');
+    else if (row.phiNote) limits.push(row.phiNote);
+    if (row.max !== null) limits.push('한 해 ' + row.max + '회까지' + (used ? ' (올해 ' + used + '회 씀)' : ''));
+  }
+  const full = row && row.max !== null && used >= row.max && !done;
+  const title = t.product ? res.name : t.text;
+  return (
+    <div className={'task' + (first ? ' first' : '') + (done ? ' done' : '')}>
+      <button type="button" className={'check' + (done ? ' on' : '')} aria-pressed={done} aria-label={t.tree + ' ' + title + (done ? ' 완료 취소' : ' 완료 표시')} onClick={() => onToggle(o)}>
+        <span>{done && <Icon name="tick" size={22} bold />}</span>
+      </button>
+      <div className="task-body">
+        <KindChips t={t} />
+        {t.product ? (
+          <React.Fragment>
+            <div className="line"><span className="pname">{res.name}</span><StateChips res={res} /></div>
+            {res.state === 'alt' && <div className="green-note">계획의 {L.josa(t.product, '과', '와')} 같은 약입니다.</div>}
+            {t.text && <div className="note">{t.text}</div>}
+            {info.line && <div className="dose">{info.line}{row && (row.dilution || row.doseText) ? <span className="src">{info.fromLabel ? '라벨 확인함' : '기준값 · 라벨 확인 전'}</span> : null}</div>}
+          </React.Fragment>
+        ) : (
+          <div className="pname">{t.text}</div>
+        )}
+        {t.note && <div className="note">{t.note}</div>}
+        {limits.length > 0 && <div className="small">{limits.join(' · ')}</div>}
+        {full && <div className="warn-note">올해 횟수를 다 썼습니다. 다른 계통의 약으로 바꾸세요.</div>}
+        {skip && o.phiPast && <div className="warn-note">수확 {o.phiDays}일 전이 지났습니다 (수확 시작을 {L.md(o.harvestAt)}로 볼 때). 이번에는 쓰지 않습니다.</div>}
+        {skip && !o.phiPast && <div className="warn-note">수확 {o.phiDays}일 전인 {L.md(o.phiCap)}까지만 쓸 수 있습니다 (수확 시작을 {L.md(o.harvestAt)}로 볼 때). 넘기면 건너뛰세요.</div>}
+        {!skip && !done && o.inHarvest && <div className="warn-note">지금은 수확하는 때입니다. 수확 {o.phiDays}일 전까지만 쓸 수 있으니 열매를 다 딴 뒤에 뿌리세요.</div>}
+        {!skip && !done && o.phiCap !== undefined && <div className="warn-note">수확을 {L.md(o.harvestAt)}에 시작한다면 {L.md(o.phiCap)}까지만</div>}
+        {o.wait && !done && <div className="green-note">{L.josa(o.wait.product, '을', '를')} 뿌린 {L.md(o.wait.date)}에서 {o.wait.gap}일 뒤인 {L.md(o.wait.until)}부터</div>}
+        {done ? (
+          <div className="small">{o.doneDate && o.doneDate !== 'done' ? L.md(L.isoToDn(o.doneDate)) + '에 함' : '끝냄'}</div>
+        ) : (
+          <div className={'period' + (late || skip ? ' late' : '')}><span className="k">{skip ? (o.phiPast ? '건너뛰기' : '빠듯함') : late ? '지남' : '기간'}</span><span className="v">{t.label}</span></div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function TreeCards({ items, data, ctx, today, onToggle, late, skip }) {
+  return L.groupByTree(items).map((g) => {
+    const mix = L.mixLines(data, ctx, g.items);
+    return (
+      <div className="tree-card" key={g.tree}>
+        <div className="tree-name">{g.tree}</div>
+        {g.items.map((o, i) => <TaskRow key={o.key} o={o} first={i === 0} data={data} ctx={ctx} today={today} onToggle={onToggle} late={late} skip={skip} />)}
+        {mix.length > 0 && !skip && (
+          <div className="mixbox">
+            <div className="cap">한 통에 섞어도 되나</div>
+            {mix.map((m, i) => (
+              <div className="between" key={i}>
+                <span className="small" style={{ fontWeight: 700, color: 'var(--text)' }}>{m.a} + {m.b}</span>
+                <MixChip verdict={m.verdict} />
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    );
+  });
+}
+
+function MixChip({ verdict }) {
+  if (verdict === '가능') return <span className="chip own">섞어도 됨</span>;
+  if (verdict === '금지') return <span className="chip bad">섞지 않기</span>;
+  return <span className="chip tagc">확인 안 됨, 따로</span>;
+}
+
+function NetBanner({ store }) {
+  if (store.net === 'demo') return <div className="banner">예시 데이터로 보는 중입니다. 이 휴대폰에만 저장됩니다. index.html의 API_URL에 웹 앱 주소를 넣으면 시트와 연결됩니다.</div>;
+  if (store.net === 'offline') return <div className="banner">연결이 안 됩니다. 저장해 둔 내용으로 보여 줍니다.{store.pending > 0 ? ' 보내지 못한 변경 ' + store.pending + '건은 연결되면 저장합니다.' : ''}<button type="button" className="linkbtn" onClick={() => store.sync(true)}>다시 연결</button></div>;
+  if (store.net === 'error') return <div className="banner bad">저장하지 못한 변경이 있습니다. {store.netMsg}<button type="button" className="linkbtn" onClick={() => store.sync(true)}>새로 고침</button></div>;
+  if (store.net === 'setup') return <div className="banner bad">시트가 준비되지 않았습니다. Apps Script에서 setup을 실행해 주세요. {store.netMsg}</div>;
+  return null;
+}
+
+function MainScreen({ store, data, ctx, today, go, onToggle, onVisitRecord, openSettings }) {
+  const o = L.fromDn(today);
+  const mp = useMemo(() => L.monthPlan(data, ctx, today, o.y, o.m), [data, ctx, today]);
+  const [showDone, setShowDone] = useState(false);
+  const routine = L.groupRoutine(mp.routine);
+  const notices = L.groupRoutine(mp.notices);
+  const empty = mp.visits.length === 0 && mp.later.length === 0 && mp.overdue.length === 0;
+  return (
+    <React.Fragment>
+      <div className="hero">
+        <div className="hero-top">
+          <div className="hero-col">
+            <div className="eyebrow">우리 집 과수 방제력</div>
+            <h1 className="month">{o.m}월</h1>
+          </div>
+          <div className="hero-side">
+            <button type="button" className="gear" aria-label="설정" onClick={openSettings}><Icon name="gear" /></button>
+            <div>오늘<strong>{L.md(today)}</strong></div>
+          </div>
+        </div>
+        <div className="tiles">
+          <div className="tile"><b>{mp.visits.length}</b><span>번 방문</span></div>
+          <div className="tile"><b>{mp.taskCount}</b><span>가지 할 일</span></div>
+          <div className="tile"><b>{mp.buyCount}</b><span>가지 살 약</span></div>
+        </div>
+      </div>
+      <div className="body">
+        <NetBanner store={store} />
+
+        {mp.products.length > 0 && (
+          <div className="card">
+            <div className="cap">이달에 쓰는 약</div>
+            {mp.products.map((p) => (
+              <div key={p.plan} style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                <div className="line"><span className={p.state === 'buy' ? 'pname soft' : 'pname big'}>{p.name}</span><StateChips res={p} /></div>
+                {p.state === 'alt' && <div className="small">계획의 {p.plan} 대신 올린 약</div>}
+                {p.state === 'buy' && p.similar && p.similar.length > 0 && <div className="small">{p.similar[0].name}: 성분은 같지만 함량이나 제형이 달라 라벨 확인이 필요합니다.</div>}
+              </div>
+            ))}
+            <button type="button" className="linkbtn" onClick={() => go('kit')}>내 약 보기</button>
+          </div>
+        )}
+
+        {notices.length > 0 && (
+          <div className="card" style={{ gap: 0 }}>
+            <div className="cap">이달에 지킬 것</div>
+            {notices.map((r, i) => (
+              <div className="row" key={i}>
+                <div className="notice-t">{r.trees.join(' · ')}</div>
+                <div style={{ fontSize: 17, fontWeight: 700 }}>{r.text}</div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {mp.overdue.length > 0 && (
+          <div className="stack">
+            <h2 className="h2">기간이 지난 일</h2>
+            <div className="hint">했으면 표시하고, 못 했으면 그대로 두세요.</div>
+            <TreeCards items={mp.overdue} data={data} ctx={ctx} today={today} onToggle={onToggle} late />
+          </div>
+        )}
+
+        {mp.visits.map((v) => {
+          const lo = L.fromDn(v.lo), hi = L.fromDn(v.hi);
+          const dtext = v.lo === v.hi ? String(lo.d) : lo.d + '–' + hi.d;
+          const waiter = v.items.filter((x) => x.wait && x.wait.until === v.lo)[0];
+          let sub = v.lo === v.hi ? '이날 하루' : '이 기간 중 하루';
+          if (waiter) sub = L.josa(waiter.wait.product, '을', '를') + ' 뿌린 날에서 ' + waiter.wait.gap + '일이 지난 뒤부터';
+          else if (v.after) sub = (ORD[v.after.n - 1] || v.after.n) + ' 번째 방문에서 ' + v.gapDays + '일이 지난 뒤부터';
+          const open = v.items.filter((x) => !x.doneDate);
+          return (
+            <div className="stack" key={v.n}>
+              <div className="visit-head">
+                <div className="visit-date">
+                  <div className="m">{lo.m}월</div>
+                  <div className={'d' + (dtext.length > 4 ? ' long' : '')}>{dtext}</div>
+                  <div className="u">일</div>
+                </div>
+                <div className="visit-info">
+                  <h2>{(ORD[v.n - 1] || v.n)} 번째 방문</h2>
+                  <div className="small">{sub}</div>
+                </div>
+              </div>
+              <TreeCards items={v.items} data={data} ctx={ctx} today={today} onToggle={onToggle} />
+              {open.length > 0 && <button type="button" className="btn" onClick={() => onVisitRecord(v)}>다녀왔어요, 기록하기</button>}
+            </div>
+          );
+        })}
+
+        {empty && (
+          <div className="card">
+            <div className="pname">이달에 남은 일이 없습니다.</div>
+            <div className="note">앞으로 할 일은 아래 메뉴의 앞으로에서 볼 수 있습니다.</div>
+          </div>
+        )}
+
+        {mp.skip.length > 0 && (
+          <div className="stack">
+            <h2 className="h2">수확이 가까워 조심할 약</h2>
+            <div className="hint">수확 날짜가 다르면 계획 시트의 수확 줄을 고치세요.</div>
+            <TreeCards items={mp.skip} data={data} ctx={ctx} today={today} onToggle={onToggle} skip />
+          </div>
+        )}
+
+        {mp.later.length > 0 && (
+          <div className="stack">
+            <h2 className="h2">다음 달로 넘겨도 되는 일</h2>
+            <div className="hint">기간이 다음 달까지 이어집니다. 이달에 가는 김에 해도 됩니다.</div>
+            <TreeCards items={mp.later} data={data} ctx={ctx} today={today} onToggle={onToggle} />
+          </div>
+        )}
+
+        {routine.length > 0 && (
+          <div className="card dark" style={{ gap: 2 }}>
+            <div className="cap">갈 때마다</div>
+            {routine.map((r, i) => (
+              <div className="routine" key={i}>
+                <div className="routine-t">{r.trees.join(' · ')}</div>
+                <div className="routine-x">{r.text}</div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {mp.done.length > 0 && (
+          <div className="stack">
+            <button type="button" className="btn line2" aria-expanded={showDone} onClick={() => setShowDone(!showDone)}>이달에 끝낸 일 {mp.done.length}가지 {showDone ? '접기' : '보기'}</button>
+            {showDone && <TreeCards items={mp.done} data={data} ctx={ctx} today={today} onToggle={onToggle} />}
+          </div>
+        )}
+      </div>
+    </React.Fragment>
+  );
+}
+
+function ARow({ o, ctx }) {
+  const t = o.task;
+  const res = L.resolve(ctx, t.product);
+  const done = !!o.doneDate;
+  return (
+    <div className={'arow' + (done ? ' done' : '')}>
+      <div className="line">
+        <span className={'chip ' + (t.kind === '주의' ? 'tagc' : 'kind' + (SPRAY[t.kind] ? ' spray' : ''))}>{t.kind}</span>
+        {t.seq && <span className="chip kind">{t.seq}</span>}
+        {done && <span className="chip own">끝냄</span>}
+      </div>
+      {t.product ? (
+        <React.Fragment>
+          <div className="line"><span className={res.state === 'buy' ? 'pname soft' : 'pname'}>{res.name}</span><StateChips res={res} /></div>
+          {res.state === 'alt' && <div className="green-note">계획의 {t.product} 대신</div>}
+          <div className="note">{t.text}</div>
+        </React.Fragment>
+      ) : (
+        <div className="pname" style={{ fontSize: 19 }}>{t.text}</div>
+      )}
+      {t.note && <div className="small">{t.note}</div>}
+      <div className="period sm"><span className="k">기간</span><span className="v">{t.label}</span></div>
+    </div>
+  );
+}
+
+function AheadScreen({ data, ctx, today }) {
+  const [mode, setMode] = useState('month');
+  const months = useMemo(() => L.monthList(today, 12), [today]);
+  const [mi, setMi] = useState(0);
+  const [tree, setTree] = useState(data.trees.length ? data.trees[0].name : '');
+  const checks = useMemo(() => { const c = {}; data.checks.forEach((x) => { c[x.id] = x.date || 'done'; }); return c; }, [data]);
+  const order = useMemo(() => L.treeOrder(data), [data]);
+  const cur = L.fromDn(today);
+  let groups = [];
+  if (mode === 'month') {
+    const ym = months[mi] || months[0];
+    const occ = L.occurrences(data.plan, ym.y, ym.m).filter((x) => x.b >= today || checks[x.key]);
+    occ.forEach((x) => { x.doneDate = checks[x.key] || ''; });
+    occ.sort((p, q) => ((order[p.task.tree] || 0) - (order[q.task.tree] || 0)) || (p.a - q.a));
+    groups = L.groupByTree(occ).map((g) => ({ key: g.tree, title: g.tree, items: g.items }));
+  } else {
+    const idx = {};
+    L.upcoming(data, today, 12).filter((x) => x.task.tree === tree).forEach((x) => {
+      x.doneDate = checks[x.key] || '';
+      const s = L.fromDn(Math.max(x.a, today));
+      const k = s.y + '-' + s.m;
+      if (idx[k] === undefined) { idx[k] = groups.length; groups.push({ key: k, title: s.m + '월', year: s.y !== cur.y ? s.y + '년' : '', items: [] }); }
+      groups[idx[k]].items.push(x);
+    });
+  }
+  return (
+    <React.Fragment>
+      <div className="hero">
+        <div className="hero-col">
+          <div className="eyebrow">할 일 미리 보기</div>
+          <h1>앞으로</h1>
+          <div className="hero-sub">달마다, 나무마다 무엇을 언제까지 하는지 봅니다.</div>
+        </div>
+        <div className="seg" role="tablist">
+          <button type="button" role="tab" aria-selected={mode === 'month'} className={mode === 'month' ? 'on' : ''} onClick={() => setMode('month')}>달별</button>
+          <button type="button" role="tab" aria-selected={mode === 'tree'} className={mode === 'tree' ? 'on' : ''} onClick={() => setMode('tree')}>나무별</button>
+        </div>
+      </div>
+      <div className="body">
+        {mode === 'month' ? (
+          <div className="chips">
+            {months.map((ym, i) => (
+              <button type="button" key={ym.y + '-' + ym.m} className={'pick' + (i === mi ? ' on' : '')} aria-pressed={i === mi} onClick={() => setMi(i)}>
+                {(i === 0 || ym.m === 1) && ym.y !== cur.y ? <small>{ym.y}</small> : null}{ym.m}월
+              </button>
+            ))}
+          </div>
+        ) : (
+          <div className="chips">
+            {data.trees.map((t) => (
+              <button type="button" key={t.name} className={'pick' + (t.name === tree ? ' on' : '')} aria-pressed={t.name === tree} onClick={() => setTree(t.name)}>{t.name}</button>
+            ))}
+          </div>
+        )}
+        {groups.length === 0 && <div className="card"><div className="note">이 기간에는 할 일이 없습니다.</div></div>}
+        {groups.map((g) => (
+          <div className="stack" key={g.key}>
+            {mode === 'month' ? (
+              <div className="tree-card">
+                <div className="tree-name mid">{g.title}</div>
+                {g.items.map((x) => <ARow key={x.key} o={x} ctx={ctx} />)}
+              </div>
+            ) : (
+              <React.Fragment>
+                <div className="month-head"><b>{g.title}</b>{g.year && <span className="small">{g.year}</span>}</div>
+                <div className="tree-card">{g.items.map((x) => <ARow key={x.key} o={x} ctx={ctx} />)}</div>
+              </React.Fragment>
+            )}
+          </div>
+        ))}
+      </div>
+    </React.Fragment>
+  );
+}
+
+function PhotoInputs({ camRef, albRef, onFiles }) {
+  const pick = (e) => { const files = Array.from(e.target.files || []); e.target.value = ''; if (files.length) onFiles(files); };
+  return (
+    <React.Fragment>
+      <input ref={camRef} className="hide" type="file" accept="image/*" capture="environment" onChange={pick} tabIndex={-1} aria-hidden="true" />
+      <input ref={albRef} className="hide" type="file" accept="image/*" multiple onChange={pick} tabIndex={-1} aria-hidden="true" />
+    </React.Fragment>
+  );
+}
+
+function KitScreen({ data, ctx, today, onPhotos, onAddName, onRemove, onCheckKit, openNameSheet }) {
+  const view = useMemo(() => L.kitView(data, ctx, today), [data, ctx, today]);
+  const camRef = useRef(null), albRef = useRef(null);
+  const photosOf = (id) => data.photos.filter((p) => p.kitId === id);
+  return (
+    <React.Fragment>
+      <div className="hero">
+        <div className="hero-top">
+          <div className="hero-col">
+            <div className="eyebrow">약 보관함</div>
+            <h1>내 약</h1>
+          </div>
+          <div className="tile side"><b>{view.owned.length}</b><span>가지 보유</span></div>
+        </div>
+      </div>
+      <div className="body">
+        <div className="card" style={{ gap: 12 }}>
+          <div>
+            <h2 style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.3 }}>약 올리기</h2>
+            <div className="note">용량표와 사용법이 보이게 올려 주세요. 여러 장을 한 번에 올릴 수 있습니다.</div>
+          </div>
+          <PhotoInputs camRef={camRef} albRef={albRef} onFiles={(files) => onPhotos(files, null, false)} />
+          <div style={{ display: 'flex', gap: 10 }}>
+            <button type="button" className="btn tall" onClick={() => camRef.current.click()}><Icon name="camera" size={30} />사진 찍기</button>
+            <button type="button" className="btn tall" onClick={() => albRef.current.click()}><Icon name="album" size={30} />앨범에서 고르기</button>
+          </div>
+          <button type="button" className="btn line2" onClick={openNameSheet}>이름으로 찾아 올리기</button>
+        </div>
+
+        <div className="stack">
+          <h2 className="h2" style={{ fontSize: 28 }}>보유한 약</h2>
+          {view.owned.length === 0 && <div className="card"><div className="note">아직 올린 약이 없습니다.</div></div>}
+          {view.owned.map((row) => (
+            <div className="card" key={row.kit.id} style={{ padding: 16, gap: 10 }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                <div className="line">
+                  <span className="pname kit">{row.kit.name}</span>
+                  {row.alt && <span className="chip alt">대체</span>}
+                  {row.similar && <span className="chip buy">비슷한 약</span>}
+                </div>
+                {row.meta && <span className="small">{row.meta}</span>}
+                <span className="small">{row.use}</span>
+                <span className="small" style={{ fontWeight: 700, color: 'var(--label)' }}>{row.checked}</span>
+                {row.photos > 0 && (
+                  <div className="mini-thumbs">
+                    {photosOf(row.kit.id).map((p) => p.fileId
+                      ? <a key={p.id} href={'https://drive.google.com/file/d/' + p.fileId + '/view'} target="_blank" rel="noopener" aria-label="라벨 사진 크게 보기">{p.thumb && <img src={p.thumb} alt="" />}</a>
+                      : <span key={p.id}>{p.thumb && <img src={p.thumb} alt="" />}</span>)}
+                  </div>
+                )}
+              </div>
+              <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end' }}>
+                <button type="button" className="btn gold" onClick={() => onCheckKit(row.kit.id)}>라벨 사진으로 확인</button>
+                <TwoStep label="삭제" onGo={() => onRemove(row.kit.id)} />
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {view.need.length > 0 && (
+          <div className="stack">
+            <h2 className="h2" style={{ fontSize: 28 }}>계획에 있지만 없는 약</h2>
+            <div className="hint" style={{ fontSize: 15 }}>성분이 같은 다른 약을 올리면 계획에 그 약 이름으로 바꿔 넣습니다.</div>
+            <div className="card tight" style={{ padding: '2px 16px' }}>
+              {view.need.map((row) => (
+                <div className="row h" key={row.product.name}>
+                  <div className="main">
+                    <span style={{ fontSize: 19, fontWeight: 500 }}>{row.product.name}</span>
+                    {row.meta && <span className="small">{row.meta}</span>}
+                    <span className="small">{row.use}</span>
+                  </div>
+                  <button type="button" className="btn gold" onClick={() => onAddName({ name: row.product.name, ingredient: row.product.ingredient === row.product.name ? '' : row.product.ingredient, content: row.product.content, form: row.product.form, covers: '' })}>올리기</button>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    </React.Fragment>
+  );
+}
+
+function CoverSelect({ value, onChange, products }) {
+  return (
+    <select className="input" value={value} onChange={(e) => onChange(e.target.value)} aria-label="계획에서 대신할 약">
+      <option value="">자동으로 맞추기</option>
+      <option value="-">대신하는 약 없음</option>
+      {products.map((p) => <option key={p.name} value={p.name}>{p.name} 대신 쓰기</option>)}
+    </select>
+  );
+}
+
+function NameSheet({ data, onAdd, onClose }) {
+  const [name, setName] = useState('');
+  const [ingredient, setIngredient] = useState('');
+  const [covers, setCovers] = useState('');
+  const ok = name.trim().length > 0;
+  return (
+    <div className="veil" onClick={onClose}>
+      <div className="sheet" role="dialog" aria-modal="true" aria-label="이름으로 올리기" onClick={(e) => e.stopPropagation()}>
+        <h2>이름으로 올리기</h2>
+        <div className="card">
+          <div className="field"><label htmlFor="nm">약 이름</label><input id="nm" className="input" value={name} onChange={(e) => setName(e.target.value)} placeholder="포장지에 적힌 이름" autoComplete="off" /></div>
+          <div className="field"><label htmlFor="ing">성분 (알면)</label><input id="ing" className="input" value={ingredient} onChange={(e) => setIngredient(e.target.value)} placeholder="예: 디티아논" autoComplete="off" /></div>
+          <div className="field"><span className="flabel">계획에 넣는 방법</span><CoverSelect value={covers} onChange={setCovers} products={data.products} /></div>
+          <div className="small">이름만 올린 약은 확인 전으로 남습니다. 나중에 라벨 사진으로 용량과 용법을 확인하세요.</div>
+        </div>
+        <button type="button" className="btn" disabled={!ok} onClick={() => onAdd({ name: name.trim(), ingredient: ingredient.trim(), content: '', form: '', covers: covers })}>내 약에 넣기</button>
+        <button type="button" className="btn line2" onClick={onClose}>닫기</button>
+      </div>
+    </div>
+  );
+}
+
+function VerdictChip({ v, baseText }) {
+  if (v === 'same') return <span className="chip own">일치</span>;
+  if (v === 'diff') return <span className="chip tagc">라벨 값으로 바꿈 · 기준 {baseText}</span>;
+  if (v === 'new') return <span className="chip tagc">라벨 값으로 넣음</span>;
+  if (v === 'keep') return <span className="chip kind">못 읽음 · 기준 {baseText} 유지</span>;
+  return null;
+}
+
+function NumField({ id, label, value, unit, onChange, verdict, baseText, searchText, searchDiff, extra }) {
+  return (
+    <div className="row">
+      <label className="flabel" htmlFor={id}>{label}</label>
+      <div className="numrow">
+        <input id={id} className="input num" inputMode="numeric" value={value === null || value === undefined ? '' : value} onChange={(e) => onChange(e.target.value.replace(/[^0-9.]/g, ''))} />
+        <span className="unit">{unit}</span>
+        <VerdictChip v={verdict} baseText={baseText} />
+      </div>
+      {extra && <div className="small" style={{ fontWeight: 700, color: 'var(--text)' }}>{extra}</div>}
+      {searchText && <div className={searchDiff ? 'warn-note' : 'small'}>검색 결과 {searchText}{searchDiff ? ' · 라벨과 다릅니다. 사진을 다시 확인하세요.' : ''}</div>}
+    </div>
+  );
+}
+
+function CheckScreen({ data, draft, setDraft, reading, onRead, onConfirm, onCancel, onPhotos, go, status }) {
+  const camRef = useRef(null), albRef = useRef(null);
+  if (!draft) {
+    return (
+      <React.Fragment>
+        <div className="hero"><div className="hero-col"><div className="eyebrow">더블 체크</div><h1 className="mid">라벨 확인</h1><div className="hero-sub">올린 사진의 용량과 용법을 계획과 맞춰 봅니다.</div></div></div>
+        <div className="body">
+          <div className="card"><div className="note">내 약에서 사진을 찍거나 앨범에서 고르면 여기서 확인합니다.</div></div>
+          <button type="button" className="btn" onClick={() => go('kit')}>내 약으로 가기</button>
+        </div>
+      </React.Fragment>
+    );
+  }
+  const res = draft.result;
+  const kit = draft.kitId ? data.kit.filter((k) => k.id === draft.kitId)[0] : null;
+  const setRes = (patch) => setDraft(Object.assign({}, draft, { result: Object.assign({}, res, patch) }));
+  const setIdent = (k, v) => setRes({ ident: Object.assign({}, res.ident, { [k]: v }) });
+  const setRow = (tree, patch) => setRes({ rows: res.rows.map((r) => (r.tree === tree ? Object.assign({}, r, patch) : r)) });
+  const removePhoto = (id) => setDraft(Object.assign({}, draft, { photos: draft.photos.filter((p) => p.id !== id) }));
+  let matches = [], base = '', main = null;
+  if (res) {
+    matches = L.matchKit(Object.assign({}, res.ident, { covers: res.covers }), data.products);
+    main = matches[0] || null;
+    base = main ? main.product : '';
+  }
+  const baseOf = (tree) => (base ? (data.doses.filter((d) => d.product === base && d.tree === tree)[0] || null) : null);
+  const shown = res ? res.rows.filter((r) => r.onLabel || r.use) : [];
+  const skipped = res ? res.rows.filter((r) => !r.onLabel && !r.use && baseOf(r.tree)) : [];
+  const unitOf = res ? (res.unit || (base && (L.productOf(data, base) || {}).unit) || '') : '';
+  return (
+    <React.Fragment>
+      <div className="hero"><div className="hero-col"><div className="eyebrow">더블 체크</div><h1 className="mid">라벨 확인</h1><div className="hero-sub">올린 사진의 용량과 용법을 계획과 맞춰 봅니다.</div></div></div>
+      <div className="body" style={{ gap: 24 }}>
+        <div className="stack">
+          <div className="hint" style={{ fontWeight: 700, color: 'var(--label)' }}>{kit ? kit.name + ' · ' : ''}올린 사진 {draft.photos.length}장</div>
+          <PhotoInputs camRef={camRef} albRef={albRef} onFiles={(files) => onPhotos(files, draft.kitId, true)} />
+          <div className="thumbs">
+            {draft.photos.map((p) => (
+              <div className="thumb" key={p.id}>
+                {p.thumb ? <img src={p.thumb} alt="올린 라벨 사진" /> : <div className="center" style={{ minHeight: 0, height: '100%', padding: 8, fontSize: 13 }}>미리 보기 없음</div>}
+                {!res && <button type="button" className="x" aria-label="사진 빼기" onClick={() => removePhoto(p.id)}><Icon name="x" size={18} bold /></button>}
+              </div>
+            ))}
+            {!res && <button type="button" className="thumb-add" onClick={() => camRef.current.click()}><Icon name="camera" size={26} />찍어서 더하기</button>}
+            {!res && <button type="button" className="thumb-add" onClick={() => albRef.current.click()}><Icon name="album" size={26} />앨범에서 더하기</button>}
+          </div>
+          {!res && <div className="hint">찍거나 앨범에서 여러 장을 고를 수 있습니다. 용량표와 사용법이 또렷하게 보여야 합니다.</div>}
+        </div>
+
+        {!res && (
+          <div className="stack">
+            <button type="button" className="btn" disabled={reading || draft.photos.length === 0} onClick={onRead}>
+              {reading ? <React.Fragment><span className="spin"></span>라벨을 읽는 중입니다</React.Fragment> : '라벨 읽기'}
+            </button>
+            {reading && <div className="hint">사진을 올리고 글자를 읽습니다. 30초에서 1분쯤 걸립니다. 화면을 닫지 마세요.</div>}
+            {!reading && status && !status.hasKey && !DEMO && <div className="banner">Gemini 키가 아직 없습니다. 사진은 드라이브에 저장되고, 값은 직접 적어 넣을 수 있습니다.</div>}
+            <button type="button" className="btn line2" disabled={reading} onClick={onCancel}>그만두기</button>
+          </div>
+        )}
+
+        {res && (
+          <React.Fragment>
+            {res.demo && <div className="banner">예시 결과입니다. 실제 사진은 읽지 않았습니다. 시트와 Gemini를 연결하면 사진에서 읽은 값이 나옵니다.</div>}
+            {res.readError && <div className="banner bad">{res.readError}</div>}
+            {(res.unreadable || []).length > 0 && <div className="banner">읽지 못한 부분: {res.unreadable.join(' / ')}</div>}
+
+            <div className="card">
+              <div className="cap">사진에서 읽은 약</div>
+              <input className="input name" aria-label="약 이름" value={res.ident.name} onChange={(e) => setIdent('name', e.target.value)} placeholder="약 이름" />
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+                <div className="field" style={{ gridColumn: '1 / 3' }}><label htmlFor="c-ing">성분</label><input id="c-ing" className="input" value={res.ident.ingredient} onChange={(e) => setIdent('ingredient', e.target.value)} /></div>
+                <div className="field"><label htmlFor="c-con">함량</label><input id="c-con" className="input" value={res.ident.content} onChange={(e) => setIdent('content', e.target.value)} /></div>
+                <div className="field"><label htmlFor="c-form">제형</label><input id="c-form" className="input" value={res.ident.form} onChange={(e) => setIdent('form', e.target.value)} /></div>
+              </div>
+              <div className="field">
+                <span className="flabel">재는 단위</span>
+                <div className="chips wrap">
+                  {['g', 'ml'].map((u) => <button type="button" key={u} className={'pick' + (unitOf === u ? ' on' : '')} aria-pressed={unitOf === u} onClick={() => setRes({ unit: u })}>{u}</button>)}
+                </div>
+              </div>
+              <div className="small">잘못 읽은 칸은 눌러서 고칠 수 있습니다.</div>
+            </div>
+
+            <div className="stack">
+              <h2 className="h2">읽은 용량과 용법</h2>
+              {shown.length === 0 && <div className="card"><div className="note">라벨에서 우리 나무의 줄을 찾지 못했습니다. 이 약은 우리 나무에 등록되지 않았을 수 있습니다. 표가 나온 사진을 더 올리거나, 아래에서 나무를 골라 직접 적어 주세요.</div></div>}
+              {shown.map((r) => {
+                const b = baseOf(r.tree);
+                const fv = L.fieldVerdicts(Object.assign({}, r, { base: b }));
+                const d = L.num(r.dilution);
+                const s = r.search || {};
+                const sdiff = (f) => s[f] !== null && s[f] !== undefined && L.num(r[f]) !== null && L.num(r[f]) !== s[f];
+                return (
+                  <div className="card" key={r.tree} style={{ gap: 4 }}>
+                    <div className="between">
+                      <div className="tree-name mid">{r.tree}</div>
+                      <button type="button" className={'toggle' + (r.use ? ' on' : '')} role="switch" aria-checked={!!r.use} aria-label={r.tree + ' 값을 계획에 넣기'} onClick={() => setRow(r.tree, { use: !r.use })}></button>
+                    </div>
+                    {r.target && <div className="small">{r.target}</div>}
+                    {r.doseText && <div className="small">라벨 표기: {r.doseText}</div>}
+                    {r.phiNote && <div className="small">사용 시기: {r.phiNote}</div>}
+                    {r.use && (
+                      <div>
+                        <NumField id={'d-' + r.tree} label="희석배수" value={r.dilution} unit="배" onChange={(v) => setRow(r.tree, { dilution: v })} verdict={fv.dilution} baseText={b && b.dilution ? L.fmtNum(b.dilution) + '배' : ''} extra={d ? '물 20L에 ' + L.fmtAmount(20000 / d) + unitOf : ''} searchText={s.dilution ? L.fmtNum(s.dilution) + '배' : ''} searchDiff={sdiff('dilution')} />
+                        <NumField id={'p-' + r.tree} label="수확 전" value={r.phi} unit="일 전까지" onChange={(v) => setRow(r.tree, { phi: v })} verdict={fv.phi} baseText={b && b.phi !== null ? b.phi + '일' : ''} searchText={s.phi !== null && s.phi !== undefined ? s.phi + '일' : ''} searchDiff={sdiff('phi')} />
+                        <NumField id={'m-' + r.tree} label="한 해" value={r.max} unit="회까지" onChange={(v) => setRow(r.tree, { max: v })} verdict={fv.max} baseText={b && b.max !== null ? b.max + '회' : ''} searchText={s.max !== null && s.max !== undefined ? s.max + '회' : ''} searchDiff={sdiff('max')} />
+                      </div>
+                    )}
+                    {!r.use && <div className="small">이 나무의 값은 넣지 않습니다.</div>}
+                  </div>
+                );
+              })}
+              {skipped.length > 0 && (
+                <div className="card">
+                  <div className="cap">라벨에서 찾지 못한 나무</div>
+                  <div className="note">기준값을 그대로 둡니다. 직접 적으려면 나무를 누르세요.</div>
+                  <div className="chips wrap">
+                    {skipped.map((r) => <button type="button" key={r.tree} className="pick" onClick={() => setRow(r.tree, { use: true })}>{r.tree}</button>)}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div className="stack">
+              <h2 className="h2">방제 계획에 넣는 방법</h2>
+              <div className="card dark" style={{ gap: 6 }}>
+                {!main && <React.Fragment><span className="chip buy" style={{ alignSelf: 'flex-start', color: 'var(--ivory)', borderColor: 'var(--ivory)' }}>계획에 없는 약</span><div style={{ fontSize: 19, fontWeight: 700, lineHeight: 1.4 }}>계획에 있는 약과 이름도 성분도 다릅니다.</div><div className="small" style={{ color: 'var(--mist)' }}>내 약에는 넣지만 계획에는 표시하지 않습니다. 같은 일을 하는 약이면 아래에서 골라 주세요.</div></React.Fragment>}
+                {main && main.type === 'same' && <React.Fragment><span className="chip own" style={{ alignSelf: 'flex-start' }}>계획의 약</span><div style={{ fontSize: 19, fontWeight: 700, lineHeight: 1.4 }}>계획에 있는 {main.product}입니다.</div><div className="small" style={{ color: 'var(--mist)' }}>계획에 보유로 표시하고, 라벨 값으로 용량과 용법을 맞춥니다.</div></React.Fragment>}
+                {main && main.type === 'alt' && <React.Fragment><span className="chip alt" style={{ alignSelf: 'flex-start' }}>대체제로 넣음</span><div style={{ fontSize: 19, fontWeight: 700, lineHeight: 1.4 }}>계획의 {L.josa(matches.filter((m) => m.type === 'alt').map((m) => m.product).join(', '), '과', '와')} 같은 약입니다.</div><div className="small" style={{ color: 'var(--mist)' }}>계획에서 {matches.filter((m) => m.type === 'alt').map((m) => m.product).join(', ')} 대신 {L.josa(res.ident.name || '이 약', '으로', '로')} 표시합니다.</div></React.Fragment>}
+                {main && main.type === 'similar' && <React.Fragment><span className="chip alt" style={{ alignSelf: 'flex-start' }}>비슷한 약</span><div style={{ fontSize: 19, fontWeight: 700, lineHeight: 1.4 }}>{L.josa(main.product, '과', '와')} 성분은 같지만 함량이나 제형이 다릅니다.</div><div className="small" style={{ color: 'var(--mist)' }}>용량이 다를 수 있어 자동으로는 바꿔 넣지 않습니다. 라벨 값을 확인했으면 아래에서 {main.product} 대신 쓰기를 고르세요.</div></React.Fragment>}
+              </div>
+              <CoverSelect value={res.covers} onChange={(v) => setRes({ covers: v })} products={data.products} />
+            </div>
+
+            {(res.cautions || []).length > 0 && (
+              <div className="stack">
+                <h2 className="h2">라벨의 주의</h2>
+                <div className="card tight">{res.cautions.map((c, i) => <div className="row" key={i}><div style={{ fontSize: 17, fontWeight: 500 }}>{c}</div></div>)}</div>
+              </div>
+            )}
+
+            <div className="stack">
+              <h2 className="h2">검색으로 맞춰 본 결과</h2>
+              {(res.sources || []).length > 0 ? (
+                <div className="card tight">
+                  {res.searchNotes && <div className="row"><div className="note">{res.searchNotes}</div></div>}
+                  {res.sources.map((s, i) => <div className="row" key={i}><a href={s.uri} target="_blank" rel="noopener" style={{ fontSize: 16, fontWeight: 700, minHeight: 30, display: 'inline-flex', alignItems: 'center' }}>{s.title || '출처 ' + (i + 1)}</a></div>)}
+                  <div className="row"><div className="small">검색 값은 참고용입니다. 계획에는 라벨에서 읽은 값만 넣습니다.</div></div>
+                </div>
+              ) : (
+                <div className="card"><div className="note">{res.demo ? '예시에서는 검색하지 않습니다.' : (res.warnings || []).indexOf('SEARCH_OFF') >= 0 ? '검색이 꺼져 있습니다. 설정에서 켤 수 있습니다.' : (res.warnings || []).indexOf('NO_KEY') >= 0 ? 'Gemini 키가 없어 검색하지 않았습니다.' : '믿을 만한 근거 페이지를 찾지 못해 검색 값은 쓰지 않았습니다. 라벨 값과 기준값만 맞춰 봤습니다.'}</div></div>
+              )}
+            </div>
+
+            <div className="stack">
+              <button type="button" className="btn" onClick={onConfirm}>확인했어요, 계획에 넣기</button>
+              <button type="button" className="btn line2" disabled={reading} onClick={() => setDraft(Object.assign({}, draft, { result: null }))}>사진 다시 올리기</button>
+              <button type="button" className="btn line2" onClick={onCancel}>그만두기</button>
+            </div>
+          </React.Fragment>
+        )}
+      </div>
+    </React.Fragment>
+  );
+}
+
+function RecordScreen({ data, ctx, today, prefill, clearPrefill, onSave, onDeleteLog }) {
+  const [date, setDate] = useState(L.dnToIso(today));
+  const [off, setOff] = useState({});
+  const [trees, setTrees] = useState([]);
+  const [prods, setProds] = useState([]);
+  const [water, setWater] = useState('');
+  const [result, setResult] = useState(null);
+  useEffect(() => {
+    const init = {};
+    if (prefill) { prefill.items.forEach((it) => { if (it.buy) init[it.key] = true; }); setResult(null); }
+    setOff(init);
+  }, [prefill]);
+  const year = String(date).slice(0, 4);
+  const flip = (list, set, v) => set(list.indexOf(v) >= 0 ? list.filter((x) => x !== v) : list.concat([v]));
+  const options = useMemo(() => {
+    const out = [], seen = {};
+    data.kit.forEach((k) => { if (!seen[k.name]) { seen[k.name] = 1; out.push({ name: k.name, own: true }); } });
+    data.products.forEach((p) => { if (SPRAY[p.kind] && !ctx.own[p.name] && !seen[p.name]) { seen[p.name] = 1; out.push({ name: p.name, own: false }); } });
+    return out;
+  }, [data, ctx]);
+  const pairs = [];
+  const seenPair = {};
+  const extra = [];
+  if (prefill) {
+    prefill.items.forEach((it) => {
+      if (off[it.key]) return;
+      if (it.product) { seenPair[it.tree + '|' + it.product] = 1; pairs.push(it); } else extra.push(it);
+    });
+  }
+  trees.forEach((t) => prods.forEach((p) => { if (!seenPair[t + '|' + p]) { seenPair[t + '|' + p] = 1; pairs.push({ tree: t, product: p }); } }));
+  const canSave = !!date && (pairs.length > 0 || extra.length > 0);
+  const save = () => {
+    const fx = onSave(pairs, extra, date, water);
+    setResult({ fx: fx, date: date, count: pairs.length + extra.length });
+    setTrees([]); setProds([]); setWater(''); clearPrefill();
+    window.scrollTo(0, 0);
+  };
+  const logs = data.logs.filter((g) => String(g.date).slice(0, 4) === String(L.fromDn(today).y)).slice().sort((p, q) => (p.date < q.date ? 1 : p.date > q.date ? -1 : 0));
+  const counts = useMemo(() => {
+    const m = {}, out = [];
+    data.logs.forEach((g) => {
+      if (String(g.date).slice(0, 4) !== String(L.fromDn(today).y)) return;
+      const base = g.base || L.canonical(data, g.product);
+      const k = g.tree + '|' + base;
+      if (!m[k]) { const row = L.doseRow(data, g.tree, [g.product, base]); m[k] = { tree: g.tree, product: g.product, n: 0, max: row ? row.max : null }; out.push(m[k]); }
+      m[k].n++;
+    });
+    return out;
+  }, [data, today]);
+  const harvest = useMemo(() => L.harvestDates(data, today), [data, today]);
+  return (
+    <React.Fragment>
+      <div className="hero"><div className="hero-col"><div className="eyebrow">뿌린 날 적기</div><h1>기록</h1><div className="hero-sub">적어 두면 수확할 수 있는 날과 다음 약 날짜를 알려 줍니다.</div></div></div>
+      <div className="body">
+        {result && (
+          <div className="stack">
+            <h2 className="h2">{L.md(L.isoToDn(result.date))} 기록을 적었습니다</h2>
+            {result.fx.length === 0 && <div className="card"><div className="note">{result.count}가지를 적었습니다.</div></div>}
+            {result.fx.map((f, i) => (
+              <div className={'card' + (f.type === 'count' ? '' : ' dark')} key={i} style={{ gap: 2 }}>
+                <div className="result-big" style={f.type === 'count' ? { color: f.over || f.full ? 'var(--danger)' : 'var(--green)' } : null}>{f.text}</div>
+                <div className="result-sub">{f.sub}</div>
+                <div className="small" style={f.type === 'count' ? null : { color: 'var(--mist)' }}>{f.note}</div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        <div className="card" style={{ gap: 16 }}>
+          <div className="field"><label htmlFor="r-date">뿌린 날</label><input id="r-date" type="date" className="input" value={date} max={L.dnToIso(today + 1)} onChange={(e) => setDate(e.target.value)} /></div>
+          {prefill && prefill.items.length > 0 && (
+            <div className="field">
+              <span className="flabel">{prefill.title}에서 한 일</span>
+              <div className="stack" style={{ gap: 0 }}>
+                {prefill.items.map((it) => (
+                  <div className="row h" key={it.key}>
+                    <div className="main"><span style={{ fontFamily: 'var(--serif)', fontWeight: 900, fontSize: 24, color: 'var(--green)', lineHeight: 1.25 }}>{it.tree}</span><span style={{ fontSize: 17, fontWeight: 700 }}>{it.product || it.text}</span>{it.buy && <span className="small">아직 없는 약이라 꺼 두었습니다</span>}</div>
+                    <button type="button" className={'toggle' + (off[it.key] ? '' : ' on')} role="switch" aria-checked={!off[it.key]} aria-label={it.tree + ' ' + (it.product || it.text) + ' 했음'} onClick={() => setOff(Object.assign({}, off, { [it.key]: !off[it.key] }))}></button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+          <div className="field">
+            <span className="flabel">{prefill ? '더 뿌린 나무' : '나무'}</span>
+            <div className="chips wrap">{data.trees.map((t) => <button type="button" key={t.name} className={'pick' + (trees.indexOf(t.name) >= 0 ? ' on' : '')} aria-pressed={trees.indexOf(t.name) >= 0} onClick={() => flip(trees, setTrees, t.name)}>{t.name}</button>)}</div>
+          </div>
+          <div className="field">
+            <span className="flabel">{prefill ? '더 뿌린 약' : '약'}</span>
+            <div className="chips wrap">{options.map((p) => <button type="button" key={p.name} className={'pick' + (prods.indexOf(p.name) >= 0 ? ' on' : '')} aria-pressed={prods.indexOf(p.name) >= 0} onClick={() => flip(prods, setProds, p.name)}>{p.name}{p.own && <small>보유</small>}</button>)}</div>
+          </div>
+          <div className="field"><label htmlFor="r-water">물 양 (적지 않아도 됨)</label><div className="numrow"><input id="r-water" className="input num" inputMode="decimal" value={water} onChange={(e) => setWater(e.target.value.replace(/[^0-9.]/g, ''))} /><span className="unit">L</span></div></div>
+          {pairs.length > 0 && <div className="small">저장할 기록: {pairs.map((p) => p.tree + ' ' + p.product).join(', ')}</div>}
+          <button type="button" className="btn" disabled={!canSave} onClick={save}>저장</button>
+        </div>
+
+        {harvest.length > 0 && (
+          <div className="stack">
+            <h2 className="h2">딸 수 있는 날</h2>
+            {harvest.map((h) => (
+              <div className="card dark" key={h.tree} style={{ gap: 2 }}>
+                <div className="result-big">{L.md(h.date)}부터</div>
+                <div className="result-sub">{h.tree}</div>
+                <div className="small" style={{ color: 'var(--mist)' }}>{h.product} · 수확 {h.phi}일 전까지</div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {counts.length > 0 && (
+          <div className="stack">
+            <h2 className="h2">올해 쓴 횟수</h2>
+            <div className="card tight">
+              {counts.map((c, i) => (
+                <div className="row h" key={i}>
+                  <div className="main"><span style={{ fontSize: 17, fontWeight: 700 }}>{c.tree} · {c.product}</span>{c.max !== null && <span className="small">한 해 {c.max}회까지</span>}</div>
+                  <span className="amount" style={{ fontSize: 28, color: c.max !== null && c.n >= c.max ? 'var(--danger)' : 'var(--green)' }}>{c.n}회</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        <div className="stack">
+          <h2 className="h2">올해 기록</h2>
+          {logs.length === 0 && <div className="card"><div className="note">아직 기록이 없습니다.</div></div>}
+          {logs.length > 0 && (
+            <div className="card tight">
+              {logs.map((g) => (
+                <div className="row h" key={g.id}>
+                  <div className="main"><span style={{ fontSize: 17, fontWeight: 700 }}>{g.tree} · {g.product}</span><span className="small">{L.md(L.isoToDn(g.date))}{g.water ? ' · 물 ' + g.water + 'L' : ''}</span></div>
+                  <TwoStep label="삭제" onGo={() => onDeleteLog(g.id)} />
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    </React.Fragment>
+  );
+}
+
+function CalcScreen({ data, ctx, go }) {
+  const [water, setWater] = useState(20);
+  const [custom, setCustom] = useState('');
+  const w = L.num(custom) || water;
+  const rows = useMemo(() => L.calcRows(data, ctx, w), [data, ctx, w]);
+  const have = rows.filter((r) => !r.missing);
+  const miss = rows.filter((r) => r.missing);
+  const mix = useMemo(() => L.mixTable(data, ctx), [data, ctx]);
+  return (
+    <React.Fragment>
+      <div className="hero">
+        <div className="hero-col"><div className="eyebrow">희석 용량</div><h1>계산기</h1><div className="hero-sub">물 양을 고르면 약마다 넣을 양이 나옵니다.</div></div>
+        <div className="water">
+          {[5, 10, 20].map((v) => <button type="button" key={v} className={!L.num(custom) && water === v ? 'on' : ''} aria-pressed={!L.num(custom) && water === v} onClick={() => { setWater(v); setCustom(''); }}>{v}L</button>)}
+        </div>
+      </div>
+      <div className="body">
+        <div className="card">
+          <div className="field"><label htmlFor="c-water">다른 물 양</label><div className="numrow"><input id="c-water" className="input num" inputMode="decimal" value={custom} onChange={(e) => setCustom(e.target.value.replace(/[^0-9.]/g, ''))} placeholder={String(water)} /><span className="unit">L</span></div></div>
+        </div>
+        <div className="stack">
+          {have.map((r, i) => (
+            <div className="card" key={i} style={{ padding: '14px 18px', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: 12 }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 2, minWidth: 0 }}>
+                <div className="line"><span className={r.state === 'buy' ? 'pname soft' : 'pname'}>{r.name}</span>{r.state !== 'buy' && <span className="chip own">보유</span>}{r.state === 'alt' && <span className="chip alt">대체</span>}</div>
+                <div className="small">{r.rate}{r.trees ? ' · ' + r.trees : ''}{r.label ? ' · 라벨 확인함' : ''}</div>
+              </div>
+              <div className="amount">{r.amount || '라벨대로'}</div>
+            </div>
+          ))}
+          {miss.length > 0 && (
+            <div className="card" style={{ padding: '14px 18px', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: 12 }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 2, minWidth: 0 }}>
+                <div className="pname soft">{miss.map((r) => r.name).join(' · ')}</div>
+                <div className="small">배수를 아직 확인하지 못했습니다. 라벨 사진을 올리면 채워집니다.</div>
+              </div>
+              <button type="button" className="btn gold" onClick={() => go('kit')}>올리기</button>
+            </div>
+          )}
+        </div>
+        <div className="stack">
+          <h2 className="h2">한 통에 섞어도 되나</h2>
+          <div className="card tight">
+            {mix.map((m) => (
+              <div className="row" key={m.id}>
+                <div className="between"><span style={{ fontSize: 17, fontWeight: 700 }}>{m.a} + {m.b}</span><MixChip verdict={m.verdict} /></div>
+                {m.note && <div className="small">{m.note}</div>}
+              </div>
+            ))}
+          </div>
+          <div className="hint">표에 없는 짝은 확인되지 않은 것입니다. 라벨의 혼용표를 보거나 따로 뿌리세요.</div>
+        </div>
+      </div>
+    </React.Fragment>
+  );
+}
+
+function SettingsSheet({ store, onClose, toast }) {
+  const [pin, setPin] = useState(LS.get('tree.pin', ''));
+  const st = store.status || {};
+  const netText = { demo: '예시 데이터 (시트 연결 전)', ok: '시트와 연결됨', saving: '저장하는 중', loading: '불러오는 중', offline: '연결 안 됨', pin: 'PIN 필요', setup: '시트 준비 필요', error: '저장 오류' }[store.net] || store.net;
+  return (
+    <div className="veil" onClick={onClose}>
+      <div className="sheet" role="dialog" aria-modal="true" aria-label="설정" onClick={(e) => e.stopPropagation()}>
+        <h2>설정</h2>
+        <div className="card tight">
+          <div className="row h"><div className="main"><span className="flabel">연결</span><span style={{ fontSize: 17, fontWeight: 700 }}>{netText}</span>{store.pending > 0 && <span className="small">보내지 못한 변경 {store.pending}건</span>}</div>{!DEMO && <button type="button" className="btn gold" onClick={() => store.sync(true)}>새로 고침</button>}</div>
+          {!DEMO && <div className="row"><span className="flabel">라벨 읽기 (Gemini)</span><span style={{ fontSize: 17, fontWeight: 700 }}>{st.hasKey ? '키 들어 있음 · ' + (st.model || '') : '키 없음'}</span></div>}
+          {!DEMO && (
+            <div className="row h">
+              <div className="main"><span className="flabel">검색으로 한 번 더 맞춰 보기</span><span className="small">끄면 라벨 값과 기준값만 맞춰 봅니다.</span></div>
+              <button type="button" className={'toggle' + (st.search ? ' on' : '')} role="switch" aria-checked={!!st.search} aria-label="검색 켜기" onClick={() => store.setSearch(!st.search).catch((e) => toast(e.message))}></button>
+            </div>
+          )}
+          {!DEMO && (
+            <div className="row">
+              <label className="flabel" htmlFor="s-pin">PIN</label>
+              <div className="numrow"><input id="s-pin" className="input" style={{ width: 160 }} inputMode="numeric" value={pin} onChange={(e) => setPin(e.target.value)} /><button type="button" className="btn gold" onClick={() => { LS.set('tree.pin', pin.trim()); store.sync(true); toast('PIN을 바꿨습니다.'); }}>저장</button></div>
+            </div>
+          )}
+          {DEMO && <div className="row"><div className="note">지금은 예시 데이터입니다. 여기서 바꾼 내용은 이 휴대폰에만 남습니다.</div><button type="button" className="btn line2" onClick={() => { store.resetDemo(); toast('예시 데이터를 처음으로 되돌렸습니다.'); }}>예시 데이터 처음으로</button></div>}
+          <div className="row"><span className="small">앱 버전 {APP_VERSION}{st.version ? ' · 서버 ' + st.version : ''}</span></div>
+        </div>
+        <button type="button" className="btn line2" onClick={onClose}>닫기</button>
+      </div>
+    </div>
+  );
+}
+
+function PinGate({ store }) {
+  const [pin, setPin] = useState('');
+  return (
+    <div className="app">
+      <div className="hero"><div className="hero-col"><div className="eyebrow">우리 집 과수 방제력</div><h1 className="mid">PIN 입력</h1><div className="hero-sub">Apps Script에서 setup을 실행했을 때 로그에 나온 숫자입니다.</div></div></div>
+      <div className="body">
+        <div className="card">
+          <div className="field"><label htmlFor="g-pin">PIN</label><input id="g-pin" className="input name" inputMode="numeric" autoComplete="off" value={pin} onChange={(e) => setPin(e.target.value)} /></div>
+          {store.netMsg && <div className="warn-note">{store.netMsg}</div>}
+        </div>
+        <button type="button" className="btn" disabled={!pin.trim()} onClick={() => { LS.set('tree.pin', pin.trim()); store.sync(true); }}>열기</button>
+      </div>
+    </div>
+  );
+}
+
+function useStore() {
+  const [raw, setRaw] = useState(() => (DEMO ? (LS.get('tree.demo', null) || clone(SEED)) : LS.get('tree.cache', null)));
+  const [status, setStatus] = useState(() => LS.get('tree.status', null));
+  const [net, setNet] = useState(DEMO ? 'demo' : 'loading');
+  const [netMsg, setNetMsg] = useState('');
+  const [pending, setPending] = useState(() => (DEMO ? 0 : LS.get('tree.queue', []).length));
+  const rawRef = useRef(raw);
+  const queueRef = useRef(DEMO ? [] : LS.get('tree.queue', []));
+  const busy = useRef(false);
+  const again = useRef('');
+
+  const saveRaw = (next) => { rawRef.current = next; setRaw(next); LS.set(DEMO ? 'tree.demo' : 'tree.cache', next); };
+  const saveQueue = (q) => { queueRef.current = q; LS.set('tree.queue', q); setPending(q.length); };
+
+  async function sync(full) {
+    if (DEMO) return;
+    if (busy.current) { if (full || !again.current) again.current = full ? 'full' : 'ops'; return; }
+    busy.current = true;
+    try {
+      let wantLoad = full;
+      for (let guard = 0; guard < 6; guard++) {
+        const sending = queueRef.current.slice();
+        if (sending.length) {
+          setNet('saving');
+          await api('ops', { ops: sending });
+          saveQueue(queueRef.current.slice(sending.length));
+          continue;
+        }
+        if (!wantLoad) break;
+        const r = await api('load');
+        wantLoad = false;
+        saveRaw(queueRef.current.length ? L.applyOps(r.tables, queueRef.current) : r.tables);
+        setStatus(r.status); LS.set('tree.status', r.status);
+        if (r.missing && r.missing.length) { setNet('setup'); setNetMsg('없는 시트: ' + r.missing.join(', ')); return; }
+      }
+      setNet('ok'); setNetMsg('');
+    } catch (e) {
+      if (e.code === 'PIN') { setNet('pin'); setNetMsg(LS.get('tree.pin', '') ? e.message : ''); }
+      else if (e.code === 'SETUP') { setNet('setup'); setNetMsg(e.message); }
+      else if (e.server) {
+        saveQueue([]);
+        setNet('error'); setNetMsg(e.message);
+        try { const r = await api('load'); saveRaw(r.tables); setStatus(r.status); } catch (e2) {}
+      } else { setNet('offline'); setNetMsg(e.message || ''); }
+    } finally {
+      busy.current = false;
+      if (again.current) { const f = again.current === 'full'; again.current = ''; sync(f); }
+    }
+  }
+
+  function commit(ops) {
+    if (!ops || !ops.length) return;
+    saveRaw(L.applyOps(rawRef.current || {}, ops));
+    if (!DEMO) { saveQueue(queueRef.current.concat(ops)); sync(false); }
+  }
+
+  async function setSearch(on) {
+    const r = await api('setSetting', { key: 'SEARCH', value: on ? 'on' : 'off' });
+    setStatus(r.status); LS.set('tree.status', r.status);
+  }
+
+  function resetDemo() { LS.del('tree.demo'); saveRaw(clone(SEED)); }
+
+  useEffect(() => {
+    if (DEMO) return undefined;
+    sync(true);
+    const on = () => sync(true);
+    const vis = () => { if (document.visibilityState === 'visible') sync(true); };
+    window.addEventListener('online', on);
+    document.addEventListener('visibilitychange', vis);
+    return () => { window.removeEventListener('online', on); document.removeEventListener('visibilitychange', vis); };
+  }, []);
+
+  return { raw, rawRef, status, net, netMsg, pending, sync, commit, setSearch, resetDemo };
+}
+
+function App() {
+  const store = useStore();
+  const [tab, setTab] = useState('main');
+  const [draft, setDraft] = useState(null);
+  const [reading, setReading] = useState(false);
+  const [prefill, setPrefill] = useState(null);
+  const [sheet, setSheet] = useState('');
+  const [toastMsg, setToastMsg] = useState('');
+  const [today, setToday] = useState(nowDn());
+  const data = useMemo(() => (store.raw ? L.normalize(store.raw) : null), [store.raw]);
+  const ctx = useMemo(() => (data ? L.buildOwn(data) : null), [data]);
+
+  useEffect(() => {
+    const id = setInterval(() => { const n = nowDn(); setToday((t) => (t === n ? t : n)); }, 60000);
+    return () => clearInterval(id);
+  }, []);
+  useEffect(() => {
+    if (!toastMsg) return undefined;
+    const id = setTimeout(() => setToastMsg(''), 4200);
+    return () => clearTimeout(id);
+  }, [toastMsg]);
+  const toast = (m) => setToastMsg(m);
+  const go = (t) => { setTab(t); window.scrollTo(0, 0); };
+
+  if (store.net === 'pin') return <PinGate store={store} />;
+  if (!data) {
+    return (
+      <div className="app"><div className="center">
+        {store.net === 'loading' || store.net === 'saving' ? <React.Fragment><div className="spin" style={{ borderColor: 'rgba(18,58,44,0.25)', borderTopColor: 'var(--green)' }}></div><div className="note">불러오는 중입니다</div></React.Fragment> : (
+          <React.Fragment>
+            <div className="pname">시트에서 내용을 가져오지 못했습니다.</div>
+            <div className="note">{store.netMsg || '연결을 확인해 주세요.'}</div>
+            <button type="button" className="btn" onClick={() => store.sync(true)}>다시 시도</button>
+          </React.Fragment>
+        )}
+      </div></div>
+    );
+  }
+
+  const iso = L.dnToIso(today);
+  const afterData = (ops) => { const nd = L.normalize(L.applyOps(store.rawRef.current, ops)); return { nd: nd, nctx: L.buildOwn(nd) }; };
+
+  const onToggle = (o) => {
+    if (o.doneDate) { store.commit(L.uncheckOps(data, o.key)); toast('완료 표시를 지웠습니다.'); return; }
+    const t = o.task;
+    if (SPRAY[t.kind] && t.product) {
+      const pair = { tree: t.tree, product: L.resolve(ctx, t.product).name, base: t.product, key: o.key };
+      const ops = L.logOps(data, [pair], iso, '', '');
+      const a = afterData(ops);
+      store.commit(ops);
+      const fx = L.logEffects(a.nd, a.nctx, [pair], iso, today).filter((f) => f.type !== 'count' || f.full || f.over)[0];
+      toast('오늘 뿌린 것으로 적었습니다.' + (fx ? ' ' + fx.text + ' ' + fx.sub + (fx.type === 'count' ? ' (' + fx.note + ')' : '') : ''));
+    } else {
+      store.commit([{ table: 'checks', type: 'put', row: { id: o.key, date: iso } }]);
+    }
+  };
+
+  const onVisitRecord = (v) => {
+    const items = v.items.filter((x) => !x.doneDate).map((x) => {
+      const t = x.task;
+      const spray = SPRAY[t.kind] && t.product;
+      const res = L.resolve(ctx, t.product);
+      return { key: x.key, tree: t.tree, product: spray ? res.name : '', base: spray ? t.product : '', buy: !!spray && res.state === 'buy', text: t.product && !spray ? t.product + ' · ' + t.text : t.text };
+    });
+    setPrefill({ title: (ORD[v.n - 1] || v.n) + ' 번째 방문', items: items });
+    go('record');
+  };
+
+  const onSaveRecord = (pairs, extra, date, water) => {
+    let ops = L.logOps(data, pairs, date, L.num(water) || '', '');
+    extra.forEach((x) => ops.push({ table: 'checks', type: 'put', row: { id: x.key, date: date } }));
+    const a = afterData(ops);
+    store.commit(ops);
+    return L.logEffects(a.nd, a.nctx, pairs, date, today);
+  };
+
+  const onPhotos = async (files, kitId, append) => {
+    try {
+      const room = 8 - (append && draft ? draft.photos.length : 0);
+      if (files.length > room) toast('한 번에 8장까지 올릴 수 있습니다. 앞의 ' + Math.max(room, 0) + '장만 넣었습니다.');
+      const photos = [];
+      for (const f of files.slice(0, Math.max(room, 0))) photos.push(await fileToPhoto(f));
+      if (append && draft) setDraft(Object.assign({}, draft, { photos: draft.photos.concat(photos), result: null }));
+      else setDraft({ kitId: kitId || null, photos: photos, result: null });
+      if (tab !== 'check') go('check');
+    } catch (e) { toast(e.message || '사진을 준비하지 못했습니다.'); }
+  };
+
+  const onRead = async () => {
+    if (!draft || reading) return;
+    setReading(true);
+    try {
+      let r;
+      if (DEMO) { await sleep(900); r = { photos: draft.photos.map(() => ({ fileId: '' })), label: demoLabel(draft, data), search: null, sources: [], warnings: [], readError: '', model: '', demo: true }; }
+      else {
+        r = await api('readLabel', {
+          photos: draft.photos.map((p) => (p.fileId ? { fileId: p.fileId } : { data: p.data, mime: p.mime })),
+          crops: data.trees.map((t) => t.aliases.join('/'))
+        });
+      }
+      const photos = draft.photos.map((p, i) => {
+        const fid = (r.photos && r.photos[i] && r.photos[i].fileId) || p.fileId;
+        return Object.assign({}, p, { fileId: fid, data: fid ? '' : p.data });
+      });
+      const kit = draft.kitId ? data.kit.filter((k) => k.id === draft.kitId)[0] : null;
+      const label = r.label || { name: kit ? kit.name : '', ingredient: kit ? kit.ingredient : '', content: kit ? kit.content : '', form: kit ? kit.form : '', rows: [], cautions: [] };
+      if (kit && !label.name) label.name = kit.name;
+      const cmp = L.compareLabel(data, label, r.search);
+      setDraft({
+        kitId: draft.kitId, photos: photos,
+        result: {
+          ident: cmp.ident, unit: cmp.unit || (kit ? kit.unit : ''), covers: kit ? kit.covers : '',
+          rows: cmp.rows.map((x) => Object.assign({}, x, { use: x.onLabel })),
+          cautions: label.cautions || [], unreadable: label.unreadable || [], maker: label.maker || '', group: label.group || '',
+          sources: r.sources || [], searchNotes: (r.search && r.search.notes) || '', warnings: r.warnings || [], readError: r.readError || '', model: r.model || '', demo: !!r.demo
+        }
+      });
+      window.scrollTo(0, 0);
+    } catch (e) {
+      if (e.code === 'PIN') store.sync(true);
+      toast(e.server ? e.message : '연결이 안 되어 라벨을 읽지 못했습니다. 다시 눌러 주세요.');
+    } finally { setReading(false); }
+  };
+
+  const onConfirm = () => {
+    const res = draft.result;
+    const name = (res.ident.name || '').trim();
+    if (!name) { toast('약 이름을 적어 주세요.'); return; }
+    const c = L.confirmOps(data, {
+      kitId: draft.kitId, name: name, ingredient: (res.ident.ingredient || '').trim(), content: (res.ident.content || '').trim(), form: (res.ident.form || '').trim(),
+      unit: res.unit, covers: res.covers, rows: res.rows.filter((r) => r.use), cautions: res.cautions, maker: res.maker, group: res.group, model: res.model, sources: res.sources,
+      photos: draft.photos.map((p) => ({ id: p.id, fileId: p.fileId, thumb: p.thumb }))
+    }, iso);
+    store.commit(c.ops);
+    setDraft(null);
+    go('kit');
+    toast(L.josa(name, '을', '를') + ' 내 약에 넣고 계획에 반영했습니다.');
+  };
+
+  const onCancelDraft = () => {
+    const ids = draft ? draft.photos.map((p) => p.fileId).filter(Boolean) : [];
+    if (ids.length && !DEMO) api('delPhotos', { fileIds: ids }).catch(() => {});
+    setDraft(null);
+    go('kit');
+  };
+
+  const onAddName = (k) => {
+    if (data.kit.some((x) => L.norm(x.name) === L.norm(k.name))) { toast('이미 내 약에 있습니다.'); return; }
+    store.commit([{ table: 'kit', type: 'put', row: { id: L.uid('k'), name: k.name, ingredient: k.ingredient || '', content: k.content || '', form: k.form || '', unit: '', covers: k.covers || '', status: '확인 전', checked: '', label: '', added: iso } }]);
+    setSheet('');
+    toast(L.josa(k.name, '을', '를') + ' 내 약에 넣었습니다.');
+  };
+
+  const onRemoveKit = (id) => {
+    const r = L.removeKitOps(data, id);
+    store.commit(r.ops);
+    if (r.fileIds.length && !DEMO) api('delPhotos', { fileIds: r.fileIds }).catch(() => {});
+    toast('내 약에서 뺐습니다.');
+  };
+
+  const navTab = tab === 'check' ? 'kit' : tab;
+  const NAV = [['main', '이번 달', 'cal'], ['ahead', '앞으로', 'list'], ['kit', '내 약', 'bottle'], ['record', '기록', 'pen'], ['calc', '계산기', 'drop']];
+  return (
+    <div className="app">
+      {tab === 'main' && <MainScreen store={store} data={data} ctx={ctx} today={today} go={go} onToggle={onToggle} onVisitRecord={onVisitRecord} openSettings={() => setSheet('settings')} />}
+      {tab === 'ahead' && <AheadScreen data={data} ctx={ctx} today={today} />}
+      {tab === 'kit' && <KitScreen data={data} ctx={ctx} today={today} onPhotos={onPhotos} onAddName={onAddName} onRemove={onRemoveKit} onCheckKit={(id) => { setDraft({ kitId: id, photos: data.photos.filter((p) => p.kitId === id && p.fileId).map((p) => ({ id: p.id, data: '', mime: 'image/jpeg', thumb: p.thumb, fileId: p.fileId })), result: null }); go('check'); }} openNameSheet={() => setSheet('name')} />}
+      {tab === 'check' && <CheckScreen data={data} draft={draft} setDraft={setDraft} reading={reading} onRead={onRead} onConfirm={onConfirm} onCancel={onCancelDraft} onPhotos={onPhotos} go={go} status={store.status} />}
+      {tab === 'record' && <RecordScreen data={data} ctx={ctx} today={today} prefill={prefill} clearPrefill={() => setPrefill(null)} onSave={onSaveRecord} onDeleteLog={(id) => { store.commit(L.deleteLogOps(data, id)); toast('기록을 지웠습니다.'); }} />}
+      {tab === 'calc' && <CalcScreen data={data} ctx={ctx} go={go} />}
+      <nav className="nav" aria-label="메뉴">
+        <div className="nav-in">
+          {NAV.map((n) => (
+            <button type="button" key={n[0]} className={navTab === n[0] ? 'on' : ''} aria-current={navTab === n[0] ? 'page' : undefined} onClick={() => go(n[0])}>
+              <Icon name={n[2]} bold={navTab === n[0]} />{n[1]}
+            </button>
+          ))}
+        </div>
+      </nav>
+      {sheet === 'settings' && <SettingsSheet store={store} onClose={() => setSheet('')} toast={toast} />}
+      {sheet === 'name' && <NameSheet data={data} onAdd={onAddName} onClose={() => setSheet('')} />}
+      {toastMsg && <div className="toast" role="status">{toastMsg}</div>}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>
