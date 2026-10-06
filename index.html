@@ -18,7 +18,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@700;900&family=Noto+Sans+KR:wght@400;500;700&display=swap">
 <script>
 var API_URL = 'https://script.google.com/macros/s/AKfycbwYZ08xNCnPO3VORtf4DS2G9IpQuKaxuhDKzWMPZ4fqlZvTbGgJx3IUzanmhYiFcmXM/exec';
-var APP_VERSION = '2026-10-06e';
+var APP_VERSION = '2026-10-06f';
 </script>
 <style>
 :root {
@@ -141,6 +141,20 @@ a { color: var(--green); }
 .seg { display: flex; background: var(--green3); border-radius: 14px; padding: 4px; gap: 4px; }
 .seg button { flex: 1 1 0; min-height: 46px; border: 0; border-radius: 11px; background: transparent; color: var(--mist); font-size: 16px; font-weight: 700; }
 .seg button.on { background: var(--gold); color: var(--text); }
+.fold { background: #fff; border-radius: 18px; overflow: hidden; }
+.fold-head { width: 100%; min-height: 76px; border: 0; background: #fff; color: var(--text); padding: 14px 16px; display: flex; align-items: center; gap: 12px; text-align: left; }
+.fold-head:disabled { cursor: default; }
+.fold-head:focus-visible { outline: 3px solid var(--gold); outline-offset: -3px; }
+.fold-main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+.fold-sub { font-size: 15px; color: var(--muted); line-height: 1.45; }
+.chev { flex-shrink: 0; color: var(--green); display: flex; transition: transform 0.15s; }
+.chev.up { transform: rotate(180deg); }
+.fold-body { padding: 0 16px 14px 16px; display: flex; flex-direction: column; }
+.fold-note { background: var(--tag); border-radius: 10px; padding: 8px 12px; font-size: 15px; font-weight: 500; line-height: 1.45; margin-bottom: 10px; }
+.fold-note strong { font-weight: 700; }
+.fold-body .task { border-top: 1px solid var(--hair); }
+.fold-plain { border-top: 1px solid var(--hair); padding: 12px 0 2px 0; display: flex; flex-direction: column; gap: 2px; font-size: 18px; font-weight: 700; line-height: 1.4; }
+.daypill { background: var(--green); color: var(--ivory); border-radius: 10px; padding: 6px 12px; font-family: var(--serif); font-weight: 900; font-size: 20px; font-variant-numeric: tabular-nums; }
 .ylegend { display: flex; flex-wrap: wrap; gap: 6px 16px; padding: 0 4px; }
 .ylegend > span { display: inline-flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 500; }
 .ym { display: inline-block; flex-shrink: 0; width: 12px; height: 12px; }
@@ -227,7 +241,7 @@ a { color: var(--green); }
 .toggle.on { background: var(--green); }
 .toggle.on::after { left: 30px; }
 .hide { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; overflow: hidden; }
-@media (prefers-reduced-motion: reduce) { .check.on span { animation: none; } .spin { animation-duration: 2.5s; } .toggle::after { transition: none; } }
+@media (prefers-reduced-motion: reduce) { .chev { transition: none; } .check.on span { animation: none; } .spin { animation-duration: 2.5s; } .toggle::after { transition: none; } }
 @media (max-width: 360px) { .hero h1.month { font-size: 88px; } .tree-name { font-size: 30px; } .tile b { font-size: 40px; } }
 </style>
 </head>
@@ -694,6 +708,62 @@ L.monthPlan = function (data, ctx, today, y, m, keep) {
   res.taskCount = active.filter(function (o) { return !o.doneDate; }).length;
   res.buyCount = prods.filter(function (p) { return p.state === 'buy'; }).length;
   return res;
+};
+
+L.rangeText = function (lo, hi, today) {
+  if (lo <= today) return L.md(hi) + '까지';
+  var a = L.fromDn(lo), b = L.fromDn(hi);
+  if (lo === hi) return L.md(lo);
+  if (a.m === b.m) return a.m + '월 ' + a.d + '일부터 ' + b.d + '일까지';
+  return L.md(lo) + '부터 ' + L.md(hi) + '까지';
+};
+
+L.treeFolds = function (data, ctx, mp, today) {
+  var by = {};
+  data.trees.forEach(function (t) { by[t.name] = { tree: t.name, items: [], routine: [], notices: [] }; });
+  function add(o, cat, visit) {
+    var f = by[o.task.tree];
+    if (f) f.items.push({ o: o, cat: cat, visit: visit || 0 });
+  }
+  mp.visits.forEach(function (v) { v.items.forEach(function (o) { add(o, 'visit', v.n); }); });
+  mp.later.forEach(function (o) { add(o, 'later'); });
+  mp.overdue.forEach(function (o) { add(o, 'late'); });
+  mp.skip.forEach(function (o) { add(o, 'skip'); });
+  mp.done.forEach(function (o) { add(o, 'done'); });
+  mp.routine.forEach(function (o) { var f = by[o.task.tree]; if (f && f.routine.indexOf(o.task.text) < 0) f.routine.push(o.task.text); });
+  mp.notices.forEach(function (o) { var f = by[o.task.tree]; if (f && f.notices.indexOf(o.task.text) < 0) f.notices.push(o.task.text); });
+  return data.trees.map(function (t) {
+    var f = by[t.name];
+    f.items.sort(function (p, q) { return (p.o.a - q.o.a) || (p.o.task.id < q.o.task.id ? -1 : 1); });
+    var sprays = f.items.filter(function (x) { return isSpray(x.o.task) && !(x.cat === 'skip' && x.o.phiPast && !x.o.doneDate); });
+    var pendS = sprays.filter(function (x) { return !x.o.doneDate; });
+    var pendC = f.items.filter(function (x) { return !isSpray(x.o.task) && !x.o.doneDate; });
+    f.late = f.items.some(function (x) { return x.cat === 'late' && !x.o.doneDate; });
+    f.buy = pendS.some(function (x) { return x.o.task.product && L.resolve(ctx, x.o.task.product).state === 'buy'; });
+    f.left = pendS.length + pendC.length;
+    if (pendS.length) {
+      f.status = 'plan';
+      var names = [];
+      pendS.forEach(function (x) {
+        var n = x.o.task.product ? L.resolve(ctx, x.o.task.product).name : x.o.task.text;
+        if (names.indexOf(n) < 0) names.push(n);
+      });
+      var timed = pendS.filter(function (x) { return x.o.lo !== undefined && x.cat !== 'late'; }).sort(function (p, q) { return p.o.lo - q.o.lo; });
+      var first = timed.length ? timed[0].o : null;
+      var when = first ? L.rangeText(first.lo, first.defer ? first.b : first.hi, today) : '기간이 지났습니다';
+      f.sub = names.slice(0, 2).join(', ') + (names.length > 2 ? ' 외 ' + (names.length - 2) + '가지' : '') + ' · ' + when;
+    } else if (sprays.length) {
+      f.status = 'done';
+      f.sub = pendC.length ? '관리 ' + pendC.length + '가지 남음 · ' + pendC[0].o.task.text : '이달 할 일을 모두 끝냈습니다';
+    } else if (f.items.length || f.routine.length || f.notices.length) {
+      f.status = 'care';
+      f.sub = pendC.length ? pendC[0].o.task.text + (pendC.length > 1 ? ' 외 ' + (pendC.length - 1) + '가지' : '') : (f.items.length ? '이달 할 일을 모두 끝냈습니다' : (f.routine[0] || f.notices[0]));
+    } else {
+      f.status = 'none';
+      f.sub = '이달에는 할 일이 없습니다';
+    }
+    return f;
+  });
 };
 
 L.groupByTree = function (items) {
@@ -1354,7 +1424,7 @@ function TwoStep({ label, onGo }) {
   );
 }
 
-function TaskRow({ o, first, data, ctx, today, onToggle, late, skip }) {
+function TaskRow({ o, first, data, ctx, today, onToggle, late, skip, extra }) {
   const t = o.task;
   const res = L.resolve(ctx, t.product);
   const done = !!o.doneDate;
@@ -1388,6 +1458,7 @@ function TaskRow({ o, first, data, ctx, today, onToggle, late, skip }) {
           <div className="pname">{t.text}</div>
         )}
         {t.note && <div className="note">{t.note}</div>}
+        {extra && <div className="green-note">{extra}</div>}
         {limits.length > 0 && <div className="small">{limits.join(' · ')}</div>}
         {full && <div className="warn-note">올해 횟수를 다 썼습니다. 다른 계통의 약으로 바꾸세요.</div>}
         {skip && o.phiPast && <div className="warn-note">수확 {o.phiDays}일 전이 지났습니다 (수확 시작을 {L.md(o.harvestAt)}로 볼 때). 이번에는 쓰지 않습니다.</div>}
@@ -1442,23 +1513,82 @@ function NetBanner({ store }) {
   return null;
 }
 
-function MainScreen({ store, data, ctx, today, go, onToggle, onVisitRecord, openSettings }) {
+function TreeFold({ f, open, onFlip, data, ctx, today, visits, tap }) {
+  const can = f.status !== 'none';
+  const visitText = (n) => {
+    const v = visits.filter((x) => x.n === n)[0];
+    if (!v || visits.length < 2) return '';
+    const lo = L.fromDn(v.lo), hi = L.fromDn(v.hi);
+    return (ORD[n - 1] || n) + ' 번째 가는 날 (' + (v.lo === v.hi ? lo.d : lo.d + '–' + hi.d) + '일)에 할 일';
+  };
+  const mixes = [];
+  visits.forEach((v) => {
+    const mine = f.items.filter((x) => x.cat === 'visit' && x.visit === v.n).map((x) => x.o);
+    L.mixLines(data, ctx, mine).forEach((m) => mixes.push(m));
+  });
+  return (
+    <div className="fold">
+      <button type="button" className={'fold-head' + (open ? ' open' : '')} aria-expanded={can ? open : undefined} disabled={!can} onClick={onFlip}>
+        <span className="fold-main">
+          <span className="line">
+            <span className="tree-name mid">{f.tree}</span>
+            {f.status === 'plan' && <span className="chip alt">방제 계획 있음</span>}
+            {f.status === 'done' && <span className="chip own">방제 완료</span>}
+            {f.status === 'care' && <span className="chip buy">관리만 있음</span>}
+            {f.late && <span className="chip bad">기간 지남</span>}
+          </span>
+          <span className="fold-sub">{f.sub}{f.buy ? ' · 구입 필요' : ''}</span>
+        </span>
+        {can && <span className={'chev' + (open ? ' up' : '')}><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg></span>}
+      </button>
+      {open && can && (
+        <div className="fold-body">
+          {f.notices.map((n, i) => <div className="fold-note" key={i}><strong>지킬 것</strong> · {n}</div>)}
+          {f.items.map((x) => (
+            <TaskRow key={x.o.key} o={x.o} data={data} ctx={ctx} today={today} onToggle={tap} late={x.cat === 'late'} skip={x.cat === 'skip'} extra={x.o.doneDate ? '' : x.cat === 'visit' ? visitText(x.visit) : x.cat === 'later' ? '다음 달로 넘겨도 되는 일입니다' : ''} />
+          ))}
+          {mixes.length > 0 && (
+            <div className="mixbox">
+              <div className="cap">한 통에 섞어도 되나</div>
+              {mixes.map((m, i) => (
+                <div className="between" key={i}>
+                  <span className="small" style={{ fontWeight: 700, color: 'var(--text)' }}>{m.a} + {m.b}</span>
+                  <MixChip verdict={m.verdict} />
+                </div>
+              ))}
+            </div>
+          )}
+          {f.routine.map((r, i) => (
+            <div className="fold-plain" key={i}><span className="cap">갈 때마다</span><span>{r}</span></div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function MainScreen({ store, data, ctx, today, go, onToggle, onVisitRecord, openSettings, openTrees, setOpenTrees }) {
   const o = L.fromDn(today);
-  const [keep, setKeep] = useState({});
+  const mp = useMemo(() => L.monthPlan(data, ctx, today, o.y, o.m), [data, ctx, today]);
+  const folds = useMemo(() => L.treeFolds(data, ctx, mp, today), [data, ctx, mp, today]);
   const lastTap = useRef({});
-  const mp = useMemo(() => L.monthPlan(data, ctx, today, o.y, o.m, keep), [data, ctx, today, keep]);
-  const [showDone, setShowDone] = useState(false);
   const tap = (x) => {
     const now = Date.now();
     if (lastTap.current[x.key] && now - lastTap.current[x.key] < 800) return;
     lastTap.current[x.key] = now;
-    if (!x.doneDate) setKeep((k) => Object.assign({}, k, { [x.key]: true }));
     try { if (navigator.vibrate) navigator.vibrate(15); } catch (e) {}
     onToggle(x);
   };
-  const routine = L.groupRoutine(mp.routine);
-  const notices = L.groupRoutine(mp.notices);
-  const empty = mp.visits.length === 0 && mp.later.length === 0 && mp.overdue.length === 0;
+  const flip = (name) => setOpenTrees(Object.assign({}, openTrees, { [name]: !openTrees[name] }));
+  const dtext = (v) => { const lo = L.fromDn(v.lo), hi = L.fromDn(v.hi); return (v.lo === v.hi ? String(lo.d) : lo.d + '–' + hi.d) + '일'; };
+  const visitNotes = [];
+  mp.visits.forEach((v) => {
+    const waiter = v.items.filter((x) => x.wait && x.wait.until === v.lo)[0];
+    const head = mp.visits.length > 1 ? (ORD[v.n - 1] || v.n) + ' 번째는 ' : '';
+    if (waiter) visitNotes.push(head + L.josa(waiter.wait.product, '을', '를') + ' 뿌린 날에서 ' + waiter.wait.gap + '일이 지난 뒤부터입니다.');
+    else if (v.after) visitNotes.push(head + (ORD[v.after.n - 1] || v.after.n) + ' 번째에서 ' + v.gapDays + '일이 지난 뒤부터입니다.');
+  });
+  const firstOpen = mp.visits.filter((v) => v.items.some((x) => !x.doneDate))[0];
   return (
     <React.Fragment>
       <div className="hero">
@@ -1478,111 +1608,27 @@ function MainScreen({ store, data, ctx, today, go, onToggle, onVisitRecord, open
           <div className="tile"><b>{mp.buyCount}</b><span>가지 살 약</span></div>
         </div>
       </div>
-      <div className="body">
+      <div className="body" style={{ gap: 20 }}>
         <NetBanner store={store} />
 
-        {mp.products.length > 0 && (
-          <div className="card">
-            <div className="cap">이달에 쓰는 약</div>
-            {mp.products.map((p) => (
-              <div key={p.plan} style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                <div className="line"><span className={p.state === 'buy' ? 'pname soft' : 'pname big'}>{p.name}</span><StateChips res={p} /></div>
-                {p.state === 'alt' && <div className="small">계획의 {p.plan} 대신 올린 약</div>}
-                {p.state === 'buy' && p.similar && p.similar.length > 0 && <div className="small">{p.similar[0].name}: 성분은 같지만 함량이나 제형이 달라 라벨 확인이 필요합니다.</div>}
-              </div>
-            ))}
-            <button type="button" className="linkbtn" onClick={() => go('kit')}>내 약 보기</button>
-          </div>
-        )}
+        <div className="card" style={{ padding: '14px 16px', gap: 6 }}>
+          <div className="cap">이달에 가는 날</div>
+          {mp.visits.length > 0 ? (
+            <div className="line">{mp.visits.map((v) => <span className="daypill" key={v.n}>{dtext(v)}</span>)}</div>
+          ) : (
+            <div style={{ fontSize: 17, fontWeight: 700 }}>{mp.later.length > 0 ? '꼭 가야 하는 날은 없습니다. 다음 달로 넘겨도 되는 일만 있습니다.' : '이달에 날짜가 정해진 일은 없습니다.'}</div>
+          )}
+          {mp.visits.length > 0 && <div className="small">{visitNotes.length ? visitNotes.join(' ') : '이 기간 중 하루에 가면 됩니다.'}</div>}
+        </div>
 
-        {notices.length > 0 && (
-          <div className="card" style={{ gap: 0 }}>
-            <div className="cap">이달에 지킬 것</div>
-            {notices.map((r, i) => (
-              <div className="row" key={i}>
-                <div className="notice-t">{r.trees.join(' · ')}</div>
-                <div style={{ fontSize: 17, fontWeight: 700 }}>{r.text}</div>
-              </div>
-            ))}
-          </div>
-        )}
+        <div className="stack">
+          {folds.map((f) => <TreeFold key={f.tree} f={f} open={!!openTrees[f.tree]} onFlip={() => flip(f.tree)} data={data} ctx={ctx} today={today} visits={mp.visits} tap={tap} />)}
+        </div>
 
-        {mp.overdue.length > 0 && (
-          <div className="stack">
-            <h2 className="h2">기간이 지난 일</h2>
-            <div className="hint">했으면 표시하고, 못 했으면 그대로 두세요.</div>
-            <TreeCards items={mp.overdue} data={data} ctx={ctx} today={today} onToggle={tap} late />
-          </div>
-        )}
-
-        {mp.visits.map((v) => {
-          const lo = L.fromDn(v.lo), hi = L.fromDn(v.hi);
-          const dtext = v.lo === v.hi ? String(lo.d) : lo.d + '–' + hi.d;
-          const waiter = v.items.filter((x) => x.wait && x.wait.until === v.lo)[0];
-          let sub = v.lo === v.hi ? '이날 하루' : '이 기간 중 하루';
-          if (waiter) sub = L.josa(waiter.wait.product, '을', '를') + ' 뿌린 날에서 ' + waiter.wait.gap + '일이 지난 뒤부터';
-          else if (v.after) sub = (ORD[v.after.n - 1] || v.after.n) + ' 번째 방문에서 ' + v.gapDays + '일이 지난 뒤부터';
-          const open = v.items.filter((x) => !x.doneDate);
-          if (open.length === 0) sub = '이 방문의 일을 모두 끝냈습니다';
-          return (
-            <div className="stack" key={v.n}>
-              <div className="visit-head">
-                <div className="visit-date">
-                  <div className="m">{lo.m}월</div>
-                  <div className={'d' + (dtext.length > 4 ? ' long' : '')}>{dtext}</div>
-                  <div className="u">일</div>
-                </div>
-                <div className="visit-info">
-                  <h2>{(ORD[v.n - 1] || v.n)} 번째 방문</h2>
-                  <div className="small">{sub}</div>
-                </div>
-              </div>
-              <TreeCards items={v.items} data={data} ctx={ctx} today={today} onToggle={tap} />
-              {open.length > 0 && <button type="button" className="btn" onClick={() => onVisitRecord(v)}>다녀왔어요, 기록하기</button>}
-            </div>
-          );
-        })}
-
-        {empty && (
-          <div className="card">
-            <div className="pname">이달에 남은 일이 없습니다.</div>
-            <div className="note">앞으로 할 일은 아래 메뉴의 앞으로에서 볼 수 있습니다.</div>
-          </div>
-        )}
-
-        {mp.skip.length > 0 && (
-          <div className="stack">
-            <h2 className="h2">수확이 가까워 조심할 약</h2>
-            <div className="hint">수확 날짜가 다르면 계획 시트의 수확 줄을 고치세요.</div>
-            <TreeCards items={mp.skip} data={data} ctx={ctx} today={today} onToggle={tap} skip />
-          </div>
-        )}
-
-        {mp.later.length > 0 && (
-          <div className="stack">
-            <h2 className="h2">다음 달로 넘겨도 되는 일</h2>
-            <div className="hint">기간이 다음 달까지 이어집니다. 이달에 가는 김에 해도 됩니다.</div>
-            <TreeCards items={mp.later} data={data} ctx={ctx} today={today} onToggle={tap} />
-          </div>
-        )}
-
-        {routine.length > 0 && (
-          <div className="card dark" style={{ gap: 2 }}>
-            <div className="cap">갈 때마다</div>
-            {routine.map((r, i) => (
-              <div className="routine" key={i}>
-                <div className="routine-t">{r.trees.join(' · ')}</div>
-                <div className="routine-x">{r.text}</div>
-              </div>
-            ))}
-          </div>
-        )}
-
-        {mp.done.length > 0 && (
-          <div className="stack">
-            <button type="button" className="btn line2" aria-expanded={showDone} onClick={() => setShowDone(!showDone)}>이달에 끝낸 일 {mp.done.length}가지 {showDone ? '접기' : '보기'}</button>
-            {showDone && <TreeCards items={mp.done} data={data} ctx={ctx} today={today} onToggle={tap} />}
-          </div>
+        {firstOpen ? (
+          <button type="button" className="btn" onClick={() => onVisitRecord(firstOpen)}>다녀왔어요, 기록하기</button>
+        ) : (
+          <button type="button" className="btn line2" onClick={() => go('record')}>뿌린 것 기록하기</button>
         )}
       </div>
     </React.Fragment>
@@ -2469,6 +2515,7 @@ function App() {
   const [draft, setDraft] = useState(null);
   const [reading, setReading] = useState(false);
   const [prefill, setPrefill] = useState(null);
+  const [openTrees, setOpenTrees] = useState({});
   const [sheet, setSheet] = useState('');
   const [toastMsg, setToastMsg] = useState('');
   const [today, setToday] = useState(nowDn());
@@ -2528,7 +2575,8 @@ function App() {
       const res = L.resolve(ctx, t.product);
       return { key: x.key, tree: t.tree, product: spray ? res.name : '', base: spray ? t.product : '', buy: !!spray && res.state === 'buy', text: t.product && !spray ? t.product + ' · ' + t.text : t.text };
     });
-    setPrefill({ title: (ORD[v.n - 1] || v.n) + ' 번째 방문', items: items });
+    const vlo = L.fromDn(v.lo), vhi = L.fromDn(v.hi);
+    setPrefill({ title: vlo.m + '월 ' + (v.lo === v.hi ? vlo.d : vlo.d + '–' + vhi.d) + '일 방문', items: items });
     go('record');
   };
 
@@ -2628,7 +2676,7 @@ function App() {
   const NAV = [['main', '이번 달', 'cal'], ['ahead', '앞으로', 'list'], ['kit', '내 약', 'bottle'], ['record', '기록', 'pen'], ['calc', '계산기', 'drop']];
   return (
     <div className="app">
-      {tab === 'main' && <MainScreen store={store} data={data} ctx={ctx} today={today} go={go} onToggle={onToggle} onVisitRecord={onVisitRecord} openSettings={() => setSheet('settings')} />}
+      {tab === 'main' && <MainScreen store={store} data={data} ctx={ctx} today={today} go={go} onToggle={onToggle} onVisitRecord={onVisitRecord} openSettings={() => setSheet('settings')} openTrees={openTrees} setOpenTrees={setOpenTrees} />}
       {tab === 'ahead' && <AheadScreen data={data} ctx={ctx} today={today} />}
       {tab === 'kit' && <KitScreen data={data} ctx={ctx} today={today} onPhotos={onPhotos} onAddName={onAddName} onRemove={onRemoveKit} onCheckKit={(id) => { setDraft({ kitId: id, photos: data.photos.filter((p) => p.kitId === id && p.fileId).map((p) => ({ id: p.id, data: '', mime: 'image/jpeg', thumb: p.thumb, fileId: p.fileId })), result: null }); go('check'); }} openNameSheet={() => setSheet('name')} />}
       {tab === 'check' && <CheckScreen data={data} draft={draft} setDraft={setDraft} reading={reading} onRead={onRead} onConfirm={onConfirm} onCancel={onCancelDraft} onPhotos={onPhotos} go={go} status={store.status} />}
