@@ -155,10 +155,10 @@ a { color: var(--green); }
 .yg-cell.now { background: #f3e6bf; }
 .yg-cell.on { border-color: var(--green); background: #fff; }
 .yg-cell:focus-visible { outline: 3px solid var(--gold); outline-offset: 1px; }
-.ytable-box { background: #fff; border-radius: 18px; padding: 8px 0; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.ytable-box { background: #fff; border-radius: 18px; overflow: auto; max-height: calc(100vh - 190px); max-height: calc(100dvh - 190px); -webkit-overflow-scrolling: touch; }
 .ytable { display: grid; }
-.yt-corner { position: sticky; left: 0; background: #fff; z-index: 1; border-bottom: 2px solid var(--green); }
-.yt-head { padding: 10px 8px; font-family: var(--serif); font-weight: 900; font-size: 20px; color: var(--green); border-bottom: 2px solid var(--green); }
+.yt-corner { position: sticky; top: 0; left: 0; background: #fff; z-index: 3; border-bottom: 2px solid var(--green); }
+.yt-head { position: sticky; top: 0; z-index: 2; background: #fff; padding: 10px 8px; font-family: var(--serif); font-weight: 900; font-size: 20px; color: var(--green); border-bottom: 2px solid var(--green); }
 .yt-month { position: sticky; left: 0; z-index: 1; background: #fff; font-family: var(--serif); font-weight: 700; font-size: 17px; padding: 10px 0; text-align: center; border-bottom: 1px solid var(--hair); }
 .yt-month.now { background: var(--green); color: var(--ivory); font-weight: 900; }
 .yt-cell { padding: 10px 8px 2px 8px; border-bottom: 1px solid var(--hair); min-width: 0; }
