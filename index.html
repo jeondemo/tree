@@ -18,7 +18,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@700;900&family=Noto+Sans+KR:wght@400;500;700&display=swap">
 <script>
 var API_URL = 'https://script.google.com/macros/s/AKfycbwYZ08xNCnPO3VORtf4DS2G9IpQuKaxuhDKzWMPZ4fqlZvTbGgJx3IUzanmhYiFcmXM/exec';
-var APP_VERSION = '2026-10-06';
+var APP_VERSION = '2026-10-06b';
 </script>
 <style>
 :root {
@@ -139,6 +139,34 @@ a { color: var(--green); }
 .seg { display: flex; background: var(--green3); border-radius: 14px; padding: 4px; gap: 4px; }
 .seg button { flex: 1 1 0; min-height: 46px; border: 0; border-radius: 11px; background: transparent; color: var(--mist); font-size: 16px; font-weight: 700; }
 .seg button.on { background: var(--gold); color: var(--text); }
+.ylegend { display: flex; flex-wrap: wrap; gap: 6px 16px; padding: 0 4px; }
+.ylegend > span { display: inline-flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 500; }
+.ym { display: inline-block; flex-shrink: 0; width: 12px; height: 12px; }
+.ym.f { border-radius: 999px; background: var(--green); }
+.ym.b { border-radius: 2px; background: #b07d1f; }
+.ym.o { border-radius: 2px; border: 2.5px solid var(--green); }
+.ym.c { width: 6px; height: 6px; border-radius: 999px; background: var(--outline); }
+.ym.n { width: 10px; height: 10px; border-radius: 2px; background: var(--gold); }
+.ygrid { background: #fff; border-radius: 18px; padding: 12px 10px; display: grid; gap: 3px; align-items: stretch; }
+.yg-head { font-size: 13px; font-weight: 700; color: var(--green); text-align: center; line-height: 1.2; padding: 4px 0; }
+.yg-month { min-height: 46px; display: flex; align-items: center; justify-content: center; font-family: var(--serif); font-weight: 700; font-size: 15px; border-radius: 8px; }
+.yg-month.now { background: var(--green); color: var(--ivory); font-weight: 900; }
+.yg-cell { min-height: 46px; padding: 2px; border-radius: 8px; border: 2px solid transparent; background: #f4f5f1; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; align-content: center; gap: 3px; }
+.yg-cell.now { background: #f3e6bf; }
+.yg-cell.on { border-color: var(--green); background: #fff; }
+.yg-cell:focus-visible { outline: 3px solid var(--gold); outline-offset: 1px; }
+.ytable-box { background: #fff; border-radius: 18px; padding: 8px 0; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.ytable { display: grid; }
+.yt-corner { position: sticky; left: 0; background: #fff; z-index: 1; border-bottom: 2px solid var(--green); }
+.yt-head { padding: 10px 8px; font-family: var(--serif); font-weight: 900; font-size: 20px; color: var(--green); border-bottom: 2px solid var(--green); }
+.yt-month { position: sticky; left: 0; z-index: 1; background: #fff; font-family: var(--serif); font-weight: 700; font-size: 17px; padding: 10px 0; text-align: center; border-bottom: 1px solid var(--hair); }
+.yt-month.now { background: var(--green); color: var(--ivory); font-weight: 900; }
+.yt-cell { padding: 10px 8px 2px 8px; border-bottom: 1px solid var(--hair); min-width: 0; }
+.yt-cell.now { background: #f8f0d6; }
+.yt-group { display: flex; flex-direction: column; margin-bottom: 8px; }
+.yt-kind { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 700; color: var(--label); }
+.yt-line { font-size: 14px; line-height: 20px; }
+.seg button { padding: 0 4px; }
 .chips { display: flex; gap: 8px; overflow-x: auto; padding: 2px 16px; margin: 0 -16px; scrollbar-width: none; }
 .chips::-webkit-scrollbar { display: none; }
 .chips.wrap { flex-wrap: wrap; overflow: visible; padding: 0; margin: 0; }
@@ -732,6 +760,42 @@ L.upcoming = function (data, today, months) {
     });
   }
   out.sort(function (p, q) { return (p.a - q.a) || (p.b - q.b); });
+  return out;
+};
+
+L.yearGrid = function (data, today) {
+  var cur = L.fromDn(today);
+  var checks = {};
+  data.checks.forEach(function (c) { checks[c.id] = c.date || 'done'; });
+  var rows = [];
+  for (var m = 1; m <= 12; m++) {
+    var y = m >= cur.m ? cur.y : cur.y + 1;
+    var occ = L.occurrences(data.plan, y, m);
+    var cells = data.trees.map(function (t) {
+      var items = occ.filter(function (o) { return o.task.tree === t.name; });
+      items.forEach(function (o) { o.doneDate = checks[o.key] || ''; });
+      items.sort(function (p, q) { return (p.a - q.a) || (p.task.id < q.task.id ? -1 : 1); });
+      var has = function (kinds) { return items.some(function (o) { return kinds.indexOf(o.task.kind) >= 0; }); };
+      return { tree: t.name, items: items, f: has(['살균']), b: has(['살충']), o: has(['동계']), c: has(['관리', '도포', '주의']) };
+    });
+    rows.push({ m: m, y: y, now: m === cur.m, cells: cells });
+  }
+  return rows;
+};
+
+L.yearText = function (ctx, items) {
+  var groups = [['동계', ['동계']], ['살균', ['살균']], ['살충', ['살충']], ['관리', ['관리', '도포']], ['주의', ['주의']]];
+  var out = [];
+  groups.forEach(function (g) {
+    var lines = [];
+    items.forEach(function (o) {
+      var t = o.task;
+      if (g[1].indexOf(t.kind) < 0) return;
+      var s = t.product ? (t.seq ? t.seq + ' ' : '') + L.resolve(ctx, t.product).name : t.text;
+      if (lines.indexOf(s) < 0) lines.push(s);
+    });
+    if (lines.length) out.push({ kind: g[0], lines: lines });
+  });
   return out;
 };
 
@@ -1526,6 +1590,118 @@ function ARow({ o, ctx }) {
   );
 }
 
+function YMarks({ c }) {
+  return (
+    <React.Fragment>
+      {c.f && <span className="ym f"></span>}
+      {c.b && <span className="ym b"></span>}
+      {c.o && <span className="ym o"></span>}
+      {c.c && <span className="ym c"></span>}
+    </React.Fragment>
+  );
+}
+
+function YearView({ data, ctx, today }) {
+  const rows = useMemo(() => L.yearGrid(data, today), [data, today]);
+  const cur = L.fromDn(today);
+  const [sel, setSel] = useState(null);
+  const [table, setTable] = useState(false);
+  const short = (name) => (name.length > 3 ? name.slice(-2) : name);
+  const legend = (
+    <div className="ylegend">
+      <span><span className="ym f"></span>살균</span>
+      <span><span className="ym b"></span>살충</span>
+      <span><span className="ym o"></span>동계</span>
+      <span><span className="ym c"></span>관리</span>
+    </div>
+  );
+  if (table) {
+    const markOf = { '동계': 'o', '살균': 'f', '살충': 'b', '관리': 'c', '주의': 'n' };
+    return (
+      <React.Fragment>
+        <button type="button" className="btn line2" onClick={() => setTable(false)}>요약으로 보기</button>
+        <div className="ytable-box">
+          <div className="ytable" style={{ gridTemplateColumns: '52px repeat(' + data.trees.length + ', 148px)', width: 52 + data.trees.length * 148 }}>
+            <div className="yt-corner"></div>
+            {data.trees.map((t) => <div className="yt-head" key={t.name}>{t.name}</div>)}
+            {rows.map((r) => (
+              <React.Fragment key={r.m}>
+                <div className={'yt-month' + (r.now ? ' now' : '')}>{r.m}월</div>
+                {r.cells.map((c) => (
+                  <div className={'yt-cell' + (r.now ? ' now' : '')} key={c.tree}>
+                    {L.yearText(ctx, c.items).map((g) => (
+                      <div className="yt-group" key={g.kind}>
+                        <span className="yt-kind"><span className={'ym ' + markOf[g.kind]}></span>{g.kind}</span>
+                        {g.lines.map((line, i) => <span className="yt-line" key={i}>{line}</span>)}
+                      </div>
+                    ))}
+                  </div>
+                ))}
+              </React.Fragment>
+            ))}
+          </div>
+        </div>
+        <div className="hint">약 이름과 할 일만 짧게 적었습니다. 옆으로 밀면 나무가 이어집니다. 용량과 기간은 달별, 나무별 보기에서 봅니다.</div>
+      </React.Fragment>
+    );
+  }
+  let pick = sel;
+  if (!pick) {
+    const nowRow = rows.filter((r) => r.now)[0] || rows[0];
+    const first = nowRow.cells.filter((c) => c.items.length > 0)[0] || nowRow.cells[0];
+    pick = { m: nowRow.m, tree: first ? first.tree : '' };
+  }
+  const pickRow = rows.filter((r) => r.m === pick.m)[0];
+  const pickCell = pickRow ? pickRow.cells.filter((c) => c.tree === pick.tree)[0] : null;
+  const items = pickCell ? pickCell.items : [];
+  return (
+    <React.Fragment>
+      {legend}
+      <div className="ygrid" style={{ gridTemplateColumns: '40px repeat(' + data.trees.length + ', minmax(0, 1fr))' }}>
+        <div></div>
+        {data.trees.map((t) => <div className="yg-head" key={t.name}>{short(t.name)}</div>)}
+        {rows.map((r) => (
+          <React.Fragment key={r.m}>
+            <div className={'yg-month' + (r.now ? ' now' : '')}>{r.m}월</div>
+            {r.cells.map((c) => {
+              const on = pick.m === r.m && pick.tree === c.tree;
+              if (!c.items.length) return <div className={'yg-cell empty' + (r.now ? ' now' : '')} key={c.tree}></div>;
+              return (
+                <button type="button" key={c.tree} className={'yg-cell' + (r.now ? ' now' : '') + (on ? ' on' : '')} aria-pressed={on} aria-label={r.m + '월 ' + c.tree + ' 할 일 ' + c.items.length + '가지'} onClick={() => setSel({ m: r.m, tree: c.tree })}>
+                  <YMarks c={c} />
+                </button>
+              );
+            })}
+          </React.Fragment>
+        ))}
+      </div>
+      <div className="hint">칸을 누르면 그 달 그 나무의 할 일이 아래에 나옵니다. 진한 줄이 이번 달입니다.</div>
+      <div className="stack">
+        <h2 className="h2" style={{ fontSize: 30 }}>{pick.m}월 · {pick.tree}{pickRow && pickRow.y !== cur.y ? <span className="small" style={{ marginLeft: 8 }}>{pickRow.y}년</span> : null}</h2>
+        {items.length === 0 ? <div className="card"><div className="note">이 달에는 할 일이 없습니다.</div></div> : (
+          <div className="card tight" style={{ padding: '2px 16px' }}>
+            {items.map((o) => {
+              const t = o.task;
+              const res = L.resolve(ctx, t.product);
+              return (
+                <div className="row" key={o.key} style={{ padding: '12px 0', opacity: o.doneDate ? 0.55 : 1 }}>
+                  <div className="line" style={{ gap: 8 }}>
+                    <span className={'chip ' + (t.kind === '주의' ? 'tagc' : 'kind')}>{t.seq ? t.kind + ' ' + t.seq : t.kind}</span>
+                    {t.product ? <React.Fragment><span className={res.state === 'buy' ? 'pname soft' : 'pname'} style={{ fontSize: res.state === 'buy' ? 18 : 19 }}>{res.name}</span><StateChips res={res} /></React.Fragment> : <span style={{ fontSize: 17, fontWeight: 700, lineHeight: 1.4 }}>{t.text}</span>}
+                    {o.doneDate && <span className="chip own">끝냄</span>}
+                  </div>
+                  <div className="small">{t.product && t.text ? t.text + ' · ' + t.label : t.label}</div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </div>
+      <button type="button" className="btn line2" onClick={() => { setTable(true); }}>전체 표로 보기</button>
+    </React.Fragment>
+  );
+}
+
 function AheadScreen({ data, ctx, today }) {
   const [mode, setMode] = useState('month');
   const months = useMemo(() => L.monthList(today, 12), [today]);
@@ -1541,7 +1717,7 @@ function AheadScreen({ data, ctx, today }) {
     occ.forEach((x) => { x.doneDate = checks[x.key] || ''; });
     occ.sort((p, q) => ((order[p.task.tree] || 0) - (order[q.task.tree] || 0)) || (p.a - q.a));
     groups = L.groupByTree(occ).map((g) => ({ key: g.tree, title: g.tree, items: g.items }));
-  } else {
+  } else if (mode === 'tree') {
     const idx = {};
     L.upcoming(data, today, 12).filter((x) => x.task.tree === tree).forEach((x) => {
       x.doneDate = checks[x.key] || '';
@@ -1557,15 +1733,17 @@ function AheadScreen({ data, ctx, today }) {
         <div className="hero-col">
           <div className="eyebrow">할 일 미리 보기</div>
           <h1>앞으로</h1>
-          <div className="hero-sub">달마다, 나무마다 무엇을 언제까지 하는지 봅니다.</div>
+          <div className="hero-sub">{mode === 'year' ? '일 년 치를 한 화면에서 봅니다.' : '달마다, 나무마다 무엇을 언제까지 하는지 봅니다.'}</div>
         </div>
         <div className="seg" role="tablist">
           <button type="button" role="tab" aria-selected={mode === 'month'} className={mode === 'month' ? 'on' : ''} onClick={() => setMode('month')}>달별</button>
           <button type="button" role="tab" aria-selected={mode === 'tree'} className={mode === 'tree' ? 'on' : ''} onClick={() => setMode('tree')}>나무별</button>
+          <button type="button" role="tab" aria-selected={mode === 'year'} className={mode === 'year' ? 'on' : ''} onClick={() => setMode('year')}>한눈에</button>
         </div>
       </div>
       <div className="body">
-        {mode === 'month' ? (
+        {mode === 'year' && <YearView data={data} ctx={ctx} today={today} />}
+        {mode === 'year' ? null : mode === 'month' ? (
           <div className="chips">
             {months.map((ym, i) => (
               <button type="button" key={ym.y + '-' + ym.m} className={'pick' + (i === mi ? ' on' : '')} aria-pressed={i === mi} onClick={() => setMi(i)}>
@@ -1580,7 +1758,7 @@ function AheadScreen({ data, ctx, today }) {
             ))}
           </div>
         )}
-        {groups.length === 0 && <div className="card"><div className="note">이 기간에는 할 일이 없습니다.</div></div>}
+        {mode !== 'year' && groups.length === 0 && <div className="card"><div className="note">이 기간에는 할 일이 없습니다.</div></div>}
         {groups.map((g) => (
           <div className="stack" key={g.key}>
             {mode === 'month' ? (
