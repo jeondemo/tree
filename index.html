@@ -18,7 +18,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@700;900&family=Noto+Sans+KR:wght@400;500;700&display=swap">
 <script>
 var API_URL = 'https://script.google.com/macros/s/AKfycbwYZ08xNCnPO3VORtf4DS2G9IpQuKaxuhDKzWMPZ4fqlZvTbGgJx3IUzanmhYiFcmXM/exec';
-var APP_VERSION = '2026-10-06d';
+var APP_VERSION = '2026-10-06e';
 </script>
 <style>
 :root {
@@ -111,7 +111,9 @@ a { color: var(--green); }
 .task:last-child { padding-bottom: 2px; }
 .check { flex-shrink: 0; width: 44px; height: 44px; padding: 0; border: 0; background: transparent; display: flex; align-items: flex-start; justify-content: center; }
 .check span { width: 30px; height: 30px; margin-top: 4px; border: 2px solid var(--green); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--ivory); }
-.check.on span { background: var(--green); }
+.check.on span { background: var(--green); animation: pop 0.28s ease-out; }
+.task.done { background: #f4f5f1; border-radius: 12px; margin: 0 -8px; padding-left: 8px; padding-right: 8px; }
+@keyframes pop { 0% { transform: scale(0.6); } 60% { transform: scale(1.18); } 100% { transform: scale(1); } }
 .task-body { display: flex; flex-direction: column; gap: 6px; min-width: 0; flex: 1; }
 .task.done .pname, .task.done .note { color: var(--outline); text-decoration: line-through; }
 .period { align-self: flex-start; background: var(--tag); border-radius: 10px; padding: 7px 14px; display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
@@ -225,7 +227,7 @@ a { color: var(--green); }
 .toggle.on { background: var(--green); }
 .toggle.on::after { left: 30px; }
 .hide { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; overflow: hidden; }
-@media (prefers-reduced-motion: reduce) { .spin { animation-duration: 2.5s; } .toggle::after { transition: none; } }
+@media (prefers-reduced-motion: reduce) { .check.on span { animation: none; } .spin { animation-duration: 2.5s; } .toggle::after { transition: none; } }
 @media (max-width: 360px) { .hero h1.month { font-size: 88px; } .tree-name { font-size: 30px; } .tile b { font-size: 40px; } }
 </style>
 </head>
@@ -545,7 +547,7 @@ L.treeOrder = function (data) {
   return o;
 };
 
-L.monthPlan = function (data, ctx, today, y, m) {
+L.monthPlan = function (data, ctx, today, y, m, keep) {
   var ms = L.dn(y, m, 1), me = L.dn(y, m, L.monthLen(y, m));
   var isCurrent = today >= ms && today <= me;
   var from = isCurrent ? today : ms;
@@ -564,7 +566,7 @@ L.monthPlan = function (data, ctx, today, y, m) {
     o.doneDate = checks[o.key] || '';
     if (o.task.kind === '주의') { res.notices.push(o); return; }
     if (o.task.routine) { res.routine.push(o); return; }
-    if (o.doneDate) { res.done.push(o); return; }
+    if (o.doneDate && !(keep && keep[o.key])) { res.done.push(o); return; }
     if (o.b < from) { res.overdue.push(o); return; }
     o.lo = Math.max(o.a, from);
     o.hi = Math.min(o.b, me);
@@ -689,7 +691,7 @@ L.monthPlan = function (data, ctx, today, y, m) {
   var rk = { own: 0, alt: 0, buy: 1 };
   prods.sort(function (p, q) { return rk[p.state] - rk[q.state]; });
   res.products = prods;
-  res.taskCount = active.length;
+  res.taskCount = active.filter(function (o) { return !o.doneDate; }).length;
   res.buyCount = prods.filter(function (p) { return p.state === 'buy'; }).length;
   return res;
 };
@@ -1442,8 +1444,18 @@ function NetBanner({ store }) {
 
 function MainScreen({ store, data, ctx, today, go, onToggle, onVisitRecord, openSettings }) {
   const o = L.fromDn(today);
-  const mp = useMemo(() => L.monthPlan(data, ctx, today, o.y, o.m), [data, ctx, today]);
+  const [keep, setKeep] = useState({});
+  const lastTap = useRef({});
+  const mp = useMemo(() => L.monthPlan(data, ctx, today, o.y, o.m, keep), [data, ctx, today, keep]);
   const [showDone, setShowDone] = useState(false);
+  const tap = (x) => {
+    const now = Date.now();
+    if (lastTap.current[x.key] && now - lastTap.current[x.key] < 800) return;
+    lastTap.current[x.key] = now;
+    if (!x.doneDate) setKeep((k) => Object.assign({}, k, { [x.key]: true }));
+    try { if (navigator.vibrate) navigator.vibrate(15); } catch (e) {}
+    onToggle(x);
+  };
   const routine = L.groupRoutine(mp.routine);
   const notices = L.groupRoutine(mp.notices);
   const empty = mp.visits.length === 0 && mp.later.length === 0 && mp.overdue.length === 0;
@@ -1499,7 +1511,7 @@ function MainScreen({ store, data, ctx, today, go, onToggle, onVisitRecord, open
           <div className="stack">
             <h2 className="h2">기간이 지난 일</h2>
             <div className="hint">했으면 표시하고, 못 했으면 그대로 두세요.</div>
-            <TreeCards items={mp.overdue} data={data} ctx={ctx} today={today} onToggle={onToggle} late />
+            <TreeCards items={mp.overdue} data={data} ctx={ctx} today={today} onToggle={tap} late />
           </div>
         )}
 
@@ -1511,6 +1523,7 @@ function MainScreen({ store, data, ctx, today, go, onToggle, onVisitRecord, open
           if (waiter) sub = L.josa(waiter.wait.product, '을', '를') + ' 뿌린 날에서 ' + waiter.wait.gap + '일이 지난 뒤부터';
           else if (v.after) sub = (ORD[v.after.n - 1] || v.after.n) + ' 번째 방문에서 ' + v.gapDays + '일이 지난 뒤부터';
           const open = v.items.filter((x) => !x.doneDate);
+          if (open.length === 0) sub = '이 방문의 일을 모두 끝냈습니다';
           return (
             <div className="stack" key={v.n}>
               <div className="visit-head">
@@ -1524,7 +1537,7 @@ function MainScreen({ store, data, ctx, today, go, onToggle, onVisitRecord, open
                   <div className="small">{sub}</div>
                 </div>
               </div>
-              <TreeCards items={v.items} data={data} ctx={ctx} today={today} onToggle={onToggle} />
+              <TreeCards items={v.items} data={data} ctx={ctx} today={today} onToggle={tap} />
               {open.length > 0 && <button type="button" className="btn" onClick={() => onVisitRecord(v)}>다녀왔어요, 기록하기</button>}
             </div>
           );
@@ -1541,7 +1554,7 @@ function MainScreen({ store, data, ctx, today, go, onToggle, onVisitRecord, open
           <div className="stack">
             <h2 className="h2">수확이 가까워 조심할 약</h2>
             <div className="hint">수확 날짜가 다르면 계획 시트의 수확 줄을 고치세요.</div>
-            <TreeCards items={mp.skip} data={data} ctx={ctx} today={today} onToggle={onToggle} skip />
+            <TreeCards items={mp.skip} data={data} ctx={ctx} today={today} onToggle={tap} skip />
           </div>
         )}
 
@@ -1549,7 +1562,7 @@ function MainScreen({ store, data, ctx, today, go, onToggle, onVisitRecord, open
           <div className="stack">
             <h2 className="h2">다음 달로 넘겨도 되는 일</h2>
             <div className="hint">기간이 다음 달까지 이어집니다. 이달에 가는 김에 해도 됩니다.</div>
-            <TreeCards items={mp.later} data={data} ctx={ctx} today={today} onToggle={onToggle} />
+            <TreeCards items={mp.later} data={data} ctx={ctx} today={today} onToggle={tap} />
           </div>
         )}
 
@@ -1568,7 +1581,7 @@ function MainScreen({ store, data, ctx, today, go, onToggle, onVisitRecord, open
         {mp.done.length > 0 && (
           <div className="stack">
             <button type="button" className="btn line2" aria-expanded={showDone} onClick={() => setShowDone(!showDone)}>이달에 끝낸 일 {mp.done.length}가지 {showDone ? '접기' : '보기'}</button>
-            {showDone && <TreeCards items={mp.done} data={data} ctx={ctx} today={today} onToggle={onToggle} />}
+            {showDone && <TreeCards items={mp.done} data={data} ctx={ctx} today={today} onToggle={tap} />}
           </div>
         )}
       </div>
@@ -2493,17 +2506,18 @@ function App() {
   const afterData = (ops) => { const nd = L.normalize(L.applyOps(store.rawRef.current, ops)); return { nd: nd, nctx: L.buildOwn(nd) }; };
 
   const onToggle = (o) => {
-    if (o.doneDate) { store.commit(L.uncheckOps(data, o.key)); toast('완료 표시를 지웠습니다.'); return; }
     const t = o.task;
+    if (o.doneDate) { store.commit(L.uncheckOps(data, o.key)); toast(t.tree + ' · ' + (t.product || t.text) + ': 완료 표시를 지웠습니다.'); return; }
     if (SPRAY[t.kind] && t.product) {
       const pair = { tree: t.tree, product: L.resolve(ctx, t.product).name, base: t.product, key: o.key };
       const ops = L.logOps(data, [pair], iso, '', '');
       const a = afterData(ops);
       store.commit(ops);
       const fx = L.logEffects(a.nd, a.nctx, [pair], iso, today).filter((f) => f.type !== 'count' || f.full || f.over)[0];
-      toast('오늘 뿌린 것으로 적었습니다.' + (fx ? ' ' + fx.text + ' ' + fx.sub + (fx.type === 'count' ? ' (' + fx.note + ')' : '') : ''));
+      toast(t.tree + ' · ' + pair.product + ': 오늘 뿌린 것으로 적었습니다.' + (fx ? ' ' + fx.text + ' ' + fx.sub + (fx.type === 'count' ? ' (' + fx.note + ')' : '') : ''));
     } else {
       store.commit([{ table: 'checks', type: 'put', row: { id: o.key, date: iso } }]);
+      toast(t.tree + ' · ' + (t.product || t.text) + ': 끝낸 일로 표시했습니다.');
     }
   };
 
