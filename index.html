@@ -18,7 +18,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@700;900&family=Noto+Sans+KR:wght@400;500;700&display=swap">
 <script>
 var API_URL = 'https://script.google.com/macros/s/AKfycbwYZ08xNCnPO3VORtf4DS2G9IpQuKaxuhDKzWMPZ4fqlZvTbGgJx3IUzanmhYiFcmXM/exec';
-var APP_VERSION = '2026-10-06f';
+var APP_VERSION = '2026-10-06g';
 </script>
 <style>
 :root {
@@ -150,6 +150,8 @@ a { color: var(--green); }
 .chev { flex-shrink: 0; color: var(--green); display: flex; transition: transform 0.15s; }
 .chev.up { transform: rotate(180deg); }
 .fold-body { padding: 0 16px 14px 16px; display: flex; flex-direction: column; }
+.chip.part { border: 1.5px solid var(--green); color: var(--green); padding: 1px 10px; display: inline-flex; align-items: center; gap: 5px; white-space: normal; text-align: left; }
+.fold-part { border: 1.5px solid var(--green); border-radius: 10px; padding: 8px 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: baseline; gap: 10px; flex-wrap: wrap; font-size: 16px; font-weight: 700; color: var(--green); }
 .fold-note { background: var(--tag); border-radius: 10px; padding: 8px 12px; font-size: 15px; font-weight: 500; line-height: 1.45; margin-bottom: 10px; }
 .fold-note strong { font-weight: 700; }
 .fold-body .task { border-top: 1px solid var(--hair); }
@@ -732,9 +734,21 @@ L.treeFolds = function (data, ctx, mp, today) {
   mp.done.forEach(function (o) { add(o, 'done'); });
   mp.routine.forEach(function (o) { var f = by[o.task.tree]; if (f && f.routine.indexOf(o.task.text) < 0) f.routine.push(o.task.text); });
   mp.notices.forEach(function (o) { var f = by[o.task.tree]; if (f && f.notices.indexOf(o.task.text) < 0) f.notices.push(o.task.text); });
+  var mo = L.fromDn(mp.ms);
+  var ym = mo.y + '-' + pad(mo.m);
   return data.trees.map(function (t) {
     var f = by[t.name];
     f.items.sort(function (p, q) { return (p.o.a - q.o.a) || (p.o.task.id < q.o.task.id ? -1 : 1); });
+    var monthKeys = {};
+    f.items.forEach(function (x) { monthKeys[x.o.key] = 1; });
+    f.parts = data.logs.filter(function (g) {
+      return g.tree === t.name && String(g.date).slice(0, 7) === ym && !(g.key && monthKeys[g.key]);
+    }).map(function (g) {
+      var d = L.isoToDn(g.date);
+      return { id: g.id, date: g.date, day: d === null ? '' : L.fromDn(d).d, product: g.product, water: g.water };
+    }).sort(function (p, q) { return p.date < q.date ? -1 : p.date > q.date ? 1 : 0; });
+    f.month = mo.m;
+    f.partText = f.parts.length ? mo.m + '/' + f.parts[0].day + ' ' + f.parts[0].product + (f.parts.length > 1 ? ' 외 ' + (f.parts.length - 1) + '건' : '') : '';
     var sprays = f.items.filter(function (x) { return isSpray(x.o.task) && !(x.cat === 'skip' && x.o.phiPast && !x.o.doneDate); });
     var pendS = sprays.filter(function (x) { return !x.o.doneDate; });
     var pendC = f.items.filter(function (x) { return !isSpray(x.o.task) && !x.o.doneDate; });
@@ -1514,7 +1528,7 @@ function NetBanner({ store }) {
 }
 
 function TreeFold({ f, open, onFlip, data, ctx, today, visits, tap }) {
-  const can = f.status !== 'none';
+  const can = f.status !== 'none' || f.parts.length > 0;
   const visitText = (n) => {
     const v = visits.filter((x) => x.n === n)[0];
     if (!v || visits.length < 2) return '';
@@ -1536,6 +1550,7 @@ function TreeFold({ f, open, onFlip, data, ctx, today, visits, tap }) {
             {f.status === 'done' && <span className="chip own">방제 완료</span>}
             {f.status === 'care' && <span className="chip buy">관리만 있음</span>}
             {f.late && <span className="chip bad">기간 지남</span>}
+            {f.parts.length > 0 && <span className="chip part"><Icon name="tick" size={13} bold />부분방제 {f.partText}</span>}
           </span>
           <span className="fold-sub">{f.sub}{f.buy ? ' · 구입 필요' : ''}</span>
         </span>
@@ -1543,6 +1558,12 @@ function TreeFold({ f, open, onFlip, data, ctx, today, visits, tap }) {
       </button>
       {open && can && (
         <div className="fold-body">
+          {f.parts.map((g) => (
+            <div className="fold-part" key={g.id}>
+              <span>부분방제 · {g.product}</span>
+              <span className="small">{f.month}월 {g.day}일에 뿌림{g.water ? ' · 물 ' + g.water + 'L' : ''}</span>
+            </div>
+          ))}
           {f.notices.map((n, i) => <div className="fold-note" key={i}><strong>지킬 것</strong> · {n}</div>)}
           {f.items.map((x) => (
             <TaskRow key={x.o.key} o={x.o} data={data} ctx={ctx} today={today} onToggle={tap} late={x.cat === 'late'} skip={x.cat === 'skip'} extra={x.o.doneDate ? '' : x.cat === 'visit' ? visitText(x.visit) : x.cat === 'later' ? '다음 달로 넘겨도 되는 일입니다' : ''} />
@@ -1588,7 +1609,6 @@ function MainScreen({ store, data, ctx, today, go, onToggle, onVisitRecord, open
     if (waiter) visitNotes.push(head + L.josa(waiter.wait.product, '을', '를') + ' 뿌린 날에서 ' + waiter.wait.gap + '일이 지난 뒤부터입니다.');
     else if (v.after) visitNotes.push(head + (ORD[v.after.n - 1] || v.after.n) + ' 번째에서 ' + v.gapDays + '일이 지난 뒤부터입니다.');
   });
-  const firstOpen = mp.visits.filter((v) => v.items.some((x) => !x.doneDate))[0];
   return (
     <React.Fragment>
       <div className="hero">
@@ -1625,11 +1645,6 @@ function MainScreen({ store, data, ctx, today, go, onToggle, onVisitRecord, open
           {folds.map((f) => <TreeFold key={f.tree} f={f} open={!!openTrees[f.tree]} onFlip={() => flip(f.tree)} data={data} ctx={ctx} today={today} visits={mp.visits} tap={tap} />)}
         </div>
 
-        {firstOpen ? (
-          <button type="button" className="btn" onClick={() => onVisitRecord(firstOpen)}>다녀왔어요, 기록하기</button>
-        ) : (
-          <button type="button" className="btn line2" onClick={() => go('record')}>뿌린 것 기록하기</button>
-        )}
       </div>
     </React.Fragment>
   );
