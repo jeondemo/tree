@@ -18,7 +18,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@700;900&family=Noto+Sans+KR:wght@400;500;700&display=swap">
 <script>
 var API_URL = 'https://script.google.com/macros/s/AKfycbwYZ08xNCnPO3VORtf4DS2G9IpQuKaxuhDKzWMPZ4fqlZvTbGgJx3IUzanmhYiFcmXM/exec';
-var APP_VERSION = '2026-10-06b';
+var APP_VERSION = '2026-10-06d';
 </script>
 <style>
 :root {
@@ -147,11 +147,17 @@ a { color: var(--green); }
 .ym.o { border-radius: 2px; border: 2.5px solid var(--green); }
 .ym.c { width: 6px; height: 6px; border-radius: 999px; background: var(--outline); }
 .ym.n { width: 10px; height: 10px; border-radius: 2px; background: var(--gold); }
+.ydone { position: absolute; top: -3px; right: -3px; width: 16px; height: 16px; border-radius: 5px; background: var(--green); color: var(--ivory); display: flex; align-items: center; justify-content: center; box-shadow: 0 0 0 1.5px #fff; }
+.ydone.still { position: static; display: inline-flex; box-shadow: none; flex-shrink: 0; }
+.yg-cell.past .ym { opacity: 0.4; }
+.yg-month.past { color: var(--outline); }
+.yt-cell.past .yt-group:not(.done) { opacity: 0.5; }
+.yt-group.done .yt-line { font-weight: 700; }
 .ygrid { background: #fff; border-radius: 18px; padding: 12px 10px; display: grid; gap: 3px; align-items: stretch; }
 .yg-head { font-size: 13px; font-weight: 700; color: var(--green); text-align: center; line-height: 1.2; padding: 4px 0; }
 .yg-month { min-height: 46px; display: flex; align-items: center; justify-content: center; font-family: var(--serif); font-weight: 700; font-size: 15px; border-radius: 8px; }
 .yg-month.now { background: var(--green); color: var(--ivory); font-weight: 900; }
-.yg-cell { min-height: 46px; padding: 2px; border-radius: 8px; border: 2px solid transparent; background: #f4f5f1; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; align-content: center; gap: 3px; }
+.yg-cell { position: relative; min-height: 46px; padding: 2px; border-radius: 8px; border: 2px solid transparent; background: #f4f5f1; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; align-content: center; gap: 3px; }
 .yg-cell.now { background: #f3e6bf; }
 .yg-cell.on { border-color: var(--green); background: #fff; }
 .yg-cell:focus-visible { outline: 3px solid var(--gold); outline-offset: 1px; }
@@ -769,16 +775,22 @@ L.yearGrid = function (data, today) {
   data.checks.forEach(function (c) { checks[c.id] = c.date || 'done'; });
   var rows = [];
   for (var m = 1; m <= 12; m++) {
-    var y = m >= cur.m ? cur.y : cur.y + 1;
+    var y = cur.y;
     var occ = L.occurrences(data.plan, y, m);
+    var ym = y + '-' + pad(m);
     var cells = data.trees.map(function (t) {
       var items = occ.filter(function (o) { return o.task.tree === t.name; });
       items.forEach(function (o) { o.doneDate = checks[o.key] || ''; });
       items.sort(function (p, q) { return (p.a - q.a) || (p.task.id < q.task.id ? -1 : 1); });
       var has = function (kinds) { return items.some(function (o) { return kinds.indexOf(o.task.kind) >= 0; }); };
-      return { tree: t.name, items: items, f: has(['살균']), b: has(['살충']), o: has(['동계']), c: has(['관리', '도포', '주의']) };
+      var sprays = data.logs.filter(function (g) { return g.tree === t.name && String(g.date).slice(0, 7) === ym; }).map(function (g) {
+        var d = L.isoToDn(g.date);
+        return { id: g.id, date: g.date, day: d === null ? '' : L.fromDn(d).d, product: g.product, water: g.water };
+      });
+      sprays.sort(function (p, q) { return p.date < q.date ? -1 : p.date > q.date ? 1 : 0; });
+      return { tree: t.name, items: items, sprays: sprays, f: has(['살균']), b: has(['살충']), o: has(['동계']), c: has(['관리', '도포', '주의']) };
     });
-    rows.push({ m: m, y: y, now: m === cur.m, cells: cells });
+    rows.push({ m: m, y: y, now: m === cur.m, past: m < cur.m, cells: cells });
   }
   return rows;
 };
@@ -1597,6 +1609,7 @@ function YMarks({ c }) {
       {c.b && <span className="ym b"></span>}
       {c.o && <span className="ym o"></span>}
       {c.c && <span className="ym c"></span>}
+      {c.sprays.length > 0 && <span className="ydone"><Icon name="tick" size={11} bold /></span>}
     </React.Fragment>
   );
 }
@@ -1613,6 +1626,7 @@ function YearView({ data, ctx, today }) {
       <span><span className="ym b"></span>살충</span>
       <span><span className="ym o"></span>동계</span>
       <span><span className="ym c"></span>관리</span>
+      <span><span className="ydone still"><Icon name="tick" size={11} bold /></span>뿌림</span>
     </div>
   );
   if (table) {
@@ -1628,7 +1642,13 @@ function YearView({ data, ctx, today }) {
               <React.Fragment key={r.m}>
                 <div className={'yt-month' + (r.now ? ' now' : '')}>{r.m}월</div>
                 {r.cells.map((c) => (
-                  <div className={'yt-cell' + (r.now ? ' now' : '')} key={c.tree}>
+                  <div className={'yt-cell' + (r.now ? ' now' : '') + (r.past ? ' past' : '')} key={c.tree}>
+                    {c.sprays.length > 0 && (
+                      <div className="yt-group done">
+                        <span className="yt-kind"><span className="ydone still"><Icon name="tick" size={11} bold /></span>뿌림</span>
+                        {c.sprays.map((g) => <span className="yt-line" key={g.id}>{r.m}/{g.day} {g.product}</span>)}
+                      </div>
+                    )}
                     {L.yearText(ctx, c.items).map((g) => (
                       <div className="yt-group" key={g.kind}>
                         <span className="yt-kind"><span className={'ym ' + markOf[g.kind]}></span>{g.kind}</span>
@@ -1641,19 +1661,20 @@ function YearView({ data, ctx, today }) {
             ))}
           </div>
         </div>
-        <div className="hint">약 이름과 할 일만 짧게 적었습니다. 옆으로 밀면 나무가 이어집니다. 용량과 기간은 달별, 나무별 보기에서 봅니다.</div>
+        <div className="hint">올해 1월부터 12월까지입니다. 약 이름과 할 일만 짧게 적었고, 뿌린 기록은 칸 맨 위에 날짜와 함께 나옵니다. 지난 달의 계획은 흐리게 보입니다.</div>
       </React.Fragment>
     );
   }
   let pick = sel;
   if (!pick) {
     const nowRow = rows.filter((r) => r.now)[0] || rows[0];
-    const first = nowRow.cells.filter((c) => c.items.length > 0)[0] || nowRow.cells[0];
+    const first = nowRow.cells.filter((c) => c.items.length > 0 || c.sprays.length > 0)[0] || nowRow.cells[0];
     pick = { m: nowRow.m, tree: first ? first.tree : '' };
   }
   const pickRow = rows.filter((r) => r.m === pick.m)[0];
   const pickCell = pickRow ? pickRow.cells.filter((c) => c.tree === pick.tree)[0] : null;
   const items = pickCell ? pickCell.items : [];
+  const sprays = pickCell ? pickCell.sprays : [];
   return (
     <React.Fragment>
       {legend}
@@ -1662,12 +1683,12 @@ function YearView({ data, ctx, today }) {
         {data.trees.map((t) => <div className="yg-head" key={t.name}>{short(t.name)}</div>)}
         {rows.map((r) => (
           <React.Fragment key={r.m}>
-            <div className={'yg-month' + (r.now ? ' now' : '')}>{r.m}월</div>
+            <div className={'yg-month' + (r.now ? ' now' : '') + (r.past ? ' past' : '')}>{r.m}월</div>
             {r.cells.map((c) => {
               const on = pick.m === r.m && pick.tree === c.tree;
-              if (!c.items.length) return <div className={'yg-cell empty' + (r.now ? ' now' : '')} key={c.tree}></div>;
+              if (!c.items.length && !c.sprays.length) return <div className={'yg-cell empty' + (r.now ? ' now' : '')} key={c.tree}></div>;
               return (
-                <button type="button" key={c.tree} className={'yg-cell' + (r.now ? ' now' : '') + (on ? ' on' : '')} aria-pressed={on} aria-label={r.m + '월 ' + c.tree + ' 할 일 ' + c.items.length + '가지'} onClick={() => setSel({ m: r.m, tree: c.tree })}>
+                <button type="button" key={c.tree} className={'yg-cell' + (r.now ? ' now' : '') + (r.past ? ' past' : '') + (on ? ' on' : '')} aria-pressed={on} aria-label={r.m + '월 ' + c.tree + ' 할 일 ' + c.items.length + '가지' + (c.sprays.length ? ', 뿌린 기록 ' + c.sprays.length + '건' : '')} onClick={() => setSel({ m: r.m, tree: c.tree })}>
                   <YMarks c={c} />
                 </button>
               );
@@ -1675,10 +1696,21 @@ function YearView({ data, ctx, today }) {
           </React.Fragment>
         ))}
       </div>
-      <div className="hint">칸을 누르면 그 달 그 나무의 할 일이 아래에 나옵니다. 진한 줄이 이번 달입니다.</div>
+      <div className="hint">올해 1월부터 12월까지입니다. 칸을 누르면 그 달 그 나무의 할 일과 뿌린 기록이 아래에 나옵니다. 진한 줄이 이번 달이고, 지난 달은 흐리게 보입니다.</div>
       <div className="stack">
-        <h2 className="h2" style={{ fontSize: 30 }}>{pick.m}월 · {pick.tree}{pickRow && pickRow.y !== cur.y ? <span className="small" style={{ marginLeft: 8 }}>{pickRow.y}년</span> : null}</h2>
-        {items.length === 0 ? <div className="card"><div className="note">이 달에는 할 일이 없습니다.</div></div> : (
+        <h2 className="h2" style={{ fontSize: 30 }}>{pick.m}월 · {pick.tree}</h2>
+        {sprays.length > 0 && (
+          <div className="card dark" style={{ gap: 6 }}>
+            <div className="cap">뿌린 기록</div>
+            {sprays.map((g) => (
+              <div className="between" key={g.id}>
+                <span style={{ fontSize: 19, fontWeight: 700 }}>{g.product}</span>
+                <span style={{ fontSize: 15, color: 'var(--mist)' }}>{pick.m}월 {g.day}일{g.water ? ' · 물 ' + g.water + 'L' : ''}</span>
+              </div>
+            ))}
+          </div>
+        )}
+        {items.length === 0 ? (sprays.length > 0 ? null : <div className="card"><div className="note">이 달에는 할 일이 없습니다.</div></div>) : (
           <div className="card tight" style={{ padding: '2px 16px' }}>
             {items.map((o) => {
               const t = o.task;
@@ -2177,7 +2209,10 @@ function RecordScreen({ data, ctx, today, prefill, clearPrefill, onSave, onDelet
           )}
           <div className="field">
             <span className="flabel">{prefill ? '더 뿌린 나무' : '나무'}</span>
-            <div className="chips wrap">{data.trees.map((t) => <button type="button" key={t.name} className={'pick' + (trees.indexOf(t.name) >= 0 ? ' on' : '')} aria-pressed={trees.indexOf(t.name) >= 0} onClick={() => flip(trees, setTrees, t.name)}>{t.name}</button>)}</div>
+            <div className="chips wrap">
+              <button type="button" className={'pick' + (trees.length === data.trees.length ? ' on' : '')} aria-pressed={trees.length === data.trees.length} onClick={() => setTrees(trees.length === data.trees.length ? [] : data.trees.map((t) => t.name))}>전체</button>
+              {data.trees.map((t) => <button type="button" key={t.name} className={'pick' + (trees.indexOf(t.name) >= 0 ? ' on' : '')} aria-pressed={trees.indexOf(t.name) >= 0} onClick={() => flip(trees, setTrees, t.name)}>{t.name}</button>)}
+            </div>
           </div>
           <div className="field">
             <span className="flabel">{prefill ? '더 뿌린 약' : '약'}</span>
