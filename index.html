@@ -144,6 +144,9 @@ a { color: var(--green); }
 .fold { background: #fff; border: 1.5px solid #b9c5ba; border-radius: 18px; overflow: hidden; }
 .fold.open { border-color: var(--green); box-shadow: 0 3px 12px rgba(16, 32, 26, 0.10); }
 .stack.folds { gap: 12px; }
+.vtree.all { margin-top: 10px; background: var(--gold); border-color: #b9974f; }
+.vtree.all .fold-sub { color: var(--text); }
+.vtree.all .chip { background: var(--green); color: var(--ivory); }
 .vtree { width: 100%; min-height: 76px; border: 1.5px solid #b9c5ba; border-radius: 18px; background: #fff; color: var(--text); padding: 12px 16px; display: flex; align-items: center; gap: 12px; text-align: left; }
 .vtree:focus-visible, .vthumb:focus-visible, .vback:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
 .vthumb { position: relative; display: block; width: 100%; aspect-ratio: 16 / 9; padding: 0; border: 0; border-radius: 14px; overflow: hidden; background: #22302a; }
@@ -2631,7 +2634,7 @@ function VideoScreen({ data, tree, setTree, onSave, onDelete, toast }) {
       <div className="body" style={{ gap: 12 }}>
         <div className="stack folds">
           {groups.map((x) => (
-            <button type="button" key={x.name} className="vtree" onClick={() => { setTree(x.name); window.scrollTo(0, 0); }}>
+            <button type="button" key={x.name} className={'vtree' + (x.name === L.ALL_TREES ? ' all' : '')} onClick={() => { setTree(x.name); window.scrollTo(0, 0); }}>
               <span className="fold-main">
                 <span className="tree-name mid">{x.name}</span>
                 <span className="fold-sub">{x.sub}</span>
