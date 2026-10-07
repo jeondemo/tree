@@ -409,10 +409,10 @@ L.pickUrl = function (text) {
   return m ? 'https://' + m[1] : t;
 };
 
-L.ALL_TREES = '전체';
+L.ALL_TREES = '방제';
 L.videoTree = function (data, v) {
   var n = trim(v.tree);
-  if (!n || n === L.ALL_TREES) return L.ALL_TREES;
+  if (!n || n === L.ALL_TREES || n === '전체') return L.ALL_TREES;
   return L.treeOfCrop(data.trees, n) || n;
 };
 
@@ -427,7 +427,7 @@ L.videoGroups = function (data) {
   });
   return names.map(function (n) {
     var list = by[n] || [];
-    var sub = list.length ? (list[0].title || '제목 없음') + (list.length > 1 ? ' 외 ' + (list.length - 1) + '개' : '') : (n === L.ALL_TREES ? '나무와 상관없는 영상을 넣는 곳' : '아직 올린 영상이 없습니다');
+    var sub = list.length ? (list[0].title || '제목 없음') + (list.length > 1 ? ' 외 ' + (list.length - 1) + '개' : '')  : '아직 올린 영상이 없습니다';
     return { name: n, list: list, count: list.length, sub: sub };
   });
 };
