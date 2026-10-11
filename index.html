@@ -18,7 +18,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@700;900&family=Noto+Sans+KR:wght@400;500;700&display=swap">
 <script>
 var API_URL = 'https://script.google.com/macros/s/AKfycbwYZ08xNCnPO3VORtf4DS2G9IpQuKaxuhDKzWMPZ4fqlZvTbGgJx3IUzanmhYiFcmXM/exec';
-var APP_VERSION = '2026-10-08a';
+var APP_VERSION = '2026-10-10a';
 </script>
 <style>
 :root {
@@ -285,6 +285,17 @@ a { color: var(--green); }
 .other { width: 100%; border: 0; border-top: 1px solid var(--hair); background: transparent; color: var(--text); padding: 12px 0 4px 0; display: flex; align-items: center; justify-content: space-between; gap: 12px; text-align: left; }
 .cap + .other { border-top: 0; }
 .diag-last:focus-visible, .other:focus-visible, .slot-add:focus-visible, .gear:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+.findbtn { border-color: #b9974f; background: var(--tag); color: var(--text); }
+.srcs { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip.srcchip { background: var(--tag); color: var(--text); display: inline-flex; align-items: center; gap: 4px; text-decoration: none; min-height: 30px; padding: 3px 10px; }
+.chip.srcchip.on { background: var(--green); color: var(--ivory); min-height: 0; }
+.frow { padding: 14px 0; border-top: 1px solid var(--hair); display: flex; flex-direction: column; gap: 8px; }
+.frow:first-child { border-top: 0; }
+.fgrid { display: grid; grid-template-columns: 1.3fr 1fr 0.8fr; gap: 8px; }
+.fcell { display: flex; flex-direction: column; min-width: 0; }
+.fcell .k { font-size: 12px; font-weight: 700; color: var(--label); }
+.fcell .v { font-size: 18px; font-weight: 700; line-height: 1.3; overflow-wrap: anywhere; }
+.fcell .v.none { font-size: 15px; color: var(--danger); }
 </style>
 </head>
 <body>
@@ -681,7 +692,7 @@ L.doseInfo = function (data, ctx, product, tree, water) {
   } else if (p && SPRAY[p.kind]) {
     line = '용량은 라벨 확인';
   }
-  return { row: row, unit: unit, line: line, fromLabel: !!(row && row.src === '라벨') };
+  return { row: row, unit: unit, line: line, fromLabel: !!(row && row.src === '라벨'), fromSearch: !!(row && row.src === '검색') };
 };
 
 function mdParse(s) {
@@ -1132,7 +1143,7 @@ L.kitView = function (data, ctx, today) {
     else if (!used.length) use = '지금 계획에는 쓰이지 않음';
     var meta = [k.ingredient, k.content, k.form].filter(Boolean).join(' · ');
     var n = photoCount[k.id] || 0;
-    var checked = (n ? '사진 ' + n + '장' : '사진 없음') + ' · ' + (k.status === '확인함' ? '용량과 용법 확인함' : '확인 전');
+    var checked = (n ? '사진 ' + n + '장' : '사진 없음') + ' · ' + (k.status === '확인함' ? '용량과 용법 확인함' : k.status === '검색으로 확인' ? '검색으로 확인 · 라벨 확인 전' : '확인 전');
     return { kit: k, alt: alt, similar: sim.length > 0 && !used.length, use: use, meta: meta, checked: checked, photos: n };
   });
   var need = data.products.filter(function (p) { return !ctx.own[p.name] && next[p.name]; }).map(function (p) {
@@ -1233,16 +1244,18 @@ L.confirmOps = function (data, draft, todayIso) {
   var ops = [];
   var existing = data.kit.filter(function (k) { return draft.kitId ? k.id === draft.kitId : L.norm(k.name) === L.norm(draft.name); })[0];
   var kitId = existing ? existing.id : L.uid('k');
+  var src = draft.src || '라벨';
+  var status = src === '검색' && !(existing && existing.status === '확인함') ? '검색으로 확인' : '확인함';
   var oldName = existing ? existing.name : '';
   if (existing && oldName !== draft.name) {
     data.doses.forEach(function (d) {
-      if (d.product === oldName && d.src === '라벨' && !L.productOf(data, oldName)) ops.push({ table: 'doses', type: 'del', id: d.id });
+      if (d.product === oldName && (d.src === '라벨' || d.src === '검색') && !L.productOf(data, oldName)) ops.push({ table: 'doses', type: 'del', id: d.id });
     });
   }
   ops.push({
     table: 'kit', type: 'put', row: {
       id: kitId, name: draft.name, ingredient: draft.ingredient || '', content: draft.content || '', form: draft.form || '',
-      unit: draft.unit || '', covers: draft.covers || '', status: '확인함', checked: todayIso,
+      unit: draft.unit || (existing ? existing.unit : ''), covers: draft.covers || '', status: status, checked: todayIso,
       label: JSON.stringify({ cautions: draft.cautions || [], maker: draft.maker || '', group: draft.group || '', model: draft.model || '', sources: (draft.sources || []).slice(0, 6) }),
       added: existing ? existing.added : todayIso
     }
@@ -1253,8 +1266,9 @@ L.confirmOps = function (data, draft, todayIso) {
     if (d === null && p === null && mx === null && !trim(r.doseText)) return;
     var id = draft.name + '|' + r.tree;
     var prev = data.doses.filter(function (x) { return x.id === id; })[0];
+    if (src === '검색' && prev && prev.src === '라벨') return;
     var was = '';
-    if (prev && prev.src !== '라벨') {
+    if (prev && prev.src !== '라벨' && prev.src !== '검색') {
       was = '기준값: ' + [prev.dilution ? L.fmtNum(prev.dilution) + '배' : '', prev.phi !== null ? '수확 ' + prev.phi + '일 전' : '', prev.max !== null ? prev.max + '회' : ''].filter(Boolean).join(', ');
     } else if (prev) { was = prev.was; }
     ops.push({
@@ -1265,7 +1279,7 @@ L.confirmOps = function (data, draft, todayIso) {
         phi: p === null ? (prev && prev.phi !== null ? prev.phi : '') : p,
         phiNote: trim(r.phiNote) || (prev ? prev.phiNote : ''),
         max: mx === null ? (prev && prev.max !== null ? prev.max : '') : mx,
-        src: '라벨', checked: todayIso, was: was
+        src: src, checked: todayIso, was: was
       }
     });
   });
@@ -1273,6 +1287,34 @@ L.confirmOps = function (data, draft, todayIso) {
     ops.push({ table: 'photos', type: 'put', row: { id: ph.id || L.uid('p'), kitId: kitId, fileId: ph.fileId || '', thumb: ph.thumb || '', added: todayIso } });
   });
   return { ops: ops, kitId: kitId };
+};
+
+L.MAKERS = ['팜한농', '경농', '동방아그로', '성보화학', '바스프', '바이엘', '신젠타', '한국삼공', '농협케미컬'];
+
+L.findView = function (data, res, asked) {
+  res = res || {};
+  var p = res.product || {};
+  var wrong = p.same === false || p.same === 'false';
+  var label = { name: trim(asked && asked.name) || trim(p.name), ingredient: trim(p.ingredient), content: trim(p.content), form: trim(p.form), rows: wrong ? [] : (res.rows || []) };
+  var cmp = L.compareLabel(data, label, null);
+  var notReg = {};
+  (res.notRegistered || []).forEach(function (c) { var t = L.treeOfCrop(data.trees, c); if (t) notReg[t] = true; });
+  var found = [], none = [], miss = [];
+  data.trees.forEach(function (t) {
+    var r = cmp.rows.filter(function (x) { return x.tree === t.name; })[0];
+    var has = r && r.onLabel && (r.dilution !== null || r.phi !== null || r.max !== null || trim(r.doseText));
+    if (has) {
+      var src = '';
+      (res.rows || []).forEach(function (x) { if (!src && L.treeOfCrop(data.trees, x.crop) === t.name && trim(x.source)) src = trim(x.source); });
+      found.push(Object.assign({}, r, { use: true, source: src }));
+    } else if (notReg[t.name] && !wrong) none.push(t.name);
+    else miss.push({ tree: t.name, base: r ? r.base : null });
+  });
+  return {
+    ident: cmp.ident, unit: cmp.unit, matches: cmp.matches, base: cmp.base, wrong: wrong,
+    product: { maker: trim(p.maker) || trim(asked && asked.maker), ingredient: trim(p.ingredient), content: trim(p.content), form: trim(p.form), kind: trim(p.kind), name: trim(p.name) },
+    found: found, none: none, miss: miss, notes: trim(res.notes), sources: res.sources || [], warning: trim(res.warning)
+  };
 };
 
 L.removeKitOps = function (data, kitId) {
@@ -1597,6 +1639,7 @@ const ICONS = {
   left: <path d="M15 6l-6 6 6 6"></path>,
   right: <path d="M9 6l6 6-6 6"></path>,
   link: <g><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"></path><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"></path></g>,
+  search: <g><circle cx="11" cy="11" r="6.5"></circle><path d="M16 16l4.5 4.5"></path></g>,
   gear: <g><circle cx="12" cy="12" r="3"></circle><path d="M12 3v2.5M12 18.5V21M3 12h2.5M18.5 12H21M5.6 5.6l1.8 1.8M16.6 16.6l1.8 1.8M5.6 18.4l1.8-1.8M16.6 7.4l1.8-1.8"></path></g>
 };
 function Icon({ name, size, bold }) {
@@ -1667,7 +1710,7 @@ function TaskRow({ o, first, data, ctx, today, onToggle, late, skip, extra }) {
             <div className="line"><span className="pname">{res.name}</span><StateChips res={res} /></div>
             {res.state === 'alt' && <div className="green-note">계획의 {L.josa(t.product, '과', '와')} 같은 약입니다.</div>}
             {t.text && <div className="note">{t.text}</div>}
-            {info.line && <div className="dose">{info.line}{row && (row.dilution || row.doseText) ? <span className="src">{info.fromLabel ? '라벨 확인함' : '기준값 · 라벨 확인 전'}</span> : null}</div>}
+            {info.line && <div className="dose">{info.line}{row && (row.dilution || row.doseText) ? <span className="src">{info.fromLabel ? '라벨 확인함' : info.fromSearch ? '검색으로 확인 · 라벨 확인 전' : '기준값 · 라벨 확인 전'}</span> : null}</div>}
           </React.Fragment>
         ) : (
           <div className="pname">{t.text}</div>
@@ -2118,7 +2161,7 @@ function PhotoInputs({ camRef, albRef, onFiles }) {
   );
 }
 
-function KitScreen({ data, ctx, today, onPhotos, onAddName, onRemove, onCheckKit, openNameSheet }) {
+function KitScreen({ data, ctx, today, onPhotos, onAddName, onRemove, onCheckKit, openFind }) {
   const view = useMemo(() => L.kitView(data, ctx, today), [data, ctx, today]);
   const camRef = useRef(null), albRef = useRef(null);
   const photosOf = (id) => data.photos.filter((p) => p.kitId === id);
@@ -2137,14 +2180,14 @@ function KitScreen({ data, ctx, today, onPhotos, onAddName, onRemove, onCheckKit
         <div className="card" style={{ gap: 12 }}>
           <div>
             <h2 style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.3 }}>약 올리기</h2>
-            <div className="note">용량표와 사용법이 보이게 올려 주세요. 여러 장을 한 번에 올릴 수 있습니다.</div>
+            <div className="note">용량표와 사용법이 보이게 올려 주세요. 라벨이 잘 안 찍히면 이름과 제조사로 찾을 수 있습니다.</div>
           </div>
           <PhotoInputs camRef={camRef} albRef={albRef} onFiles={(files) => onPhotos(files, null, false)} />
           <div style={{ display: 'flex', gap: 10 }}>
             <button type="button" className="btn tall" onClick={() => camRef.current.click()}><Icon name="camera" size={30} />사진 찍기</button>
             <button type="button" className="btn tall" onClick={() => albRef.current.click()}><Icon name="album" size={30} />앨범에서 고르기</button>
           </div>
-          <button type="button" className="btn line2" onClick={openNameSheet}>이름으로 찾아 올리기</button>
+          <button type="button" className="btn line2 findbtn" onClick={() => openFind(null)}><Icon name="search" size={22} bold />이름과 제조사로 찾기</button>
         </div>
 
         <div className="stack">
@@ -2157,6 +2200,7 @@ function KitScreen({ data, ctx, today, onPhotos, onAddName, onRemove, onCheckKit
                   <span className="pname kit">{row.kit.name}</span>
                   {row.alt && <span className="chip alt">대체</span>}
                   {row.similar && <span className="chip buy">비슷한 약</span>}
+                  {row.kit.status === '검색으로 확인' && <span className="chip tagc">검색으로 확인</span>}
                 </div>
                 {row.meta && <span className="small">{row.meta}</span>}
                 <span className="small">{row.use}</span>
@@ -2169,7 +2213,8 @@ function KitScreen({ data, ctx, today, onPhotos, onAddName, onRemove, onCheckKit
                   </div>
                 )}
               </div>
-              <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end' }}>
+              <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end', flexWrap: 'wrap' }}>
+                {row.kit.status !== '확인함' && <button type="button" className="btn gold" onClick={() => openFind(row.kit)}>이름으로 찾기</button>}
                 <button type="button" className="btn gold" onClick={() => onCheckKit(row.kit.id)}>라벨 사진으로 확인</button>
                 <TwoStep label="삭제" onGo={() => onRemove(row.kit.id)} />
               </div>
@@ -2782,6 +2827,137 @@ function VideoScreen({ data, tree, setTree, onSave, onDelete, toast }) {
   );
 }
 
+function FindScreen({ data, find, setFind, busy, onFind, onConfirm, openNameSheet, go }) {
+  const f = find;
+  const set = (patch) => setFind(Object.assign({}, f, patch));
+  const makerName = f.maker === '직접' ? f.makerText.trim() : f.maker;
+  const v = f.view;
+  if (!v) {
+    return (
+      <React.Fragment>
+        <div className="hero" style={{ gap: 8 }}>
+          <button type="button" className="vback" onClick={() => go('kit')}><Icon name="left" size={20} bold />내 약</button>
+          <div className="eyebrow">내 약 · 이름으로 찾기</div>
+          <h1 className="mid">약 찾기</h1>
+          <div className="hero-sub">포장지 앞면의 약 이름과 회사 이름만 있으면 됩니다.</div>
+        </div>
+        <div className="body" style={{ gap: 16 }}>
+          <div className="card">
+            <label className="cap" htmlFor="f-name">약 이름</label>
+            <input id="f-name" className="input name" value={f.name} autoComplete="off" placeholder="예: 델란" onChange={(e) => set({ name: e.target.value })} />
+          </div>
+          <div className="card">
+            <div className="cap">제조사</div>
+            <div className="chips wrap">
+              {L.MAKERS.concat(['직접']).map((m) => <button type="button" key={m} className={'pick' + (f.maker === m ? ' on' : '')} aria-pressed={f.maker === m} onClick={() => set({ maker: f.maker === m ? '' : m })}>{m === '직접' ? '직접 적기' : m}</button>)}
+            </div>
+            {f.maker === '직접' && <input className="input" aria-label="제조사 직접 적기" value={f.makerText} placeholder="포장지에 적힌 회사 이름" autoComplete="off" onChange={(e) => set({ makerText: e.target.value })} />}
+            <div className="small">포장지 아래쪽이나 뒷면에 "제조원", "판매원"으로 적혀 있습니다. 몰라도 찾을 수 있지만 덜 정확합니다.</div>
+          </div>
+          <div className="card">
+            <label className="cap" htmlFor="f-ing">성분과 함량 (알면)</label>
+            <input id="f-ing" className="input" value={f.ingredient} autoComplete="off" placeholder="예: 디티아논 75%" onChange={(e) => set({ ingredient: e.target.value })} />
+            <div className="small">같은 이름으로 함량이 다른 제품이 있을 때 고르는 데 씁니다.</div>
+          </div>
+          {f.error && <div className="banner bad">{f.error}</div>}
+          <div className="stack">
+            <button type="button" className="btn" disabled={busy || !f.name.trim()} onClick={onFind}>
+              {busy ? <React.Fragment><span className="spin"></span>찾는 중입니다</React.Fragment> : <React.Fragment><Icon name="search" size={24} bold />찾기</React.Fragment>}
+            </button>
+            <div className="hint">{busy ? '검색해서 표를 찾고 있습니다. 20초에서 1분쯤 걸립니다. 화면을 닫지 마세요.' : '찾는 순서: 그 회사의 제품 페이지 → 농약안전정보시스템(농촌진흥청 등록 정보) → 농사로, 팜모닝. 블로그나 쇼핑몰 글은 쓰지 않습니다.'}</div>
+          </div>
+          <button type="button" className="linkbtn" onClick={openNameSheet}>찾지 않고 이름만 올리기</button>
+        </div>
+      </React.Fragment>
+    );
+  }
+  const auto = v.matches.filter((m) => m.type !== 'similar')[0];
+  const coverText = f.covers === '-' ? '대신하는 약 없음' : f.covers ? '계획의 ' + f.covers + ' 대신 씀' : auto ? (auto.type === 'same' ? '계획의 ' + L.josa(auto.product, '으로', '로') + ' 씀' : '계획의 ' + auto.product + ' 대신 씀') : '지금 계획에는 쓰이지 않음';
+  const meta = [v.product.ingredient, v.product.content, v.product.form].filter(Boolean).join(' ');
+  const cell = (k, val, base) => (
+    <div className="fcell"><span className="k">{k}</span><span className={'v' + (val ? '' : ' none')}>{val || '못 찾음'}</span>{!val && base && <span className="small">기준 {base} 유지</span>}</div>
+  );
+  return (
+    <React.Fragment>
+      <div className="hero" style={{ gap: 8 }}>
+        <button type="button" className="vback" onClick={() => set({ view: null, raw: null })}><Icon name="left" size={20} bold />다시 찾기</button>
+        <div className="eyebrow">찾은 결과{v.product.maker ? ' · ' + v.product.maker : ''}</div>
+        <h1 className={v.ident.name.length > 4 ? 'mid' : ''}>{v.ident.name}</h1>
+      </div>
+      <div className="body" style={{ gap: 16 }}>
+        {f.demo && <div className="banner">예시 결과입니다. 실제로 검색하지 않았습니다. 시트와 Gemini를 연결하면 검색해서 찾습니다.</div>}
+        {v.wrong && <div className="banner bad">이름은 같지만 다른 회사나 다른 함량의 제품만 찾았습니다. 값은 넣지 않았습니다. 제조사와 성분을 확인해 다시 찾거나 라벨 사진으로 확인하세요.</div>}
+        {v.warning && <div className="banner bad">{v.warning}</div>}
+        <div className="card">
+          <div className="cap">찾은 제품</div>
+          <div style={{ fontSize: 19, fontWeight: 700 }}>{meta || '성분과 제형은 찾지 못함'}</div>
+          {(v.product.kind || v.unit) && <div className="small">{[v.product.kind ? v.product.kind + '제' : '', v.unit ? '재는 단위 ' + v.unit : ''].filter(Boolean).join(' · ')}</div>}
+          {v.sources.length > 0 && (
+            <div className="srcs">
+              {v.sources.slice(0, 6).map((x, i) => <a key={i} className="chip srcchip" href={x.uri} target="_blank" rel="noopener noreferrer"><Icon name="link" size={13} bold />{(x.title || '출처').slice(0, 28)}</a>)}
+            </div>
+          )}
+          {v.sources.length > 0 && <div className="small">출처를 누르면 찾은 페이지가 열립니다.</div>}
+        </div>
+
+        <div className="stack">
+          <h2 className="h2">우리 나무에 쓰는 법</h2>
+          <div className="card" style={{ gap: 0, padding: '4px 18px 8px 18px' }}>
+            {v.found.length === 0 && v.none.length === 0 && <div className="note" style={{ padding: '14px 0' }}>우리 나무의 값을 찾지 못했습니다. 라벨 사진으로 확인해 주세요.</div>}
+            {v.found.map((r) => {
+              const unit = v.unit || '';
+              const d = L.num(r.dilution);
+              return (
+                <div className="frow" key={r.tree}>
+                  <div className="between"><span className="tree-name" style={{ fontSize: 26 }}>{r.tree}</span>{r.source && <span className="chip srcchip on">{r.source.slice(0, 16)}</span>}</div>
+                  <div className="fgrid">
+                    {cell('희석', d ? L.fmtNum(d) + '배' : r.doseText, r.base && r.base.dilution ? L.fmtNum(r.base.dilution) + '배' : '')}
+                    {cell('수확 전', r.phi !== null ? r.phi + '일 전' : r.phiNote, r.base && r.base.phi !== null ? r.base.phi + '일' : '')}
+                    {cell('한 해', r.max !== null ? r.max + '회' : '', r.base && r.base.max !== null ? r.base.max + '회' : '')}
+                  </div>
+                  <div className="small">{[d ? '물 20L에 ' + L.fmtAmount(20000 / d) + unit : '', r.target].filter(Boolean).join(' · ')}</div>
+                </div>
+              );
+            })}
+            {v.miss.map((m) => (
+              <div className="frow" key={m.tree}>
+                <div className="between"><span className="tree-name" style={{ fontSize: 26 }}>{m.tree}</span><span className="chip bad">찾지 못함</span></div>
+                <div className="small">{m.base ? '앱의 기준값을 그대로 둡니다. 라벨로 확인하세요.' : '이 나무의 등록 여부를 찾지 못했습니다. 쓰려면 라벨을 확인하세요.'}</div>
+              </div>
+            ))}
+            {v.none.length > 0 && (
+              <div className="frow">
+                <div className="between"><span className="tree-name" style={{ fontSize: 22 }}>{v.none.join(' · ')}</span><span className="chip buy">등록 없음</span></div>
+                <div className="small">등록된 표에 없습니다. 이 나무에는 쓰지 않습니다.</div>
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div className="card">
+          <div className="cap">계획에 넣는 방법</div>
+          <div style={{ fontSize: 18, fontWeight: 700 }}>{coverText}</div>
+          <CoverSelect value={f.covers} onChange={(x) => set({ covers: x })} products={data.products} />
+        </div>
+        {v.notes && <div className="card"><div className="cap">주의</div><div className="note" style={{ color: 'var(--text)' }}>{v.notes}</div></div>}
+        <div className="banner">검색으로 찾은 값입니다. 앱에는 "검색으로 확인"으로 표시되고, 나중에 라벨 사진을 올리면 라벨 값으로 바뀝니다. 뿌리기 전에 포장지의 표와 한 번 맞춰 보세요.</div>
+        <div className="stack">
+          <button type="button" className="btn" onClick={onConfirm}>내 약에 넣기</button>
+          <button type="button" className="btn line2" onClick={() => set({ view: null, raw: null })}>다시 찾기</button>
+        </div>
+      </div>
+    </React.Fragment>
+  );
+}
+
+function demoFind(data, name) {
+  const p = data.products.filter((x) => L.norm(x.name) === L.norm(name))[0];
+  if (!p) return { product: { name: name, same: true }, rows: [], notRegistered: [], sources: [] };
+  const rows = data.doses.filter((d) => d.product === p.name && d.dilution).map((d) => ({ crop: d.tree, target: d.target, dilution: d.dilution, phi: d.phi, phiText: d.phiNote, max: d.max, per20L: L.fmtAmount(20000 / d.dilution) + (p.unit || 'g'), source: '제조사 페이지' }));
+  const have = rows.map((r) => r.crop);
+  return { product: { name: p.name, ingredient: p.ingredient, content: p.content, form: p.form, kind: p.kind, same: true }, rows: rows, notRegistered: data.trees.map((t) => t.name).filter((t) => have.indexOf(t) < 0).slice(1), sources: [] };
+}
+
 function recentDiag(data, tree, today) {
   const g = L.diagsOf(data, tree)[0];
   if (!g) return null;
@@ -3121,6 +3297,8 @@ function App() {
   const [openTrees, setOpenTrees] = useState({});
   const [videoTree, setVideoTree] = useState('');
   const [diag, setDiag] = useState(null);
+  const [find, setFind] = useState(null);
+  const [findBusy, setFindBusy] = useState(false);
   const [diagBusy, setDiagBusy] = useState(false);
   const [sheet, setSheet] = useState('');
   const [toastMsg, setToastMsg] = useState('');
@@ -3268,6 +3446,7 @@ function App() {
     if (data.kit.some((x) => L.norm(x.name) === L.norm(k.name))) { toast('이미 내 약에 있습니다.'); return; }
     store.commit([{ table: 'kit', type: 'put', row: { id: L.uid('k'), name: k.name, ingredient: k.ingredient || '', content: k.content || '', form: k.form || '', unit: '', covers: k.covers || '', status: '확인 전', checked: '', label: '', added: iso } }]);
     setSheet('');
+    if (tab === 'find') { setFind(null); go('kit'); }
     toast(L.josa(k.name, '을', '를') + ' 내 약에 넣었습니다.');
   };
 
@@ -3283,6 +3462,42 @@ function App() {
     setVideoTree(L.videoTree(data, v));
     toast(L.josa(v.title.trim(), '을', '를') + (v.id ? ' 고쳤습니다.' : ' 영상에 넣었습니다.'));
   };
+  const openFind = (kit) => {
+    setFind({ kitId: kit ? kit.id : '', name: kit ? kit.name : '', maker: '', makerText: '', ingredient: kit ? [kit.ingredient, kit.content].filter(Boolean).join(' ') : '', covers: kit ? kit.covers : '', view: null, raw: null, error: '', demo: false });
+    go('find');
+  };
+  const onFind = async () => {
+    if (!find || findBusy || !find.name.trim()) return;
+    const maker = find.maker === '직접' ? find.makerText.trim() : find.maker;
+    const asked = { name: find.name.trim(), maker: maker };
+    setFindBusy(true);
+    try {
+      let r;
+      if (DEMO) { await sleep(900); r = demoFind(data, asked.name); }
+      else r = await api('findProduct', { name: asked.name, maker: maker, ingredient: find.ingredient.trim(), crops: data.trees.map((t) => t.aliases.join('/')) });
+      setFind(Object.assign({}, find, { raw: r, view: L.findView(data, r, asked), error: '', demo: DEMO }));
+      window.scrollTo(0, 0);
+    } catch (e) {
+      if (e.code === 'PIN') store.sync(true);
+      const msg = e.server && /모르는 요청/.test(e.message) ? '서버가 예전 버전입니다. Apps Script에서 Code.gs를 바꾸고 새 버전으로 배포해 주세요.' : e.server ? e.message : '연결이 안 되어 찾지 못했습니다. 다시 눌러 주세요.';
+      setFind(Object.assign({}, find, { error: msg }));
+    } finally { setFindBusy(false); }
+  };
+  const onFindConfirm = () => {
+    const v = find.view;
+    const name = (v.ident.name || '').trim();
+    if (!name) { toast('약 이름을 적어 주세요.'); return; }
+    const kitId = find.kitId || (data.kit.filter((k) => L.norm(k.name) === L.norm(name))[0] || {}).id || null;
+    const c = L.confirmOps(data, {
+      kitId: kitId, name: name, ingredient: v.product.ingredient || v.ident.ingredient, content: v.product.content, form: v.product.form,
+      unit: v.unit, covers: find.covers, rows: v.found, cautions: v.notes ? [v.notes] : [], maker: v.product.maker, group: '', model: (find.raw && find.raw.model) || '', sources: v.sources, photos: [], src: '검색'
+    }, iso);
+    store.commit(c.ops);
+    setFind(null);
+    go('kit');
+    toast(L.josa(name, '을', '를') + ' 내 약에 넣었습니다. ' + (v.found.length ? v.found.map((r) => r.tree).join(', ') + ' 용량을 검색 값으로 넣었습니다.' : '찾은 용량이 없어 라벨 확인이 필요합니다.'));
+  };
+
   const trashUnsaved = (d) => {
     if (d && !d.saved && d.fileIds && d.fileIds.length && !DEMO) api('delPhotos', { fileIds: d.fileIds }).catch(() => {});
   };
@@ -3357,14 +3572,15 @@ function App() {
 
   const onDeleteVideo = (id) => { store.commit([{ table: 'videos', type: 'del', id: id }]); toast('영상을 지웠습니다.'); };
 
-  const navTab = tab === 'check' ? 'kit' : tab === 'diag' ? 'main' : tab;
+  const navTab = tab === 'check' || tab === 'find' ? 'kit' : tab === 'diag' ? 'main' : tab;
   const NAV = [['main', '이번 달', 'cal'], ['ahead', '앞으로', 'list'], ['kit', '내 약', 'bottle'], ['record', '기록', 'pen'], ['calc', '계산기', 'drop'], ['video', '영상', 'play']];
   return (
     <div className="app">
       {tab === 'main' && <MainScreen store={store} data={data} ctx={ctx} today={today} go={go} onToggle={onToggle} onVisitRecord={onVisitRecord} openSettings={() => setSheet('settings')} openTrees={openTrees} setOpenTrees={setOpenTrees} onDiag={onDiag} openSavedDiag={openSavedDiag} />}
       {tab === 'diag' && diag && <DiagScreen data={data} ctx={ctx} today={today} diag={diag} setDiag={setDiag} busy={diagBusy} onRun={onDiagRun} onSave={onDiagSave} onRetake={onDiagRetake} onDelete={onDiagDelete} onPhotos={onDiagPhotos} openSaved={openSavedDiag} go={go} />}
       {tab === 'ahead' && <AheadScreen data={data} ctx={ctx} today={today} />}
-      {tab === 'kit' && <KitScreen data={data} ctx={ctx} today={today} onPhotos={onPhotos} onAddName={onAddName} onRemove={onRemoveKit} onCheckKit={(id) => { setDraft({ kitId: id, photos: data.photos.filter((p) => p.kitId === id && p.fileId).map((p) => ({ id: p.id, data: '', mime: 'image/jpeg', thumb: p.thumb, fileId: p.fileId })), result: null }); go('check'); }} openNameSheet={() => setSheet('name')} />}
+      {tab === 'kit' && <KitScreen data={data} ctx={ctx} today={today} onPhotos={onPhotos} onAddName={onAddName} onRemove={onRemoveKit} onCheckKit={(id) => { setDraft({ kitId: id, photos: data.photos.filter((p) => p.kitId === id && p.fileId).map((p) => ({ id: p.id, data: '', mime: 'image/jpeg', thumb: p.thumb, fileId: p.fileId })), result: null }); go('check'); }} openFind={openFind} />}
+      {tab === 'find' && find && <FindScreen data={data} find={find} setFind={setFind} busy={findBusy} onFind={onFind} onConfirm={onFindConfirm} openNameSheet={() => setSheet('name')} go={go} />}
       {tab === 'check' && <CheckScreen data={data} draft={draft} setDraft={setDraft} reading={reading} onRead={onRead} onConfirm={onConfirm} onCancel={onCancelDraft} onPhotos={onPhotos} go={go} status={store.status} />}
       {tab === 'record' && <RecordScreen data={data} ctx={ctx} today={today} prefill={prefill} clearPrefill={() => setPrefill(null)} onSave={onSaveRecord} onDeleteLog={(id) => { store.commit(L.deleteLogOps(data, id)); toast('기록을 지웠습니다.'); }} />}
       {tab === 'calc' && <CalcScreen data={data} ctx={ctx} go={go} />}
