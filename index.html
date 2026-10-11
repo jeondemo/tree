@@ -300,6 +300,32 @@ a { color: var(--green); }
 .needname { flex-shrink: 0; margin-right: 3px; font-size: 19px; font-weight: 500; line-height: 1.35; }
 .chip.treec { flex-shrink: 0; background: var(--green2); color: var(--gold); font-size: 12px; padding: 1px 7px; }
 @media (max-width: 360px) { .needname { font-size: 17px; margin-right: 1px; } .needtop { gap: 4px; } .chip.treec { font-size: 11px; padding: 1px 6px; } }
+.namebtn { border: 0; background: transparent; padding: 0; margin: 0; color: var(--text); text-align: left; display: inline-flex; align-items: center; gap: 2px; text-decoration: underline; text-decoration-color: #b9c5ba; text-decoration-thickness: 2px; text-underline-offset: 5px; }
+.namebtn svg { color: var(--label); }
+.namebtn:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+.sheet.drugsheet { max-height: 92vh; gap: 14px; padding-top: 10px; }
+.grab { align-self: center; width: 44px; height: 5px; border-radius: 999px; background: #b9c5ba; }
+.gear.light { background: #fff; color: var(--green); flex-shrink: 0; }
+.nowbox { border-radius: 18px; padding: 16px 18px; background: var(--green); color: var(--ivory); display: flex; gap: 12px; align-items: flex-start; }
+.nowbox.wait { background: var(--tag); color: var(--text); }
+.nowbox .ic { flex-shrink: 0; margin-top: 2px; }
+.nowbox .k { font-size: 13px; font-weight: 700; opacity: 0.85; }
+.nowbox .h { font-size: 19px; font-weight: 700; line-height: 1.35; }
+.nowbox .s { font-size: 14px; color: var(--mist); line-height: 1.45; }
+.nowbox.wait .s { color: var(--muted); }
+.dsec { gap: 0; }
+.dsec .sec { font-family: var(--serif); font-weight: 900; font-size: 20px; line-height: 1.3; color: var(--green); padding-bottom: 8px; }
+.duse { padding: 12px 0; border-top: 1px solid var(--hair); display: flex; flex-direction: column; gap: 4px; }
+.dterm { display: flex; flex-direction: column; font-size: 14px; color: var(--muted); line-height: 1.45; }
+.dterm b { font-size: 17px; color: var(--text); }
+.ddose { font-size: 16px; font-weight: 700; margin-top: 2px; }
+.linkbtn.small2 { min-height: 40px; font-size: 14px; color: var(--label); gap: 4px; text-decoration: none; }
+.dplan { display: flex; align-items: center; gap: 10px; padding: 9px 0; border-top: 1px solid var(--hair); }
+.dplan b { font-size: 16px; }
+.dmix { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; padding: 8px 0; border-top: 1px solid var(--hair); }
+.dmix > span:first-child { display: flex; flex-direction: column; min-width: 0; }
+.dmix b { font-size: 16px; }
+.dtext { font-size: 16px; line-height: 1.5; }
 </style>
 </head>
 <body>
@@ -1322,6 +1348,237 @@ L.findView = function (data, res, asked) {
   };
 };
 
+L.SYMPTOMS = {
+ "잎오갈병": {
+  "*": "새잎이 붉거나 노랗게 부풀며 오그라들고, 나중에 흰 가루가 덮인 뒤 떨어짐"
+ },
+ "세균구멍병": {
+  "*": "잎에 물에 젖은 듯한 작은 점이 적갈색으로 변해 빠지며 구멍. 열매엔 검은 점이 생겨 갈라짐",
+  "자두": "잎 가장자리에 작은 점이 생겨 일찍 떨어지고, 열매에 1~2mm 자흑색 점. 새 가지가 갈라져 진이 남"
+ },
+ "검은점무늬병": {
+  "*": "잎에 작은 점이 생겨 구멍이 나고 일찍 떨어짐. 열매에 1~2mm 자흑색 점"
+ },
+ "잿빛무늬병": {
+  "*": "꽃이 갈색으로 시들어 썩고, 익는 열매에 갈색 무늬와 누런 잿빛 가루가 생겨 금방 썩음"
+ },
+ "탄저병": {
+  "*": "열매에 갈색 점이 커지며 움푹 꺼지고 분홍빛 포자 덩어리가 생김. 잎엔 갈색 둥근 점",
+  "감": "열매에 작은 점이 움푹 꺼지며 커짐. 잎엔 검은 점 둘레가 노랗고, 가지가 갈라지며 꺼짐",
+  "사과대추": "열매에 흑갈색 작은 점이 꺼지며 커지고 쭈글쭈글해짐. 습하면 가운데에 담황색 포자",
+  "딸기": "런너·잎자루에 흑갈색 반점이 번지고 포기가 시듦. 관부를 쪼개면 안쪽이 검게 썩음"
+ },
+ "주머니병": {
+  "*": "열매가 2~3배로 길쭉하게 부풀고 흰 가루가 덮이며, 속이 비고 검게 변해 떨어짐"
+ },
+ "세균열매썩음병": {
+  "*": "열매에 물에 젖은 듯한 갈색·검은 점이 커지며 움푹 패고 속이 갈색으로 변함"
+ },
+ "갈색무늬병": {
+  "*": "잎에 작은 갈색~자줏빛 점이 많이 생기고, 잎이 누렇게 되어 여름에 일찍 떨어짐"
+ },
+ "둥근무늬낙엽병": {
+  "*": "8월 중순 뒤 잎에 둥근 반점이 나타나 둘레가 붉게 변하고, 잎과 열매가 일찍 떨어짐"
+ },
+ "흰가루병": {
+  "*": "잎·새순에 밀가루 같은 흰 곰팡이가 덮임",
+  "감": "잎 뒷면에 밀가루 같은 흰 곰팡이, 앞면엔 검은 작은 점들. 가을엔 흑갈색 알갱이",
+  "딸기": "잎·꽃자루·열매에 흰 가루 곰팡이가 생기고, 잎이 위로 말리며 윤기를 잃음",
+  "백일홍": "어린 가지·새순·잎에 흰 가루가 덮이고 오그라듦. 장마 뒤 심해짐"
+ },
+ "갈색점무늬병": {
+  "*": "잎에 암갈색 작은 점이 갈색 둥근 무늬로 커지고, 떨어지기 전 붉게 변함"
+ },
+ "역병": {
+  "*": "물이 고이는 곳에서 줄기 밑동·뿌리가 썩어 잎이 누렇게 시들고, 열매가 물러 썩기도 함"
+ },
+ "잿빛곰팡이병": {
+  "*": "꽃잎·열매가 물러지며 잿빛 곰팡이가 빽빽이 덮임"
+ },
+ "시들음병": {
+  "*": "작은잎 3장 중 1~2장이 누렇게 작아지고, 포기가 한쪽으로 기울며 시듦"
+ },
+ "줄기마름병": {
+  "*": "줄기·가지 껍질이 갈색으로 움푹 꺼지며 진이 나고, 그 위 가지가 말라 죽음"
+ },
+ "녹병": {
+  "*": "여름 뒤 잎 뒷면에 노란 가루 덩어리가 생기고, 잎이 누렇게 되어 일찍 떨어짐"
+ },
+ "복숭아순나방": {
+  "*": "새순 끝이 꺾여 시들며 진과 똥이 나옴. 열매는 꼭지나 껍질 밑을 먹고 가는 똥을 냄"
+ },
+ "복숭아심식나방": {
+  "*": "열매에 바늘구멍과 흰 실 같은 굳은 즙, 열매가 울퉁불퉁. 나온 구멍은 송곳 자국",
+  "사과대추": "열매 속을 파먹어, 피해 열매만 일찍 붉게 물들고 쉽게 떨어짐"
+ },
+ "복숭아굴나방": {
+  "*": "잎 속을 꼬불꼬불 굴처럼 파먹어 흰 줄이 생기고, 심하면 잎이 일찍 떨어짐"
+ },
+ "미국흰불나방": {
+  "*": "가지 끝 잎을 거미줄 같은 실로 엮고, 그 안에서 털 많은 애벌레가 떼로 잎을 먹음"
+ },
+ "감꼭지나방": {
+  "*": "꼭지 쪽으로 파고들어 열매가 누렇거나 붉게 변해 떨어짐. 가지 끝 눈이 말라 죽음"
+ },
+ "대추애기잎말이나방": {
+  "*": "새순·잎을 실로 묶어 말고 그 속에서 갉아먹음. 열매 겉도 갉음"
+ },
+ "잎말이나방": {
+  "*": "잎을 실로 말거나 붙여 놓고 그 안에서 애벌레가 갉아먹음"
+ },
+ "파밤나방": {
+  "*": "어린 애벌레가 잎 뒷면을 긁어 먹어 잎이 하얗게 비치고, 자라면 잎에 구멍을 냄"
+ },
+ "복숭아유리나방": {
+  "*": "줄기 밑동 껍질에서 진이 흐르고 적갈색 굵은 똥이 붙어 있음"
+ },
+ "대추나무잎혹파리": {
+  "*": "잎이 가장자리부터 안으로 말리고 갈색이나 붉은색으로 변함"
+ },
+ "작은뿌리파리": {
+  "*": "포기가 시들음병처럼 시들고, 뿌리에 작은 흰 애벌레가 붙어 있음"
+ },
+ "복숭아가루진딧물": {
+  "*": "잎 뒷면에 흰 가루 묻은 진딧물이 모이고, 끈적한 분비물로 잎이 심하게 더러워짐"
+ },
+ "복숭아혹진딧물": {
+  "*": "새순에 모여 즙을 빨아 새순과 잎이 뒤틀리듯 오그라듦"
+ },
+ "목화진딧물": {
+  "*": "새순·잎 뒷면에 작은 진딧물이 모여 잎이 오그라들고 끈적임"
+ },
+ "진딧물": {
+  "*": "새순·잎 뒷면에 작은 벌레가 모여 즙을 빨고, 잎이 오그라들며 끈적임"
+ },
+ "배롱나무알락진딧물": {
+  "*": "잎 뒷면에 노란 진딧물이 모이고 잎·가지가 끈적이며 검은 그을음. 줄기에 개미가 다님"
+ },
+ "뽕나무깍지벌레": {
+  "*": "가지에 흰 깍지가 무리 지어 덮이고, 심하면 가지가 말라 죽음"
+ },
+ "깍지벌레": {
+  "*": "가지·줄기·잎에 딱지나 솜 같은 벌레가 붙어 즙을 빨고, 분비물로 검은 그을음이 생김"
+ },
+ "감나무주머니깍지벌레": {
+  "*": "가지·줄기 껍질 틈에 흰 솜 주머니가 무수히 붙고, 잎·열매가 검게 그을림"
+ },
+ "주머니깍지벌레": {
+  "*": "가지·줄기 껍질 틈에 흰 솜 주머니가 무수히 붙고, 잎·열매가 검게 그을림"
+ },
+ "갈색날개매미충": {
+  "*": "어린 가지에 알을 줄지어 낳아 가지가 말라 죽고, 분비물로 그을음이 생김"
+ },
+ "미국선녀벌레": {
+  "*": "잎·가지에 흰 솜 같은 밀랍과 하얀 애벌레가 붙고, 분비물로 아래 잎·열매가 검게 그을림"
+ },
+ "감관총채벌레": {
+  "*": "어린잎이 세로로 대롱처럼 말리고 누렇게 말라 떨어짐. 말린 잎 속에 작은 벌레가 많음"
+ },
+ "애무늬고리장님노린재": {
+  "*": "어린잎에 작은 반점이 생기고, 자라면서 구멍이 크게 뚫림. 꽃봉오리가 떨어짐"
+ },
+ "응애": {
+  "*": "잎 뒷면에서 즙을 빨아 잎에 흰 깨알 반점이 번지고, 누렇게 변해 일찍 떨어짐"
+ },
+ "점박이응애": {
+  "*": "잎 뒷면에서 즙을 빨아 잎에 흰 깨알 반점이 번지고, 누렇게 변해 일찍 떨어짐"
+ }
+};
+
+L.symptom = function (name, tree) {
+  var n = String(name || '').replace(/\(.*?\)/g, '').trim().replace(/\s*예방$/, '');
+  var e = L.SYMPTOMS[n] || L.SYMPTOMS[n.replace(/류$/, '')] || null;
+  if (!e) return '';
+  return (tree && e[tree]) || e['*'] || '';
+};
+
+L.splitTop = function (text) {
+  var out = [], cur = '', depth = 0;
+  String(text || '').split('').forEach(function (ch) {
+    if (ch === '(') depth++;
+    if (ch === ')') depth = Math.max(0, depth - 1);
+    if ((ch === ',' || ch === '·') && depth === 0) { out.push(cur); cur = ''; return; }
+    cur += ch;
+  });
+  out.push(cur);
+  return out.map(function (x) { return trim(x); }).filter(Boolean);
+};
+
+function groupCodes(g) {
+  return (String(g || '').match(/[가-힣]\d+|\d+[a-z]?/g) || []);
+}
+
+L.drugInfo = function (data, ctx, name, today) {
+  var p = L.productOf(data, name);
+  var kit = data.kit.filter(function (k) { return k.name === name; })[0] || null;
+  var base = p ? p.name : (kit ? (L.matchKit(kit, data.products).filter(function (m) { return m.type !== 'similar'; })[0] || {}).product || '' : '');
+  var bp = base ? L.productOf(data, base) : null;
+  var res = base ? L.resolve(ctx, base) : { state: kit ? 'own' : 'buy', name: name };
+  var year = L.fromDn(today).y;
+  var uses = [];
+  data.trees.forEach(function (t) {
+    var row = L.doseRow(data, t.name, [kit ? kit.name : '', name, base]);
+    if (!row) return;
+    var info = L.doseInfo(data, ctx, base || name, t.name, 20);
+    var terms = L.splitTop(row.target).map(function (x) {
+      var core = x.replace(/\(.*?\)/g, '').trim();
+      return { name: x, sym: L.symptom(core, t.name) };
+    });
+    uses.push({
+      tree: t.name, row: row, terms: terms,
+      dose: row.dilution ? L.fmtNum(row.dilution) + '배 · 물 20L에 ' + L.fmtAmount(20000 / row.dilution) + (info.unit || '') : (row.doseText || '용량은 라벨 확인'),
+      phi: row.phi !== null ? '수확 ' + row.phi + '일 전까지' : (row.phiNote || ''),
+      max: row.max !== null ? '한 해 ' + row.max + '회 · 올해 ' + L.usage(data, t.name, base || name, year) + '회' : '',
+      src: row.src
+    });
+  });
+  var done = {};
+  data.checks.forEach(function (c) { done[c.id] = 1; });
+  var plan = L.upcoming(data, today, 13).filter(function (oc) { return base && oc.task.product === base && !done[oc.key]; }).map(function (oc) {
+    var ay = L.fromDn(Math.max(oc.a, today)).y;
+    return { tree: oc.task.tree, text: oc.task.text + (oc.task.seq ? ' (' + oc.task.seq + ')' : ''), label: (oc.a <= today ? '지금 · ' : ay > year ? '내년 ' : '') + oc.task.label, a: oc.a, now: oc.a <= today, post: oc.task.post };
+  });
+  var never = [], ok = [], unknown = [], all = '';
+  data.mix.forEach(function (m) {
+    var other = '';
+    if (m.a === base) other = m.b; else if (m.b === base) other = m.a; else if (m.b === '*' && m.a !== base && base) other = m.a;
+    if (!other) return;
+    if (other === '*') { if (m.verdict === '금지') all = m.note || '다른 약과 섞지 않기'; return; }
+    var list = m.verdict === '금지' ? never : m.verdict === '가능' ? ok : unknown;
+    if (list.indexOf(other) < 0) list.push(other);
+  });
+  [ok, unknown].forEach(function (l) { never.forEach(function (n) { var i = l.indexOf(n); if (i >= 0) l.splice(i, 1); }); });
+  var gaps = [];
+  var myGap = bp ? bp.gap : 0;
+  data.products.forEach(function (q) { if (q.name !== base && q.gap > 0) gaps.push({ name: q.name, days: Math.max(q.gap, myGap) }); });
+  var codes = groupCodes(bp ? bp.group : '');
+  var same = data.products.filter(function (q) { return q.name !== base && groupCodes(q.group).some(function (c) { return codes.indexOf(c) >= 0; }); }).map(function (q) { return q.name; });
+  var waits = [];
+  var treesUsed = uses.map(function (u) { return u.tree; });
+  data.logs.forEach(function (g) {
+    var dn = L.isoToDn(g.date);
+    if (dn === null || dn > today || treesUsed.indexOf(g.tree) < 0) return;
+    var gb = g.base || L.canonical(data, g.product);
+    if (gb === base) return;
+    var gp = L.productOf(data, gb);
+    var days = Math.max(myGap, gp ? gp.gap : 0);
+    if (!days || dn + days <= today) return;
+    var cur = waits.filter(function (w) { return w.tree === g.tree; })[0];
+    if (!cur) waits.push({ tree: g.tree, until: dn + days, after: g.product, date: dn, days: days });
+    else if (dn + days > cur.until) { cur.until = dn + days; cur.after = g.product; cur.date = dn; cur.days = days; }
+  });
+  var full = uses.filter(function (u) { return u.row.max !== null && L.usage(data, u.tree, base || name, year) >= u.row.max; }).map(function (u) { return u.tree; });
+  var lastLog = null;
+  data.logs.forEach(function (g) { var dn = L.isoToDn(g.date); if (dn !== null && dn <= today && (!lastLog || dn > lastLog.dn)) lastLog = { dn: dn, product: g.product }; });
+  return {
+    name: name, base: base, product: bp, kit: kit, state: kit ? (base && kit.name !== base ? 'alt' : 'own') : res.state,
+    kind: (bp && bp.kind) || '', ingredient: (kit && kit.ingredient) || (bp && bp.ingredient) || '',
+    uses: uses, plan: plan, mix: { all: all, never: never, ok: ok, unknown: unknown }, gap: myGap, gaps: gaps, same: same,
+    waits: waits, full: full, lastLog: lastLog, note: bp ? bp.note : '', kitMeta: kit ? [kit.ingredient, kit.content, kit.form].filter(Boolean).join(' ') : '',
+    status: kit ? kit.status : ''
+  };
+};
+
 L.removeKitOps = function (data, kitId) {
   var k = data.kit.filter(function (x) { return x.id === kitId; })[0];
   var ops = [], fileIds = [];
@@ -2166,7 +2423,7 @@ function PhotoInputs({ camRef, albRef, onFiles }) {
   );
 }
 
-function KitScreen({ data, ctx, today, onPhotos, onAddName, onRemove, onCheckKit, openFind }) {
+function KitScreen({ data, ctx, today, onPhotos, onAddName, onRemove, onCheckKit, openFind, openDrug }) {
   const view = useMemo(() => L.kitView(data, ctx, today), [data, ctx, today]);
   const camRef = useRef(null), albRef = useRef(null);
   const photosOf = (id) => data.photos.filter((p) => p.kitId === id);
@@ -2202,7 +2459,7 @@ function KitScreen({ data, ctx, today, onPhotos, onAddName, onRemove, onCheckKit
             <div className="card" key={row.kit.id} style={{ padding: 16, gap: 10 }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
                 <div className="line">
-                  <span className="pname kit">{row.kit.name}</span>
+                  <button type="button" className="namebtn pname kit" onClick={() => openDrug(row.kit.name)}>{row.kit.name}<Icon name="right" size={20} bold /></button>
                   {row.alt && <span className="chip alt">대체</span>}
                   {row.similar && <span className="chip buy">비슷한 약</span>}
                   {row.kit.status === '검색으로 확인' && <span className="chip tagc">검색으로 확인</span>}
@@ -2234,7 +2491,7 @@ function KitScreen({ data, ctx, today, onPhotos, onAddName, onRemove, onCheckKit
             <div className="card tight" style={{ padding: '2px 16px' }}>
               {view.need.map((row) => (
                 <div className="row" key={row.product.name}>
-                  <span className="needtop"><span className="needname">{row.product.name}</span>{(row.trees || []).map((t) => <span className="chip treec" key={t}>{t}</span>)}</span>
+                  <span className="needtop"><button type="button" className="namebtn needname" onClick={() => openDrug(row.product.name)}>{row.product.name}</button>{(row.trees || []).map((t) => <span className="chip treec" key={t}>{t}</span>)}</span>
                   <div className="between">
                   <div className="main">
                     {row.meta && <span className="small">{row.meta}</span>}
@@ -2965,6 +3222,102 @@ function demoFind(data, name) {
   return { product: { name: p.name, ingredient: p.ingredient, content: p.content, form: p.form, kind: p.kind, same: true }, rows: rows, notRegistered: data.trees.map((t) => t.name).filter((t) => have.indexOf(t) < 0).slice(1), sources: [] };
 }
 
+function DrugSheet({ data, ctx, today, name, onClose, onDiag, onAdd }) {
+  const v = useMemo(() => L.drugInfo(data, ctx, name, today), [data, ctx, name, today]);
+  const blocked = v.waits.length > 0;
+  const nextPlan = v.plan.filter((x) => !x.now)[0];
+  let head, sub;
+  if (blocked) {
+    const w = v.waits.slice().sort((a, b) => b.until - a.until)[0];
+    head = (v.waits.length > 1 ? v.waits.map((x) => x.tree).join('·') + ' 모두 ' : L.josa(w.tree, '은', '는') + ' ') + L.md(w.until) + '부터 쓸 수 있습니다';
+    sub = v.waits.map((x) => x.tree + ': ' + L.josa(x.after, '을', '를') + ' ' + L.md(x.date) + '에 뿌림, ' + x.days + '일 띄우기').join(' / ');
+  } else {
+    head = '오늘 써도 됩니다';
+    sub = (v.lastLog ? '최근 기록: ' + v.lastLog.product + ' ' + L.md(v.lastLog.dn) + '. 띄워야 할 약은 없습니다.' : '최근에 뿌린 기록이 없습니다.') + (v.plan.some((x) => x.now) ? ' 지금이 계획 기간입니다.' : nextPlan ? ' 이 약의 다음 계획은 ' + nextPlan.label.replace(/,.*$/, '') + '입니다.' : '');
+  }
+  if (v.full.length) sub += ' ' + L.josa(v.full.join(', '), '은', '는') + ' 올해 횟수를 다 썼습니다.';
+  const bigGap = v.gaps.reduce((m, g) => { (m[g.days] = m[g.days] || []).push(g.name); return m; }, {});
+  return (
+    <div className="veil" onClick={onClose}>
+      <div className="sheet drugsheet" role="dialog" aria-modal="true" aria-label={name + ' 약 정보'} onClick={(e) => e.stopPropagation()}>
+        <div className="grab"></div>
+        <div className="between" style={{ alignItems: 'flex-start', padding: '0 4px' }}>
+          <div className="vtext" style={{ gap: 6 }}>
+            <div className="line" style={{ gap: 8 }}><h2 style={{ padding: 0 }}>{name}</h2><StateChips res={{ state: v.state }} /></div>
+            <span className="note">{[v.kind, v.ingredient, v.gap ? '다른 약과 ' + v.gap + '일 이상 띄우기' : ''].filter(Boolean).join(' · ')}</span>
+          </div>
+          <button type="button" className="gear light" aria-label="닫기" onClick={onClose}><Icon name="x" bold /></button>
+        </div>
+        {v.state === 'alt' && <div className="green-note" style={{ padding: '0 4px' }}>계획의 {v.base} 자리에 들어가는 약입니다.</div>}
+        <div className={'nowbox' + (blocked ? ' wait' : '')}>
+          <span className="ic"><Icon name={blocked ? 'cal' : 'tick'} size={22} bold /></span>
+          <span className="vtext"><span className="k">지금 바로 써도 되나 · {L.md(today)}</span><span className="h">{head}</span><span className="s">{sub}</span></span>
+        </div>
+
+        <div className="card dsec">
+          <div className="sec">어디에, 무엇에 쓰나</div>
+          {v.uses.length === 0 && <div className="note">앱의 약량표에 이 약을 쓰는 나무가 없습니다. 라벨 사진으로 확인하거나 이름과 제조사로 찾아 주세요.</div>}
+          {v.uses.map((u) => (
+            <div className="duse" key={u.tree}>
+              <div className="line" style={{ gap: 8 }}><span className="chip treec">{u.tree}</span>{u.src === '라벨' && <span className="small">라벨 확인함</span>}{u.src === '검색' && <span className="small">검색으로 확인</span>}</div>
+              {u.terms.map((t) => (
+                <div className="dterm" key={t.name}><b>{t.name}</b>{t.sym && <span>{t.sym}</span>}</div>
+              ))}
+              <div className="ddose">{u.dose}</div>
+              <div className="small">{[u.phi, u.max].filter(Boolean).join(' · ')}</div>
+              <button type="button" className="linkbtn small2" onClick={() => onDiag(u.tree)}><Icon name="camera" size={16} bold />{u.tree} 잎이 이런 것 같으면 사진으로 확인</button>
+            </div>
+          ))}
+          {v.uses.length > 0 && <div className="small" style={{ paddingTop: 8, borderTop: '1px solid var(--hair)' }}>증상 설명은 농업기술원 자료 등을 짧게 줄인 참고용입니다. 헷갈리면 사진으로 확인하세요.</div>}
+        </div>
+
+        <div className="card dsec">
+          <div className="sec">계획에서 쓰는 때</div>
+          {v.plan.length === 0 && <div className="note">지금 방제 계획에는 이 약이 들어 있지 않습니다.</div>}
+          {v.plan.slice(0, 8).map((x, i) => (
+            <div className="dplan" key={i}>
+              <span className="chip treec">{x.tree}</span>
+              <span className="vtext"><b>{x.label}</b><span className="small">{x.text}{x.post ? ' · 수확 뒤' : ''}</span></span>
+              {i === 0 && <span className="chip alt">{x.now ? '지금' : '다음 차례'}</span>}
+            </div>
+          ))}
+        </div>
+
+        <div className="card dsec">
+          <div className="sec">다른 약과 함께 쓸 때</div>
+          <div className="cap">한 통에 섞기</div>
+          {v.mix.all ? <div className="dmix"><span><b>모든 약</b><span className="small">{v.mix.all}</span></span><span className="chip bad">섞지 않기</span></div> : (
+            <React.Fragment>
+              {v.mix.never.length > 0 && <div className="dmix"><span><b>{v.mix.never.join(' · ')}</b></span><span className="chip bad">섞지 않기</span></div>}
+              {v.mix.ok.length > 0 && <div className="dmix"><span><b>{v.mix.ok.join(' · ')}</b></span><span className="chip own">섞어도 됨</span></div>}
+              {v.mix.unknown.length > 0 && <div className="dmix"><span><b>{v.mix.unknown.join(' · ')}</b><span className="small">따로 뿌리기</span></span><span className="chip tagc">확인 안 됨</span></div>}
+              {!v.mix.never.length && !v.mix.ok.length && !v.mix.unknown.length && <div className="note">섞기 정보가 없습니다. 라벨의 혼용표를 확인하세요.</div>}
+            </React.Fragment>
+          )}
+          <div className="cap" style={{ marginTop: 10 }}>띄울 날짜</div>
+          <div className="dtext">{v.gap ? '다른 약을 뿌린 날에서 ' + v.gap + '일 뒤에 쓰고, 이 약을 뿌린 뒤에도 ' + v.gap + '일은 다른 약을 쉬세요.' : '이 약 자체는 간격이 필요 없습니다.'}{!v.gap && Object.keys(bigGap).length > 0 ? ' 다만 ' + Object.keys(bigGap).map((d) => bigGap[d].join('·') + '를 뿌렸으면 ' + d + '일 뒤에').join(', ') + ' 쓰세요.' : ''}</div>
+          {v.same.length > 0 && (
+            <React.Fragment>
+              <div className="cap" style={{ marginTop: 10 }}>번갈아 쓰기</div>
+              <div className="dtext">{v.same.slice(0, -1).concat([L.josa(v.same[v.same.length - 1], '과', '와')]).join(', ')} 같은 계통입니다. 연달아 쓰면 잘 안 듣게 되니 사이에 다른 계통 약을 넣으세요.</div>
+            </React.Fragment>
+          )}
+        </div>
+
+        {(v.note || v.kitMeta) && (
+          <div className="card dsec">
+            <div className="sec">주의</div>
+            {v.note && <div className="dtext">{v.note}</div>}
+            {v.kit && <div className="small">{[v.kitMeta, v.status === '확인함' ? '라벨 확인함' : v.status === '검색으로 확인' ? '검색으로 확인 · 라벨 확인 전' : '확인 전'].filter(Boolean).join(' · ')}</div>}
+          </div>
+        )}
+        {!v.kit && <button type="button" className="btn" onClick={() => onAdd(v)}>내 약에 올리기</button>}
+        <button type="button" className="btn line2" onClick={onClose}>닫기</button>
+      </div>
+    </div>
+  );
+}
+
 function recentDiag(data, tree, today) {
   const g = L.diagsOf(data, tree)[0];
   if (!g) return null;
@@ -3305,6 +3658,7 @@ function App() {
   const [videoTree, setVideoTree] = useState('');
   const [diag, setDiag] = useState(null);
   const [find, setFind] = useState(null);
+  const [drug, setDrug] = useState('');
   const [findBusy, setFindBusy] = useState(false);
   const [diagBusy, setDiagBusy] = useState(false);
   const [sheet, setSheet] = useState('');
@@ -3586,7 +3940,7 @@ function App() {
       {tab === 'main' && <MainScreen store={store} data={data} ctx={ctx} today={today} go={go} onToggle={onToggle} onVisitRecord={onVisitRecord} openSettings={() => setSheet('settings')} openTrees={openTrees} setOpenTrees={setOpenTrees} onDiag={onDiag} openSavedDiag={openSavedDiag} />}
       {tab === 'diag' && diag && <DiagScreen data={data} ctx={ctx} today={today} diag={diag} setDiag={setDiag} busy={diagBusy} onRun={onDiagRun} onSave={onDiagSave} onRetake={onDiagRetake} onDelete={onDiagDelete} onPhotos={onDiagPhotos} openSaved={openSavedDiag} go={go} />}
       {tab === 'ahead' && <AheadScreen data={data} ctx={ctx} today={today} />}
-      {tab === 'kit' && <KitScreen data={data} ctx={ctx} today={today} onPhotos={onPhotos} onAddName={onAddName} onRemove={onRemoveKit} onCheckKit={(id) => { setDraft({ kitId: id, photos: data.photos.filter((p) => p.kitId === id && p.fileId).map((p) => ({ id: p.id, data: '', mime: 'image/jpeg', thumb: p.thumb, fileId: p.fileId })), result: null }); go('check'); }} openFind={openFind} />}
+      {tab === 'kit' && <KitScreen data={data} ctx={ctx} today={today} onPhotos={onPhotos} onAddName={onAddName} onRemove={onRemoveKit} onCheckKit={(id) => { setDraft({ kitId: id, photos: data.photos.filter((p) => p.kitId === id && p.fileId).map((p) => ({ id: p.id, data: '', mime: 'image/jpeg', thumb: p.thumb, fileId: p.fileId })), result: null }); go('check'); }} openFind={openFind} openDrug={setDrug} />}
       {tab === 'find' && find && <FindScreen data={data} find={find} setFind={setFind} busy={findBusy} onFind={onFind} onConfirm={onFindConfirm} openNameSheet={() => setSheet('name')} go={go} />}
       {tab === 'check' && <CheckScreen data={data} draft={draft} setDraft={setDraft} reading={reading} onRead={onRead} onConfirm={onConfirm} onCancel={onCancelDraft} onPhotos={onPhotos} go={go} status={store.status} />}
       {tab === 'record' && <RecordScreen data={data} ctx={ctx} today={today} prefill={prefill} clearPrefill={() => setPrefill(null)} onSave={onSaveRecord} onDeleteLog={(id) => { store.commit(L.deleteLogOps(data, id)); toast('기록을 지웠습니다.'); }} />}
@@ -3601,6 +3955,7 @@ function App() {
           ))}
         </div>
       </nav>
+      {drug && tab === 'kit' && <DrugSheet data={data} ctx={ctx} today={today} name={drug} onClose={() => setDrug('')} onDiag={(t) => { setDrug(''); onDiag(t); }} onAdd={(v) => { setDrug(''); const p = v.product || {}; onAddName({ name: v.name, ingredient: p.ingredient === v.name ? '' : (p.ingredient || ''), content: p.content || '', form: p.form || '', covers: '' }); }} />}
       {sheet === 'settings' && <SettingsSheet store={store} onClose={() => setSheet('')} toast={toast} />}
       {sheet === 'name' && <NameSheet data={data} onAdd={onAddName} onClose={() => setSheet('')} />}
       {toastMsg && <div className="toast" role="status">{toastMsg}</div>}
