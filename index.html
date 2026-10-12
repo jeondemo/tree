@@ -326,6 +326,12 @@ a { color: var(--green); }
 .dmix > span:first-child { display: flex; flex-direction: column; min-width: 0; }
 .dmix b { font-size: 16px; }
 .dtext { font-size: 16px; line-height: 1.5; }
+.hintbox { border-left: 3px solid var(--gold); background: #faf5e6; border-radius: 0 10px 10px 0; padding: 8px 12px; display: flex; flex-direction: column; gap: 3px; }
+.hintbox .k { font-size: 12px; font-weight: 700; color: #8a6a1f; }
+.hintbox .hl { font-size: 14px; line-height: 1.45; color: var(--muted); }
+.hintbox .hl b { color: var(--text); font-weight: 700; }
+.hintbox .hs { font-size: 13px; line-height: 1.45; color: var(--label); font-weight: 500; margin-top: 2px; }
+.hintbox .linkbtn.small2 { min-height: 36px; }
 </style>
 </head>
 <body>
@@ -1504,6 +1510,37 @@ L.splitTop = function (text) {
   return out.map(function (x) { return trim(x); }).filter(Boolean);
 };
 
+var HINT_ALIAS = [
+  ['가루진딧물', '복숭아가루진딧물'], ['순나방', '복숭아순나방'], ['심식나방', '복숭아심식나방'], ['유리나방', '복숭아유리나방'],
+  ['흰불나방', '미국흰불나방'], ['굴나방', '복숭아굴나방'], ['선녀벌레', '미국선녀벌레'], ['갈색날개매미충', '갈색날개매미충'],
+  ['잎말이나방', '잎말이나방'], ['파밤나방', '파밤나방'], ['꼭지나방', '감꼭지나방'], ['총채벌레', '감관총채벌레'], ['노린재', '애무늬고리장님노린재'],
+  ['진딧물', '진딧물'], ['깍지벌레', '깍지벌레'], ['응애', '응애'],
+  ['열매 검은 점', '세균열매썩음병'], ['세균열매썩음병', '세균열매썩음병'], ['검은점무늬병', '검은점무늬병'], ['구멍병', '세균구멍병'],
+  ['잎오갈병', '잎오갈병'], ['잿빛무늬병', '잿빛무늬병'], ['갈색점무늬병', '갈색점무늬병'], ['갈색무늬병', '갈색무늬병'], ['주머니병', '주머니병'],
+  ['흰가루병', '흰가루병'], ['흰 가루', '흰가루병'], ['시들음병', '시들음병'], ['탄저병', '탄저병'], ['줄기마름병', '줄기마름병'], ['녹병', '녹병'], ['역병', '역병']
+];
+var HINT_TREE = { '진딧물': { '딸기': '목화진딧물', '백일홍': '배롱나무알락진딧물', '자두': '복숭아혹진딧물' }, '깍지벌레': { '감': '감나무주머니깍지벌레', '자두': '뽕나무깍지벌레' } };
+var SHOW_NAME = { '진딧물': '진딧물', '깍지벌레': '깍지벌레' };
+
+L.taskHints = function (t) {
+  if (!t || !t.product || !/보이면|번지면|있었으면|심했으면|있으면/.test(t.text)) return null;
+  var text = t.text;
+  var used = [];
+  var terms = [];
+  HINT_ALIAS.forEach(function (a) {
+    var at = text.indexOf(a[0]);
+    if (at < 0) return;
+    if (used.some(function (u) { return at >= u[0] && at < u[1]; })) return;
+    used.push([at, at + a[0].length]);
+    var key = (HINT_TREE[a[1]] && HINT_TREE[a[1]][t.tree]) || a[1];
+    var sym = L.symptom(key, t.tree);
+    if (sym && !terms.some(function (x) { return x.name === key; })) terms.push({ name: SHOW_NAME[key] || key, sym: sym, at: at });
+  });
+  if (!terms.length) return null;
+  terms.sort(function (x, y) { return x.at - y.at; });
+  return { terms: terms, see: /보이면/.test(text), spread: /번지면/.test(text) };
+};
+
 function groupCodes(g) {
   return (String(g || '').match(/[가-힣]\d+|\d+[a-z]?/g) || []);
 }
@@ -1944,7 +1981,20 @@ function TwoStep({ label, onGo }) {
   );
 }
 
-function TaskRow({ o, first, data, ctx, today, onToggle, late, skip, extra }) {
+function HintBox({ t, onDiag }) {
+  const h = L.taskHints(t);
+  if (!h) return null;
+  return (
+    <div className="hintbox">
+      <div className="k">이렇게 생겼어요</div>
+      {h.terms.map((x) => <div className="hl" key={x.name}><b>{x.name}</b> {x.sym}</div>)}
+      {h.see && <div className="hs">가끔 가서 확인이 어려우면, 지난해 이 피해가 있었던 나무는 보이지 않아도 이 기간에 한 번 뿌리세요.</div>}
+      {onDiag && <button type="button" className="linkbtn small2" onClick={() => onDiag(t.tree)}><Icon name="camera" size={16} bold />헷갈리면 사진으로 확인</button>}
+    </div>
+  );
+}
+
+function TaskRow({ o, first, data, ctx, today, onToggle, late, skip, extra, onDiag }) {
   const t = o.task;
   const res = L.resolve(ctx, t.product);
   const done = !!o.doneDate;
@@ -1978,6 +2028,7 @@ function TaskRow({ o, first, data, ctx, today, onToggle, late, skip, extra }) {
           <div className="pname">{t.text}</div>
         )}
         {t.note && <div className="note">{t.note}</div>}
+        {!done && <HintBox t={t} onDiag={onDiag} />}
         {extra && <div className="green-note">{extra}</div>}
         {limits.length > 0 && <div className="small">{limits.join(' · ')}</div>}
         {full && <div className="warn-note">올해 횟수를 다 썼습니다. 다른 계통의 약으로 바꾸세요.</div>}
@@ -2073,7 +2124,7 @@ function TreeFold({ f, open, onFlip, data, ctx, today, visits, tap, onDiag, last
           ))}
           {f.notices.map((n, i) => <div className="fold-note" key={i}><strong>지킬 것</strong> · {n}</div>)}
           {f.items.map((x) => (
-            <TaskRow key={x.o.key} o={x.o} data={data} ctx={ctx} today={today} onToggle={tap} late={x.cat === 'late'} skip={x.cat === 'skip'} extra={x.o.doneDate ? '' : x.cat === 'visit' ? visitText(x.visit) : x.cat === 'later' ? '다음 달로 넘겨도 되는 일입니다' : ''} />
+            <TaskRow key={x.o.key} o={x.o} data={data} ctx={ctx} today={today} onToggle={tap} onDiag={onDiag} late={x.cat === 'late'} skip={x.cat === 'skip'} extra={x.o.doneDate ? '' : x.cat === 'visit' ? visitText(x.visit) : x.cat === 'later' ? '다음 달로 넘겨도 되는 일입니다' : ''} />
           ))}
           {mixes.length > 0 && (
             <div className="mixbox">
@@ -2199,6 +2250,7 @@ function ARow({ o, ctx }) {
         <div className="pname" style={{ fontSize: 19 }}>{t.text}</div>
       )}
       {t.note && <div className="small">{t.note}</div>}
+      {!done && <HintBox t={t} />}
       <div className="period sm"><span className="k">기간</span><span className="v">{t.label}</span></div>
     </div>
   );
