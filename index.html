@@ -728,7 +728,8 @@ L.doseInfo = function (data, ctx, product, tree, water) {
   } else if (p && SPRAY[p.kind]) {
     line = '용량은 라벨 확인';
   }
-  return { row: row, unit: unit, line: line, fromLabel: !!(row && row.src === '라벨'), fromSearch: !!(row && row.src === '검색') };
+  var note = row && row.dilution && row.doseText ? row.doseText : '';
+  return { row: row, unit: unit, line: line, note: note, fromLabel: !!(row && row.src === '라벨'), fromSearch: !!(row && row.src === '검색') };
 };
 
 function mdParse(s) {
@@ -1564,6 +1565,7 @@ L.drugInfo = function (data, ctx, name, today) {
     uses.push({
       tree: t.name, row: row, terms: terms,
       dose: row.dilution ? L.fmtNum(row.dilution) + '배 · 물 20L에 ' + L.fmtAmount(20000 / row.dilution) + (info.unit || '') : (row.doseText || '용량은 라벨 확인'),
+      doseNote: row.dilution && row.doseText ? row.doseText : '',
       phi: row.phi !== null ? '수확 ' + row.phi + '일 전까지' : (row.phiNote || ''),
       max: row.max !== null ? '한 해 ' + row.max + '회 · 올해 ' + L.usage(data, t.name, base || name, year) + '회' : '',
       src: row.src
@@ -2022,7 +2024,7 @@ function TaskRow({ o, first, data, ctx, today, onToggle, late, skip, extra, onDi
             <div className="line"><span className="pname">{res.name}</span><StateChips res={res} /></div>
             {res.state === 'alt' && <div className="green-note">계획의 {L.josa(t.product, '과', '와')} 같은 약입니다.</div>}
             {t.text && <div className="note">{t.text}</div>}
-            {info.line && <div className="dose">{info.line}{row && (row.dilution || row.doseText) ? <span className="src">{info.fromLabel ? '라벨 확인함' : info.fromSearch ? '검색으로 확인 · 라벨 확인 전' : '기준값 · 라벨 확인 전'}</span> : null}</div>}
+            {info.line && <div className="dose">{info.line}{info.note && <span className="src" style={{ fontWeight: 700, color: 'var(--text)' }}>라벨: {info.note}</span>}{row && (row.dilution || row.doseText) ? <span className="src">{info.fromLabel ? '라벨 확인함' : info.fromSearch ? '검색으로 확인 · 라벨 확인 전' : '기준값 · 라벨 확인 전'}</span> : null}</div>}
           </React.Fragment>
         ) : (
           <div className="pname">{t.text}</div>
@@ -2720,13 +2722,21 @@ function CheckScreen({ data, draft, setDraft, reading, onRead, onConfirm, onCanc
                       <button type="button" className={'toggle' + (r.use ? ' on' : '')} role="switch" aria-checked={!!r.use} aria-label={r.tree + ' 값을 계획에 넣기'} onClick={() => setRow(r.tree, { use: !r.use })}></button>
                     </div>
                     {r.target && <div className="small">{r.target}</div>}
-                    {r.doseText && <div className="small">라벨 표기: {r.doseText}</div>}
-                    {r.phiNote && <div className="small">사용 시기: {r.phiNote}</div>}
+                    {!r.use && r.doseText && <div className="small">라벨 표기: {r.doseText}</div>}
+                    {!r.use && r.phiNote && <div className="small">사용 시기: {r.phiNote}</div>}
                     {r.use && (
                       <div>
                         <NumField id={'d-' + r.tree} label="희석배수" value={r.dilution} unit="배" onChange={(v) => setRow(r.tree, { dilution: v })} verdict={fv.dilution} baseText={b && b.dilution ? L.fmtNum(b.dilution) + '배' : ''} extra={d ? '물 20L에 ' + L.fmtAmount(20000 / d) + unitOf : ''} searchText={s.dilution ? L.fmtNum(s.dilution) + '배' : ''} searchDiff={sdiff('dilution')} />
                         <NumField id={'p-' + r.tree} label="수확 전" value={r.phi} unit="일 전까지" onChange={(v) => setRow(r.tree, { phi: v })} verdict={fv.phi} baseText={b && b.phi !== null ? b.phi + '일' : ''} searchText={s.phi !== null && s.phi !== undefined ? s.phi + '일' : ''} searchDiff={sdiff('phi')} />
                         <NumField id={'m-' + r.tree} label="한 해" value={r.max} unit="회까지" onChange={(v) => setRow(r.tree, { max: v })} verdict={fv.max} baseText={b && b.max !== null ? b.max + '회' : ''} searchText={s.max !== null && s.max !== undefined ? s.max + '회' : ''} searchDiff={sdiff('max')} />
+                        <div className="row">
+                          <label className="flabel" htmlFor={'t-' + r.tree}>라벨 표기 (시기마다 배수가 다르면 그대로 적기)</label>
+                          <input id={'t-' + r.tree} className="input" value={r.doseText || ''} placeholder="예: 개화 전 500배, 낙엽 직전 250~500배" onChange={(e) => setRow(r.tree, { doseText: e.target.value })} />
+                        </div>
+                        <div className="row">
+                          <label className="flabel" htmlFor={'w-' + r.tree}>사용 시기</label>
+                          <input id={'w-' + r.tree} className="input" value={r.phiNote || ''} placeholder="예: 개화 전 1~2회, 수확 후 낙엽 직전 1회" onChange={(e) => setRow(r.tree, { phiNote: e.target.value })} />
+                        </div>
                       </div>
                     )}
                     {!r.use && <div className="small">이 나무의 값은 넣지 않습니다.</div>}
@@ -3321,6 +3331,7 @@ function DrugSheet({ data, ctx, today, name, onClose, onDiag, onAdd }) {
                 <div className="dterm" key={t.name}><b>{t.name}</b>{t.sym && <span>{t.sym}</span>}</div>
               ))}
               <div className="ddose">{u.dose}</div>
+              {u.doseNote && <div className="small" style={{ color: 'var(--text)' }}>라벨: {u.doseNote}</div>}
               <div className="small">{[u.phi, u.max].filter(Boolean).join(' · ')}</div>
               <button type="button" className="linkbtn small2" onClick={() => onDiag(u.tree)}><Icon name="camera" size={16} bold />{u.tree} 잎이 이런 것 같으면 사진으로 확인</button>
             </div>
