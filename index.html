@@ -2643,7 +2643,12 @@ function CheckScreen({ data, draft, setDraft, reading, onRead, onConfirm, onCanc
   }
   const baseOf = (tree) => (base ? (data.doses.filter((d) => d.product === base && d.tree === tree)[0] || null) : null);
   const shown = res ? res.rows.filter((r) => r.onLabel || r.use) : [];
-  const skipped = res ? res.rows.filter((r) => !r.onLabel && !r.use && baseOf(r.tree)) : [];
+  const skipped = res ? data.trees.map((t) => t.name).filter((t) => !shown.some((r) => r.tree === t)) : [];
+  const addTree = (tree) => {
+    if (res.rows.some((r) => r.tree === tree)) { setRow(tree, { use: true }); return; }
+    const b = baseOf(tree);
+    setRes({ rows: res.rows.concat([{ tree: tree, onLabel: false, use: true, target: b ? b.target : '', doseText: '', phiNote: '', dilution: null, phi: null, max: null, base: b ? { dilution: b.dilution, phi: b.phi, max: b.max, src: b.src } : null, search: null }]) });
+  };
   const unitOf = res ? (res.unit || (base && (L.productOf(data, base) || {}).unit) || '') : '';
   return (
     <React.Fragment>
@@ -2730,10 +2735,10 @@ function CheckScreen({ data, draft, setDraft, reading, onRead, onConfirm, onCanc
               })}
               {skipped.length > 0 && (
                 <div className="card">
-                  <div className="cap">라벨에서 찾지 못한 나무</div>
-                  <div className="note">기준값을 그대로 둡니다. 직접 적으려면 나무를 누르세요.</div>
+                  <div className="cap">라벨에서 읽지 못한 나무</div>
+                  <div className="note">라벨에 있는데 읽히지 않은 나무는 눌러서 직접 적으세요.</div>
                   <div className="chips wrap">
-                    {skipped.map((r) => <button type="button" key={r.tree} className="pick" onClick={() => setRow(r.tree, { use: true })}>{r.tree}</button>)}
+                    {skipped.map((t) => <button type="button" key={t} className="pick" onClick={() => addTree(t)}>{t}</button>)}
                   </div>
                 </div>
               )}
@@ -3815,7 +3820,7 @@ function App() {
       });
       const kit = draft.kitId ? data.kit.filter((k) => k.id === draft.kitId)[0] : null;
       const label = r.label || { name: kit ? kit.name : '', ingredient: kit ? kit.ingredient : '', content: kit ? kit.content : '', form: kit ? kit.form : '', rows: [], cautions: [] };
-      if (kit && !label.name) label.name = kit.name;
+      if (kit) ['name', 'ingredient', 'content', 'form'].forEach((k) => { if (!label[k]) label[k] = kit[k]; });
       const cmp = L.compareLabel(data, label, r.search);
       setDraft({
         kitId: draft.kitId, photos: photos,
@@ -3837,8 +3842,9 @@ function App() {
     const res = draft.result;
     const name = (res.ident.name || '').trim();
     if (!name) { toast('약 이름을 적어 주세요.'); return; }
+    const old = draft.kitId ? data.kit.filter((k) => k.id === draft.kitId)[0] || {} : {};
     const c = L.confirmOps(data, {
-      kitId: draft.kitId, name: name, ingredient: (res.ident.ingredient || '').trim(), content: (res.ident.content || '').trim(), form: (res.ident.form || '').trim(),
+      kitId: draft.kitId, name: name, ingredient: (res.ident.ingredient || '').trim() || old.ingredient || '', content: (res.ident.content || '').trim() || old.content || '', form: (res.ident.form || '').trim() || old.form || '',
       unit: res.unit, covers: res.covers, rows: res.rows.filter((r) => r.use), cautions: res.cautions, maker: res.maker, group: res.group, model: res.model, sources: res.sources,
       photos: draft.photos.map((p) => ({ id: p.id, fileId: p.fileId, thumb: p.thumb }))
     }, iso);
